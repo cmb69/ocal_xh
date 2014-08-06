@@ -137,6 +137,257 @@ EOT;
 EOT;
     }
 
+    /**
+     * Renders a calendar.
+     *
+     * @param int $monthCount A month count.
+     *
+     * @return string (X)HTML.
+     */
+    public function renderCalendar($monthCount)
+    {
+        $view = new Bcal_Calendars();
+        return $view->render($monthCount);
+    }
+}
+
+/**
+ * The calendars.
+ *
+ * @category CMSimple_XH
+ * @package  Bcal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ */
+class Bcal_Calendars
+{
+    /**
+     * The month.
+     *
+     * @var int
+     */
+    protected $month;
+
+    /**
+     * The year.
+     *
+     * @var int
+     */
+    protected $year;
+
+    /**
+     * Initializes a new instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $now = time();
+        $this->month = isset($_GET['bcal_month'])
+            ? $_GET['bcal_month']
+            : date('n', $now);
+        $this->year = isset($_GET['bcal_year'])
+            ? $_GET['bcal_year']
+            : date('Y', $now);
+    }
+
+    /**
+     * Renders the calendars.
+     *
+     * @param int $monthCount A number of months.
+     *
+     * @return string (X)HTML.
+     */
+    public function render($monthCount)
+    {
+        $html = '<div class="bcal_calendars">'
+            . $this->renderPagination();
+        $month = new Bcal_Month($this->month, $this->year);
+        while ($monthCount) {
+            $calendar = new Bcal_MonthCalendar($month);
+            $html .= $calendar->render();
+            $monthCount--;
+            $month = $month->getNextMonth();
+        }
+        $html .= '</div>';
+        return $html;
+    }
+
+    /**
+     * Renders the pagination.
+     *
+     * @return string (X)HTML.
+     */
+    protected function renderPagination()
+    {
+        return '<div class="bcal_pagination">'
+            . $this->renderPaginationLink(0, -1, 'prev_year')
+            . $this->renderPaginationLink(-1, 0, 'prev_month')
+            . $this->renderPaginationLink(false, false, 'today')
+            . $this->renderPaginationLink(1, 0, 'next_month')
+            . $this->renderPaginationLink(0, 1, 'next_year')
+            . '</div>';
+    }
+
+    /**
+     * Renders a pagination link.
+     *
+     * @param int    $month A month.
+     * @param int    $year  A year.
+     * @param string $label A label key.
+     *
+     * @return string (X)HTML.
+     *
+     * @todo Restrict links to reasonable range, to avoid search engines
+     *       searching infinitely.
+     */
+    protected function renderPaginationLink($month, $year, $label)
+    {
+        global $sn, $su, $plugin_tx;
+
+        if ($month === false && $year === false) {
+            $url = $sn . '?' . $su;
+        } else {
+            $month = $this->month + $month;
+            $year = $this->year + $year;
+            if ($month < 1) {
+                $month = 12;
+                $year -= 1;
+            } elseif ($month > 12) {
+                $month = 1;
+                $year += 1;
+            }
+            $url = $sn . '?' . $su . '&amp;bcal_year=' . $year
+                . '&amp;bcal_month=' . $month;
+        }
+        return '<a href="' . $url . '">' . $plugin_tx['bcal']['label_'. $label]
+            . '</a>';
+    }
+}
+
+
+/**
+ * The month calendars.
+ *
+ * @category CMSimple_XH
+ * @package  Bcal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ */
+class Bcal_MonthCalendar
+{
+    /**
+     * The month.
+     *
+     * @var int
+     */
+    protected $month;
+
+    /**
+     * Initializes a new instance.
+     *
+     * @param Bcal_Month $month A month.
+     *
+     * @return void
+     */
+    public function __construct(Bcal_Month $month)
+    {
+        $this->month = $month;
+    }
+
+    /**
+     * Renders the month calendar.
+     *
+     * @return string (X)HTML.
+     */
+    public function render()
+    {
+        $day = $this->month->getDayOffset();
+        $html = '<table class="bcal_calendar">'
+            . $this->renderHeading()
+            . $this->renderDaynames();
+        for ($row = 0; $row < 6; $row++) {
+            $html .= $this->renderWeekStartingWith($day);
+            $day += 7;
+        }
+        $html .= '</table>';
+        return $html;
+    }
+
+    /**
+     * Renders the heading.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The localization of the plugins.
+     */
+    protected function renderHeading()
+    {
+        global $plugin_tx;
+
+        $monthnames = explode(',', $plugin_tx['bcal']['date_months']);
+        return '<th colspan="7">' . $monthnames[$this->month->getMonth() - 1]
+            . ' ' . $this->month->getYear() . '</th>';
+    }
+
+    /**
+     * Renders the daynames.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The localization of the plugins.
+     */
+    protected function renderDaynames()
+    {
+        global $plugin_tx;
+
+        $daynames = explode(',', $plugin_tx['bcal']['date_days']);
+        $html = '<tr>';
+        foreach ($daynames as $dayname) {
+            $html .= '<th>' . $dayname . '</th>';
+        }
+        $html .= '</tr>';
+        return $html;
+    }
+
+    /**
+     * Renders a week table row.
+     *
+     * @param int $day A day.
+     *
+     * @return string (X)HTML.
+     */
+    protected function renderWeekStartingWith($day)
+    {
+        $html = '<tr>';
+        for ($col = 0; $col < 7; $col++) {
+            $html .= $this->renderDay($day);
+            $day++;
+        }
+        $html .= '</tr>';
+        return $html;
+    }
+
+    /**
+     * Renders a day table cell.
+     *
+     * @param int $day A day.
+     *
+     * @return string (X)HTML.
+     */
+    protected function renderDay($day)
+    {
+        $html = '<td>';
+        if ($day >= 1 && $day <= $this->month->getLastDay()) {
+            $html .= $day;
+        } else {
+            $html .= '&nbsp;';
+        }
+        $html .= '</td>';
+        return $html;
+    }
 }
 
 ?>

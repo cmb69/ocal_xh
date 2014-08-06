@@ -31,6 +31,11 @@ EOT
 }
 
 /**
+ * The domain layer.
+ */
+require_once $pth['folder']['plugin_classes'] . 'Domain.php';
+
+/**
  * The presentation layer.
  */
 require_once $pth['folder']['plugin_classes'] . 'Presentation.php';
@@ -39,6 +44,22 @@ require_once $pth['folder']['plugin_classes'] . 'Presentation.php';
  * The plugin version.
  */
 define('BCAL_VERSION', '@BCAL_VERSION@');
+
+/**
+ * Renders a calendar.
+ *
+ * @param int $monthCount A month count.
+ *
+ * @return string (X)HTML.
+ *
+ * @global Bcal_Controller The plugin controller.
+ */
+function bcal($monthCount = 1)
+{
+    global $_Bcal_controller;
+
+    return $_Bcal_controller->renderCalendar($monthCount);
+}
 
 /**
  * The plugin controller.

@@ -1,4 +1,28 @@
 /*
+ * Calendar
+ */
+.bcal_calendars {
+    text-align: center;
+}
+.bcal_pagination {
+    margin: 1em 0;
+}
+.bcal_pagination a {
+    margin: 0 1em;
+}
+.bcal_calendar {
+    display: inline-block;
+    margin: 0 0.5em 1em 0.5em;
+    border: 1px solid #888;
+    padding: 0 0.5em;
+}
+.bcal_calendar td {
+    width: 1em;
+    height: 1em;
+    text-align: right;
+}
+
+/*
  * Back-end
  */
 .bcal_logo {
