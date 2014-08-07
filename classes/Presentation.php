@@ -146,7 +146,9 @@ EOT;
      */
     public function renderCalendar($monthCount)
     {
-        $view = new Bcal_Calendars();
+        $db = new BCal_Db();
+        $occupancy = $db->findOccupancy();
+        $view = new Bcal_Calendars($occupancy);
         return $view->render($monthCount);
     }
 }
@@ -162,6 +164,13 @@ EOT;
  */
 class Bcal_Calendars
 {
+    /**
+     * The occupancy.
+     *
+     * @var Bcal_Occupancy
+     */
+    protected $occupancy;
+
     /**
      * The month.
      *
@@ -179,9 +188,11 @@ class Bcal_Calendars
     /**
      * Initializes a new instance.
      *
+     * @param Bcal_Occupancy $occupancy An occupancy.
+     *
      * @return void
      */
-    public function __construct()
+    public function __construct(Bcal_Occupancy $occupancy)
     {
         $now = time();
         $this->month = isset($_GET['bcal_month'])
@@ -190,6 +201,7 @@ class Bcal_Calendars
         $this->year = isset($_GET['bcal_year'])
             ? $_GET['bcal_year']
             : date('Y', $now);
+        $this->occupancy = $occupancy;
     }
 
     /**
@@ -205,7 +217,7 @@ class Bcal_Calendars
             . $this->renderPagination();
         $month = new Bcal_Month($this->month, $this->year);
         while ($monthCount) {
-            $calendar = new Bcal_MonthCalendar($month);
+            $calendar = new Bcal_MonthCalendar($month, $this->occupancy);
             $html .= $calendar->render();
             $monthCount--;
             $month = $month->getNextMonth();
@@ -281,20 +293,29 @@ class Bcal_MonthCalendar
     /**
      * The month.
      *
-     * @var int
+     * @var Bcal_Month
      */
     protected $month;
 
     /**
+     * The occupancy.
+     *
+     * @var Bcal_Occupancy $occupancy.
+     */
+    protected $occupancy;
+
+    /**
      * Initializes a new instance.
      *
-     * @param Bcal_Month $month A month.
+     * @param Bcal_Month     $month     A month.
+     * @param Bcal_Occupancy $occupancy An occupancy.
      *
      * @return void
      */
-    public function __construct(Bcal_Month $month)
+    public function __construct(Bcal_Month $month, Bcal_Occupancy $occupancy)
     {
         $this->month = $month;
+        $this->occupancy = $occupancy;
     }
 
     /**
@@ -379,14 +400,16 @@ class Bcal_MonthCalendar
      */
     protected function renderDay($day)
     {
-        $html = '<td>';
         if ($day >= 1 && $day <= $this->month->getLastDay()) {
-            $html .= $day;
+            $date = sprintf(
+                '%04d-%02d-%02d', $this->month->getYear(),
+                $this->month->getMonth(), $day
+            );
+            $state = $this->occupancy->getState($date);
+            return '<td class="bcal_state_' . $state . '">' . $day . '</td>';
         } else {
-            $html .= '&nbsp;';
+            return '<td>&nbsp;</td>';
         }
-        $html .= '</td>';
-        return $html;
     }
 }
 

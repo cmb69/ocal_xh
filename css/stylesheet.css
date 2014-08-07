@@ -22,6 +22,14 @@
     text-align: right;
 }
 
+.bcal_state_0, .bcal_state_1 {
+    border: 1px solid #888;
+}
+.bcal_state_1 {
+    background: green;
+    color: white;
+}
+
 /*
  * Back-end
  */

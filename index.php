@@ -31,6 +31,11 @@ EOT
 }
 
 /**
+ * The data source layer.
+ */
+require_once $pth['folder']['plugin_classes'] . 'DataSource.php';
+
+/**
  * The domain layer.
  */
 require_once $pth['folder']['plugin_classes'] . 'Domain.php';

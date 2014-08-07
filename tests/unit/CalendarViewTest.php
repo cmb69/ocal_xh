@@ -14,8 +14,14 @@
  * @link      http://3-magi.net/?CMSimple_XH/Bcal_XH
  */
 
+require_once './vendor/autoload.php';
+require_once './classes/DataSource.php';
 require_once './classes/Domain.php';
 require_once './classes/Presentation.php';
+
+use org\bovigo\vfs\vfsStreamWrapper;
+use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Testing the calendar views.
@@ -33,12 +39,16 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      *
+     * @global array The paths of system files and folders.
      * @global array The localization of the plugins.
      */
     public function setUp()
     {
-        global $plugin_tx;
+        global $pth, $plugin_tx;
 
+        vfsStreamWrapper::register();
+        vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
+        $pth['folder']['content'] = vfsStream::url('test/');
         $plugin_tx['bcal'] = array(
             'date_months' => 'January,February,March,April,May,June,July,August,'
                 . 'September,October,November,December',
