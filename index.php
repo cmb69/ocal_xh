@@ -6,12 +6,12 @@
  * PHP version 5
  *
  * @category  CMSimple_XH
- * @package   Bcal
+ * @package   Ocal
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014 Christoph M. Becker <http://3-magi.net/>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @version   SVN: $Id$
- * @link      http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
 /*
@@ -24,8 +24,8 @@ if (!defined('CMSIMPLE_XH_VERSION')
     header('HTTP/1.1 403 Forbidden');
     header('Content-Type: text/plain; charset=UTF-8');
     die(<<<EOT
-Bcal_XH detected an unsupported CMSimple_XH version.
-Uninstall Bcal_XH or upgrade to a supported CMSimple_XH version!
+Ocal_XH detected an unsupported CMSimple_XH version.
+Uninstall Ocal_XH or upgrade to a supported CMSimple_XH version!
 EOT
     );
 }
@@ -48,7 +48,7 @@ require_once $pth['folder']['plugin_classes'] . 'Presentation.php';
 /**
  * The plugin version.
  */
-define('BCAL_VERSION', '@BCAL_VERSION@');
+define('OCAL_VERSION', '@OCAL_VERSION@');
 
 /**
  * Renders a calendar.
@@ -57,21 +57,21 @@ define('BCAL_VERSION', '@BCAL_VERSION@');
  *
  * @return string (X)HTML.
  *
- * @global Bcal_Controller The plugin controller.
+ * @global Ocal_Controller The plugin controller.
  */
-function bcal($monthCount = 1)
+function ocal($monthCount = 1)
 {
-    global $_Bcal_controller;
+    global $_Ocal_controller;
 
-    return $_Bcal_controller->renderCalendar($monthCount);
+    return $_Ocal_controller->renderCalendar($monthCount);
 }
 
 /**
  * The plugin controller.
  *
- * @var Bcal_Controller
+ * @var Ocal_Controller
  */
-$_Bcal_controller = new Bcal_Controller();
-$_Bcal_controller->dispatch();
+$_Ocal_controller = new Ocal_Controller();
+$_Ocal_controller->dispatch();
 
 ?>

@@ -6,12 +6,12 @@
  * PHP version 5
  *
  * @category  Testing
- * @package   Bcal
+ * @package   Ocal
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014 Christoph M. Becker <http://3-magi.net>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @version   SVN: $Id$
- * @link      http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
 require_once './vendor/autoload.php';
@@ -22,17 +22,17 @@ require_once './classes/Presentation.php';
  * Testing the general plugin administration.
  *
  * @category Testing
- * @package  Bcal
+ * @package  Ocal
  * @author   Christoph M. Becker <cmbecker69@gmx.de>
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 class AdministrationTest extends PHPUnit_Framework_TestCase
 {
     /**
      * The test subject.
      *
-     * @var Bcal_Controller
+     * @var Ocal_Controller
      */
     private $_subject;
 
@@ -54,13 +54,13 @@ class AdministrationTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        global $bcal, $admin, $action;
+        global $ocal, $admin, $action;
 
         $this->_defineConstant('XH_ADM', true);
-        $bcal = 'true';
+        $ocal = 'true';
         $admin = 'plugin_stylesheet';
         $action = 'plugin_text';
-        $this->_subject = new Bcal_Controller();
+        $this->_subject = new Ocal_Controller();
         $this->_rspmiMock = new PHPUnit_Extensions_MockFunction(
             'XH_registerStandardPluginMenuItems', $this->_subject
         );
@@ -72,7 +72,7 @@ class AdministrationTest extends PHPUnit_Framework_TestCase
             'plugin_admin_common', $this->_subject
         );
         $pluginAdminCommonMock->expects($this->once())
-            ->with($action, $admin, 'bcal');
+            ->with($action, $admin, 'ocal');
     }
 
     /**

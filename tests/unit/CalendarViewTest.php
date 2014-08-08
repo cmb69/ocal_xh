@@ -6,12 +6,12 @@
  * PHP version 5
  *
  * @category  Testing
- * @package   Bcal
+ * @package   Ocal
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014 Christoph M. Becker <http://3-magi.net>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @version   SVN: $Id$
- * @link      http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
 require_once './vendor/autoload.php';
@@ -27,10 +27,10 @@ use org\bovigo\vfs\vfsStream;
  * Testing the calendar views.
  *
  * @category Testing
- * @package  Bcal
+ * @package  Ocal
  * @author   Christoph M. Becker <cmbecker69@gmx.de>
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 class CalendarViewTest extends PHPUnit_Framework_TestCase
 {
@@ -52,7 +52,7 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
             'content' => vfsStream::url('test/'),
             'plugins' => vfsStream::url('test/')
         );
-        $plugin_tx['bcal'] = array(
+        $plugin_tx['ocal'] = array(
             'date_months' => 'January,February,March,April,May,June,July,August,'
                 . 'September,October,November,December',
             'date_days' => 'M,T,W,T,F,S,S',
@@ -72,11 +72,11 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
      */
     public function testRendersCalendar()
     {
-        $this->subject = new Bcal_Controller();
+        $this->subject = new Ocal_Controller();
         $this->assertTag(
             array(
                 'tag' => 'table',
-                'attributes' => array('class' => 'bcal_calendar')
+                'attributes' => array('class' => 'ocal_calendar')
             ), $this->subject->renderCalendar(3)
         );
     }

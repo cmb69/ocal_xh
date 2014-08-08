@@ -42,8 +42,8 @@
         }
         event = event || window.event;
         target = event.target || event.srcElement;
-        if (target.className.indexOf("bcal_state_") === 0) {
-            target.className = "bcal_state_" + currentState;
+        if (target.className.indexOf("ocal_state_") === 0) {
+            target.className = "ocal_state_" + currentState;
             saveButton.disabled = false;
             addListener(window, "beforeunload", warning);
         }
@@ -56,8 +56,8 @@
         cells = calendar.getElementsByTagName("td");
         for (i = 0; i < cells.length; i += 1) {
             cell = cells[i];
-            if (cell.className.indexOf("bcal_state_") === 0) {
-                state = cell.className.substr(("bcal_state_").length);
+            if (cell.className.indexOf("ocal_state_") === 0) {
+                state = cell.className.substr(("ocal_state_").length);
                 states.push(state);
             }
         }
@@ -71,7 +71,7 @@
         tables = document.getElementsByTagName("table");
         for (i = 0; i < tables.length; i += 1) {
             table = tables[i];
-            if (table.className === "bcal_calendar") {
+            if (table.className === "ocal_calendar") {
                 month = table.getAttribute("data-month");
                 states[month] = getCalendarStates(table);
             }
@@ -86,7 +86,7 @@
             var request, payload;
 
             request = new XMLHttpRequest();
-            request.open("POST", location.href + "&bcal_save=1");
+            request.open("POST", location.href + "&ocal_save=1");
             request.setRequestHeader("Content-Type", "application/json");
             // FIXME: JSON.stringify
             payload = JSON.stringify(getAllCalendarStates());
@@ -103,7 +103,7 @@
         buttons = document.getElementsByTagName("button");
         for (i = 0; i < buttons.length; i += 1) {
             button = buttons[i];
-            if (button.className === "bcal_save") {
+            if (button.className === "ocal_save") {
                 saveButton = button;
                 saveButton.onclick = save;
             }
@@ -116,7 +116,7 @@
         tables = document.getElementsByTagName("table");
         for (i = 0; i < tables.length; i += 1) {
             table = tables[i];
-            if (table.className === "bcal_calendar") {
+            if (table.className === "ocal_calendar") {
                 table.onclick = onClick;
             }
         }
@@ -130,15 +130,15 @@
 
             event = event || window.event;
             target = event.target || event.srcElement;
-            currentState = +target.className.substr("bcal_state_".length);
+            currentState = +target.className.substr("ocal_state_".length);
             target.style.borderWidth = "3px";
-            cells = document.querySelectorAll(".bcal_calendar td");
+            cells = document.querySelectorAll(".ocal_calendar td");
             for (i = 0; i < cells.length; i += 1) {
                 cells[i].style.cursor = "pointer";
             }
         }
 
-        states = document.querySelectorAll(".bcal_toolbar span");
+        states = document.querySelectorAll(".ocal_toolbar span");
         for (i = 0; i < states.length; i += 1) {
             states[i].onclick = selectState;
         }

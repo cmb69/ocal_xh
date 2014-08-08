@@ -6,24 +6,24 @@
  * PHP version 5
  *
  * @category  CMSimple_XH
- * @package   Bcal
+ * @package   Ocal
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014 Christoph M. Becker <http://3-magi.net/>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @version   SVN: $Id$
- * @link      http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
 /**
  * The controllers.
  *
  * @category CMSimple_XH
- * @package  Bcal
+ * @package  Ocal
  * @author   Christoph M. Becker <cmbecker69@gmx.de>
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Bcal_Controller
+class Ocal_Controller
 {
     /**
      * Dispatches according to the request.
@@ -34,13 +34,13 @@ class Bcal_Controller
      */
     public function dispatch()
     {
-        global $bcal;
+        global $ocal;
 
         if (XH_ADM) {
             if (function_exists('XH_registerStandardPluginMenuItems')) {
                 XH_registerStandardPluginMenuItems(false);
             }
-            if (isset($bcal) && $bcal == 'true') {
+            if (isset($ocal) && $ocal == 'true') {
                 $this->_handleAdministration();
             }
         }
@@ -65,7 +65,7 @@ class Bcal_Controller
             $o .= $this->_renderInfo();
             break;
         default:
-            $o .= plugin_admin_common($action, $admin, 'bcal');
+            $o .= plugin_admin_common($action, $admin, 'ocal');
         }
     }
 
@@ -76,9 +76,9 @@ class Bcal_Controller
      */
     private function _renderInfo()
     {
-        return '<h1>Bcal</h1>'
+        return '<h1>Ocal</h1>'
             . $this->_renderLogo()
-            . '<p>Version: ' . BCAL_VERSION . '</p>'
+            . '<p>Version: ' . OCAL_VERSION . '</p>'
             . $this->_renderCopyright() . $this->_renderLicense();
     }
 
@@ -90,15 +90,15 @@ class Bcal_Controller
     private function _renderLicense()
     {
         return <<<EOT
-<p class="bcal_license">This program is free software: you can redistribute
+<p class="ocal_license">This program is free software: you can redistribute
 it and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.</p>
-<p class="bcal_license">This program is distributed in the hope that it will
+<p class="ocal_license">This program is distributed in the hope that it will
 be useful, but <em>without any warranty</em>; without even the implied warranty
 of <em>merchantability</em> or <em>fitness for a particular purpose</em>. See
 the GNU General Public License for more details.</p>
-<p class="bcal_license">You should have received a copy of the GNU General
+<p class="ocal_license">You should have received a copy of the GNU General
 Public License along with this program. If not, see <a
 href="http://www.gnu.org/licenses/"
 target="_blank">http://www.gnu.org/licenses/</a>. </p>
@@ -118,8 +118,8 @@ EOT;
         global $pth, $plugin_tx;
 
         return tag(
-            'img src="' . $pth['folder']['plugins']. 'bcal/bcal.png"'
-            . ' class="bcal_logo" alt="' . $plugin_tx['bcal']['alt_logo'] . '"'
+            'img src="' . $pth['folder']['plugins']. 'ocal/ocal.png"'
+            . ' class="ocal_logo" alt="' . $plugin_tx['ocal']['alt_logo'] . '"'
         );
     }
 
@@ -146,13 +146,13 @@ EOT;
      */
     public function renderCalendar($monthCount)
     {
-        if (XH_ADM && isset($_GET['bcal_save'])) {
+        if (XH_ADM && isset($_GET['ocal_save'])) {
             $this->saveStates();
             exit;
         }
-        $db = new BCal_Db();
+        $db = new Ocal_Db();
         $occupancy = $db->findOccupancy();
-        $view = new Bcal_Calendars($occupancy);
+        $view = new Ocal_Calendars($occupancy);
         return $view->render($monthCount);
     }
 
@@ -165,7 +165,7 @@ EOT;
     {
         $payload = file_get_contents('php://input');
         $states = XH_decodeJson($payload);
-        $db = new BCal_Db();
+        $db = new Ocal_Db();
         $occupancy = $db->findOccupancy();
         foreach (get_object_vars($states) as $month => $states) {
             foreach ($states as $i => $state) {
@@ -181,17 +181,17 @@ EOT;
  * The calendars.
  *
  * @category CMSimple_XH
- * @package  Bcal
+ * @package  Ocal
  * @author   Christoph M. Becker <cmbecker69@gmx.de>
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Bcal_Calendars
+class Ocal_Calendars
 {
     /**
      * The occupancy.
      *
-     * @var Bcal_Occupancy
+     * @var Ocal_Occupancy
      */
     protected $occupancy;
 
@@ -212,18 +212,18 @@ class Bcal_Calendars
     /**
      * Initializes a new instance.
      *
-     * @param Bcal_Occupancy $occupancy An occupancy.
+     * @param Ocal_Occupancy $occupancy An occupancy.
      *
      * @return void
      */
-    public function __construct(Bcal_Occupancy $occupancy)
+    public function __construct(Ocal_Occupancy $occupancy)
     {
         $now = time();
-        $this->month = isset($_GET['bcal_month'])
-            ? $_GET['bcal_month']
+        $this->month = isset($_GET['ocal_month'])
+            ? $_GET['ocal_month']
             : date('n', $now);
-        $this->year = isset($_GET['bcal_year'])
-            ? $_GET['bcal_year']
+        $this->year = isset($_GET['ocal_year'])
+            ? $_GET['ocal_year']
             : date('Y', $now);
         $this->occupancy = $occupancy;
     }
@@ -238,14 +238,14 @@ class Bcal_Calendars
     public function render($monthCount)
     {
         $this->emitScriptElements();
-        $html = '<div class="bcal_calendars">'
+        $html = '<div class="ocal_calendars">'
             . $this->renderPagination();
         if (XH_ADM) {
             $html .= $this->renderToolbar();
         }
-        $month = new Bcal_Month($this->month, $this->year);
+        $month = new Ocal_Month($this->month, $this->year);
         while ($monthCount) {
-            $calendar = new Bcal_MonthCalendar($month, $this->occupancy);
+            $calendar = new Ocal_MonthCalendar($month, $this->occupancy);
             $html .= $calendar->render();
             $monthCount--;
             $month = $month->getNextMonth();
@@ -268,7 +268,7 @@ class Bcal_Calendars
 
         if (XH_ADM) {
             $bjs .= '<script type="text/javascript" src="'
-                . $pth['folder']['plugins'] . 'bcal/bcal.js"></script>';
+                . $pth['folder']['plugins'] . 'ocal/ocal.js"></script>';
         }
     }
 
@@ -279,7 +279,7 @@ class Bcal_Calendars
      */
     protected function renderPagination()
     {
-        return '<div class="bcal_pagination">'
+        return '<div class="ocal_pagination">'
             . $this->renderPaginationLink(0, -1, 'prev_year')
             . $this->renderPaginationLink(-1, 0, 'prev_month')
             . $this->renderPaginationLink(false, false, 'today')
@@ -316,10 +316,10 @@ class Bcal_Calendars
                 $month = 1;
                 $year += 1;
             }
-            $url = $sn . '?' . $su . '&amp;bcal_year=' . $year
-                . '&amp;bcal_month=' . $month;
+            $url = $sn . '?' . $su . '&amp;ocal_year=' . $year
+                . '&amp;ocal_month=' . $month;
         }
-        return '<a href="' . $url . '">' . $plugin_tx['bcal']['label_'. $label]
+        return '<a href="' . $url . '">' . $plugin_tx['ocal']['label_'. $label]
             . '</a>';
     }
 
@@ -334,12 +334,12 @@ class Bcal_Calendars
     {
         global $plugin_tx;
 
-        $html = '<div class="bcal_toolbar">';
+        $html = '<div class="ocal_toolbar">';
         for ($i = 0; $i <= 3; $i++) {
-            $html .= '<span class="bcal_state_' . $i . '"></span>';
+            $html .= '<span class="ocal_state_' . $i . '"></span>';
         }
-        $html .= '<button type="button" class="bcal_save" disabled="disabled">'
-            . $plugin_tx['bcal']['label_save'] . '</button>'
+        $html .= '<button type="button" class="ocal_save" disabled="disabled">'
+            . $plugin_tx['ocal']['label_save'] . '</button>'
             . '</div>';
         return $html;
     }
@@ -349,36 +349,36 @@ class Bcal_Calendars
  * The month calendars.
  *
  * @category CMSimple_XH
- * @package  Bcal
+ * @package  Ocal
  * @author   Christoph M. Becker <cmbecker69@gmx.de>
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Bcal_MonthCalendar
+class Ocal_MonthCalendar
 {
     /**
      * The month.
      *
-     * @var Bcal_Month
+     * @var Ocal_Month
      */
     protected $month;
 
     /**
      * The occupancy.
      *
-     * @var Bcal_Occupancy $occupancy.
+     * @var Ocal_Occupancy $occupancy.
      */
     protected $occupancy;
 
     /**
      * Initializes a new instance.
      *
-     * @param Bcal_Month     $month     A month.
-     * @param Bcal_Occupancy $occupancy An occupancy.
+     * @param Ocal_Month     $month     A month.
+     * @param Ocal_Occupancy $occupancy An occupancy.
      *
      * @return void
      */
-    public function __construct(Bcal_Month $month, Bcal_Occupancy $occupancy)
+    public function __construct(Ocal_Month $month, Ocal_Occupancy $occupancy)
     {
         $this->month = $month;
         $this->occupancy = $occupancy;
@@ -392,7 +392,7 @@ class Bcal_MonthCalendar
     public function render()
     {
         $day = $this->month->getDayOffset();
-        $html = '<table class="bcal_calendar" data-month="'
+        $html = '<table class="ocal_calendar" data-month="'
             . $this->month->getIso() . '">'
             . $this->renderHeading()
             . $this->renderDaynames();
@@ -418,7 +418,7 @@ class Bcal_MonthCalendar
     {
         global $plugin_tx;
 
-        $monthnames = explode(',', $plugin_tx['bcal']['date_months']);
+        $monthnames = explode(',', $plugin_tx['ocal']['date_months']);
         return '<th colspan="7">' . $monthnames[$this->month->getMonth() - 1]
             . ' ' . $this->month->getYear() . '</th>';
     }
@@ -434,7 +434,7 @@ class Bcal_MonthCalendar
     {
         global $plugin_tx;
 
-        $daynames = explode(',', $plugin_tx['bcal']['date_days']);
+        $daynames = explode(',', $plugin_tx['ocal']['date_days']);
         $html = '<tr>';
         foreach ($daynames as $dayname) {
             $html .= '<th>' . $dayname . '</th>';
@@ -476,7 +476,7 @@ class Bcal_MonthCalendar
                 $this->month->getMonth(), $day
             );
             $state = $this->occupancy->getState($date);
-            return '<td class="bcal_state_' . $state . '">' . $day . '</td>';
+            return '<td class="ocal_state_' . $state . '">' . $day . '</td>';
         } else {
             return '<td>&nbsp;</td>';
         }

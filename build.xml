@@ -2,7 +2,7 @@
 
 <!-- $Id$ -->
 
-<project name="Bcal" default="default">
+<project name="Ocal" default="default">
 
     <!-- Properties -->
 
@@ -16,7 +16,7 @@
     </fileset>
 
     <fileset id="js-sources" dir=".">
-        <include name="bcal.js"/>
+        <include name="ocal.js"/>
     </fileset>
 
     <fileset id="unit-tests" dir="tests/unit">
@@ -39,7 +39,7 @@
 
     <target name="compat">
         <exec command="phpcompatinfo --configuration phpcompatinfo.xml print
-                                     --exclude-pattern bcal ."
+                                     --exclude-pattern ocal ."
               logoutput="true"/>
     </target>
 
@@ -75,8 +75,8 @@
     <!-- Documentation -->
 
     <target name="php-doc">
-        <phpdoc title="Bcal_XH Developer Documentation" destdir="doc/php"
-                output="HTML:Smarty:HandS" defaultpackagename="Bcal"
+        <phpdoc title="Ocal_XH Developer Documentation" destdir="doc/php"
+                output="HTML:Smarty:HandS" defaultpackagename="Ocal"
                 defaultcategoryname="CMSimple_XH" parseprivate="true">
             <fileset refid="php-sources"/>
             <projdocfileset dir=".">
@@ -109,21 +109,21 @@
             </fileset>
             <filterchain>
                 <replacetokens>
-                    <token key="BCAL_VERSION" value="${version}"/>
+                    <token key="OCAL_VERSION" value="${version}"/>
                 </replacetokens>
             </filterchain>
         </move>
         <jsMin targetDir="dist" suffix="" failOnError="false">
             <fileset dir="export">
-                <include name="bcal.js"/>
+                <include name="ocal.js"/>
             </fileset>
         </jsMin>
         <move todir="dist">
             <fileset dir="export">
-                <exclude name="bcal.komodoproject"/>
                 <exclude name="build.xml"/>
                 <exclude name="composer.*"/>
                 <exclude name="coverage.xml"/>
+                <exclude name="ocal.komodoproject"/>
                 <exclude name="phpcompatinfo.xml"/>
                 <exclude name="tests/**"/>
                 <exclude name="TODO"/>
@@ -132,7 +132,7 @@
         <delete dir="export"/>
         <copy file="dist/config/config.php" tofile="dist/config/defaultconfig.php"/>
         <copy file="dist/languages/en.php" tofile="dist/languages/default.php"/>
-        <zip destfile="Bcal_XH-${version}.zip" basedir="dist" prefix="bcal/"/>
+        <zip destfile="Ocal_XH-${version}.zip" basedir="dist" prefix="ocal/"/>
         <delete dir="dist"/>
     </target>
 

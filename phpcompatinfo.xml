@@ -10,7 +10,7 @@
                verbose="false">
 
     <excludes>
-        <exclude id="bcal">
+        <exclude id="ocal">
             <directory name="test"/>
             <directory name="vendor"/>
         </exclude>

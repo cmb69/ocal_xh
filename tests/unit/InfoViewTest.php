@@ -6,12 +6,12 @@
  * PHP version 5
  *
  * @category  Testing
- * @package   Bcal
+ * @package   Ocal
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014 Christoph M. Becker <http://3-magi.net>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @version   SVN: $Id$
- * @link      http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
 require_once './vendor/autoload.php';
@@ -23,17 +23,17 @@ require_once './classes/Presentation.php';
  * Testing the info view.
  *
  * @category Testing
- * @package  Bcal
+ * @package  Ocal
  * @author   Christoph M. Becker <cmbecker69@gmx.de>
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 class InfoViewTest extends PHPUnit_Framework_TestCase
 {
     /**
      * The subject under test.
      *
-     * @var Bcal_Controller
+     * @var Ocal_Controller
      */
     private $_subject;
 
@@ -49,19 +49,19 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        global $bcal, $o, $pth, $plugin_tx;
+        global $ocal, $o, $pth, $plugin_tx;
 
         $this->_defineConstant('XH_ADM', true);
-        $this->_defineConstant('BCAL_VERSION', '1.0');
-        $bcal = 'true';
+        $this->_defineConstant('OCAL_VERSION', '1.0');
+        $ocal = 'true';
         $o = '';
         $pth = array(
             'folder' => array('plugins' => './plugins/')
         );
         $plugin_tx = array(
-            'bcal' => array('alt_logo' => 'Calendar')
+            'ocal' => array('alt_logo' => 'Calendar')
         );
-        $this->_subject = new Bcal_Controller();
+        $this->_subject = new Ocal_Controller();
         $rspmiMock = new PHPUnit_Extensions_MockFunction(
             'XH_registerStandardPluginMenuItems', $this->_subject
         );
@@ -85,7 +85,7 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         $this->assertTag(
             array(
                 'tag' => 'h1',
-                'content' => 'Bcal'
+                'content' => 'Ocal'
             ),
             $o
         );
@@ -106,8 +106,8 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
             array(
                 'tag' => 'img',
                 'attributes' => array(
-                    'src' => './plugins/bcal/bcal.png',
-                    'class' => 'bcal_logo',
+                    'src' => './plugins/ocal/ocal.png',
+                    'class' => 'ocal_logo',
                     'alt' => 'Calendar'
                 )
             ),
@@ -129,7 +129,7 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         $this->assertTag(
             array(
                 'tag' => 'p',
-                'content' => 'Version: ' . BCAL_VERSION
+                'content' => 'Version: ' . OCAL_VERSION
             ),
             $o
         );
@@ -177,7 +177,7 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         $this->assertTag(
             array(
                 'tag' => 'p',
-                'attributes' => array('class' => 'bcal_license'),
+                'attributes' => array('class' => 'ocal_license'),
                 'content' => 'This program is free software:'
             ),
             $o

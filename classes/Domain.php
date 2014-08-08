@@ -6,24 +6,24 @@
  * PHP version 5
  *
  * @category  CMSimple_XH
- * @package   Bcal
+ * @package   Ocal
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014 Christoph M. Becker <http://3-magi.net/>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @version   SVN: $Id$
- * @link      http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
 /**
  * The months.
  *
  * @category CMSimple_XH
- * @package  Bcal
+ * @package  Ocal
  * @author   Christoph M. Becker <cmbecker69@gmx.de>
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Bcal_Month
+class Ocal_Month
 {
     /**
      * The month.
@@ -117,7 +117,7 @@ class Bcal_Month
     /**
      * Returns the next month.
      *
-     * @return Bcal_Month
+     * @return Ocal_Month
      */
     public function getNextMonth()
     {
@@ -127,7 +127,7 @@ class Bcal_Month
             $month = 1;
             $year += 1;
         }
-        return new Bcal_Month($month, $year);
+        return new Ocal_Month($month, $year);
     }
 }
 

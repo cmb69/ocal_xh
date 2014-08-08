@@ -1,56 +1,56 @@
 /*
  * Calendars
  */
-.bcal_calendars {
+.ocal_calendars {
     text-align: center;
 }
-.bcal_pagination {
+.ocal_pagination {
     margin: 1em 0;
 }
-.bcal_pagination a {
+.ocal_pagination a {
     margin: 0 1em;
 }
-.bcal_toolbar {
+.ocal_toolbar {
     margin: 1em 0;
 }
-.bcal_toolbar span {
+.ocal_toolbar span {
     display: inline-block;
     width: 1em;
     height: 1em;
     margin-right: 1em;
     vertical-align: middle;
 }
-.bcal_save {
+.ocal_save {
     vertical-align: middle;
 }
-.bcal_calendar {
+.ocal_calendar {
     display: inline-block;
     margin: 0 0.5em 1em 0.5em;
     padding: 0 0.5em;
     vertical-align: top;
     border-collapse: collapse;
 }
-.bcal_calendar td {
+.ocal_calendar td {
     padding: 0.2em;
     text-align: center;
 }
 
-.bcal_state_0, .bcal_state_1, .bcal_state_2, .bcal_state_3 {
+.ocal_state_0, .ocal_state_1, .ocal_state_2, .ocal_state_3 {
     border: 1px solid #888;
 }
-.bcal_state_0 {
+.ocal_state_0 {
     background: white;
     color: black;
 }
-.bcal_state_1 {
+.ocal_state_1 {
     background: green;
     color: white;
 }
-.bcal_state_2 {
+.ocal_state_2 {
     background: yellow;
     color: black;
 }
-.bcal_state_3 {
+.ocal_state_3 {
     background: red;
     color: white;
 }
@@ -58,9 +58,9 @@
 /*
  * Back-end
  */
-.bcal_logo {
+.ocal_logo {
     float: left;
 }
-.bcal_license {
+.ocal_license {
     text-align: justify;
 }

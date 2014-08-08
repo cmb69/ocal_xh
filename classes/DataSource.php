@@ -6,29 +6,29 @@
  * PHP version 5
  *
  * @category  CMSimple_XH
- * @package   Bcal
+ * @package   Ocal
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014 Christoph M. Becker <http://3-magi.net/>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @version   SVN: $Id$
- * @link      http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
 /**
  * The database.
  *
  * @category CMSimple_XH
- * @package  Bcal
+ * @package  Ocal
  * @author   Christoph M. Becker <cmbecker69@gmx.de>
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Bcal_Db
+class Ocal_Db
 {
     /**
      * Finds and returns an occupancy object.
      *
-     * @return Bcal_Occupancy
+     * @return Ocal_Occupancy
      */
     public function findOccupancy()
     {
@@ -41,18 +41,18 @@ class Bcal_Db
         if ($contents) {
             return unserialize($contents); // FIXME: error check
         } else {
-            return new Bcal_Occupancy();
+            return new Ocal_Occupancy();
         }
     }
 
     /**
      * Saves an occupancy.
      *
-     * @param Bcal_Occupancy $occupancy An occupancy.
+     * @param Ocal_Occupancy $occupancy An occupancy.
      *
      * @return void
      */
-    public function saveOccupancy(Bcal_Occupancy $occupancy)
+    public function saveOccupancy(Ocal_Occupancy $occupancy)
     {
         $filename = $this->getFoldername() . 'test.dat';
         file_put_contents($filename, serialize($occupancy));
@@ -81,12 +81,12 @@ class Bcal_Db
  * The occupancies.
  *
  * @category CMSimple_XH
- * @package  Bcal
+ * @package  Ocal
  * @author   Christoph M. Becker <cmbecker69@gmx.de>
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Bcal_XH
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Bcal_Occupancy
+class Ocal_Occupancy
 {
     /**
      * The states.
