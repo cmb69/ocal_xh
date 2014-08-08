@@ -26,7 +26,7 @@
     }
 
     function initEditor(element) {
-        var currentState, saveButton, statusbar;
+        var occupancy, currentState, saveButton, statusbar;
 
         function warning(event) {
             var confirmation = "Unsaved changes!";
@@ -95,7 +95,10 @@
             }
 
             request = new XMLHttpRequest();
-            request.open("POST", location.href + "&ocal_save=1");
+            request.open(
+                "POST",
+                location.href + "&ocal_name=" + occupancy + "&ocal_save=1"
+            );
             request.setRequestHeader("Content-Type", "application/json");
             payload = JSON.stringify(getAllCalendarStates());
             request.onreadystatechange = onReadyChangeState;
@@ -119,6 +122,8 @@
 
         function init() {
             var elements, i;
+
+            occupancy = element.getAttribute("data-name");
 
             elements = element.querySelectorAll(".ocal_calendar");
             for (i = 0; i < elements.length; i += 1) {

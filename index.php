@@ -53,17 +53,18 @@ define('OCAL_VERSION', '@OCAL_VERSION@');
 /**
  * Renders a calendar.
  *
- * @param int $monthCount A month count.
+ * @param string $name       A calendar name.
+ * @param int    $monthCount A month count.
  *
  * @return string (X)HTML.
  *
  * @global Ocal_Controller The plugin controller.
  */
-function ocal($monthCount = 1)
+function ocal($name, $monthCount = 1)
 {
     global $_Ocal_controller;
 
-    return $_Ocal_controller->renderCalendar($monthCount);
+    return $_Ocal_controller->renderCalendar($name, $monthCount);
 }
 
 /**

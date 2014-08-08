@@ -140,18 +140,19 @@ EOT;
     /**
      * Renders a calendar.
      *
-     * @param int $monthCount A month count.
+     * @param string $name       A calendar name.
+     * @param int    $monthCount A month count.
      *
      * @return string (X)HTML.
      */
-    public function renderCalendar($monthCount)
+    public function renderCalendar($name, $monthCount)
     {
-        if (XH_ADM && isset($_GET['ocal_save'])) {
-            echo $this->saveStates();
+        if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $name) {
+            echo $this->saveStates($name);
             exit;
         }
         $db = new Ocal_Db();
-        $occupancy = $db->findOccupancy();
+        $occupancy = $db->findOccupancy($name);
         $view = new Ocal_Calendars($occupancy);
         return $view->render($monthCount);
     }
@@ -159,16 +160,18 @@ EOT;
     /**
      * Saves the states.
      *
+     * @param string $name A calendar name.
+     *
      * @return void
      */
-    protected function saveStates()
+    protected function saveStates($name)
     {
         global $plugin_tx;
 
         $payload = file_get_contents('php://input');
         $states = XH_decodeJson($payload);
         $db = new Ocal_Db();
-        $occupancy = $db->findOccupancy();
+        $occupancy = $db->findOccupancy($name);
         foreach (get_object_vars($states) as $month => $states) {
             foreach ($states as $i => $state) {
                 $date = sprintf('%s-%02d', $month, $i + 1);
@@ -241,7 +244,8 @@ class Ocal_Calendars
     public function render($monthCount)
     {
         $this->emitScriptElements();
-        $html = '<div class="ocal_calendars">'
+        $html = '<div class="ocal_calendars" data-name="'
+            . $this->occupancy->getName()  . '">'
             . $this->renderPagination();
         if (XH_ADM) {
             $html .= $this->renderToolbar()

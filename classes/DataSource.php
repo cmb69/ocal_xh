@@ -28,21 +28,26 @@ class Ocal_Db
     /**
      * Finds and returns an occupancy object.
      *
+     * @param string $name An occupancy name.
+     *
      * @return Ocal_Occupancy
      */
-    public function findOccupancy()
+    public function findOccupancy($name)
     {
-        $filename = $this->getFoldername() . 'test.dat';
+        $filename = $this->getFoldername() . $name . '.dat';
         if (is_readable($filename)) {
             $contents = file_get_contents($filename);
         } else {
             $contents = false;
         }
         if ($contents) {
-            return unserialize($contents); // FIXME: error check
+            // FIXME: error check
+            $occupancy = unserialize($contents);
+            $occupancy->setName($name);
         } else {
-            return new Ocal_Occupancy();
+            $occupancy = new Ocal_Occupancy($name);
         }
+        return $occupancy;
     }
 
     /**
@@ -54,7 +59,7 @@ class Ocal_Db
      */
     public function saveOccupancy(Ocal_Occupancy $occupancy)
     {
-        $filename = $this->getFoldername() . 'test.dat';
+        $filename = $this->getFoldername() . $occupancy->getName() . '.dat';
         file_put_contents($filename, serialize($occupancy));
     }
 
@@ -86,8 +91,15 @@ class Ocal_Db
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_Occupancy
+class Ocal_Occupancy implements Serializable
 {
+    /**
+     * The name.
+     *
+     * @var string
+     */
+    protected $name;
+
     /**
      * The states.
      *
@@ -98,11 +110,36 @@ class Ocal_Occupancy
     /**
      * Initializes a new instance.
      *
+     * @param string $name A name.
+     *
      * @return void
      */
-    public function __construct()
+    public function __construct($name)
     {
+        $this->name = (string) $name;
         $this->states = array();
+    }
+
+    /**
+     * Returns the name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Sets the name.
+     *
+     * @param string $name A name.
+     *
+     * @return void
+     */
+    public function setName($name)
+    {
+        $this->name = (string) $name;
     }
 
     /**
@@ -136,6 +173,28 @@ class Ocal_Occupancy
         } else {
             unset($this->states[$date]);
         }
+    }
+
+    /**
+     * Returns the serialized representation.
+     *
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize($this->states);
+    }
+
+    /**
+     * Sets the internal state.
+     *
+     * @param string $data A serialized representation.
+     *
+     * @return void
+     */
+    public function unserialize($data)
+    {
+        $this->states = unserialize($data);
     }
 }
 

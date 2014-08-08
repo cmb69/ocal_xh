@@ -77,7 +77,7 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
             array(
                 'tag' => 'table',
                 'attributes' => array('class' => 'ocal_calendar')
-            ), $this->subject->renderCalendar(3)
+            ), $this->subject->renderCalendar('test', 3)
         );
     }
 }
