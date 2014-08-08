@@ -9,8 +9,6 @@
 (function () {
     "use strict";
 
-    var currentState, saveButton;
-
     function addListener(element, event, listener) {
         if (typeof element.addEventListener !== "undefined") {
             element.addEventListener(event, listener);
@@ -27,124 +25,118 @@
         }
     }
 
-    function warning(event) {
-        var confirmation = "Unsaved changes!";
+    function initEditor(element) {
+        var currentState, saveButton;
 
-        (event || window.event).returnValue = confirmation;
-        return confirmation;
-    }
+        function warning(event) {
+            var confirmation = "Unsaved changes!";
 
-    function onClick(event) {
-        var target;
-
-        if (typeof currentState !== "number") {
-            return;
+            (event || window.event).returnValue = confirmation;
+            return confirmation;
         }
-        event = event || window.event;
-        target = event.target || event.srcElement;
-        if (target.className.indexOf("ocal_state_") === 0) {
-            target.className = "ocal_state_" + currentState;
-            saveButton.disabled = false;
-            addListener(window, "beforeunload", warning);
-        }
-    }
 
-    function getCalendarStates(calendar) {
-        var states, cells, i, cell, state;
+        function onClick(event) {
+            var target;
 
-        states = [];
-        cells = calendar.getElementsByTagName("td");
-        for (i = 0; i < cells.length; i += 1) {
-            cell = cells[i];
-            if (cell.className.indexOf("ocal_state_") === 0) {
-                state = cell.className.substr(("ocal_state_").length);
-                states.push(state);
+            if (typeof currentState !== "number") {
+                return;
+            }
+            event = event || window.event;
+            target = event.target || event.srcElement;
+            if (target.className.indexOf("ocal_state_") === 0) {
+                target.className = "ocal_state_" + currentState;
+                saveButton.disabled = false;
+                addListener(window, "beforeunload", warning);
             }
         }
-        return states;
-    }
 
-    function getAllCalendarStates() {
-        var states, tables, i, table, month;
+        function getCalendarStates(calendar) {
+            var states, cells, i, cell;
 
-        states = {};
-        tables = document.getElementsByTagName("table");
-        for (i = 0; i < tables.length; i += 1) {
-            table = tables[i];
-            if (table.className === "ocal_calendar") {
-                month = table.getAttribute("data-month");
-                states[month] = getCalendarStates(table);
+            states = [];
+            cells = calendar.getElementsByTagName("td");
+            for (i = 0; i < cells.length; i += 1) {
+                cell = cells[i];
+                if (cell.className.indexOf("ocal_state_") === 0) {
+                    states.push(cell.className.substr(("ocal_state_").length));
+                }
             }
+            return states;
         }
-        return states;
-    }
 
-    function addSaveHandler() {
-        var buttons, i, button;
+        function getAllCalendarStates() {
+            var states, calendars, i, calendar, month;
 
-        function save() {
+            states = {};
+            calendars = element.querySelectorAll(".ocal_calendar");
+            for (i = 0; i < calendars.length; i += 1) {
+                calendar = calendars[i];
+                month = calendar.getAttribute("data-month");
+                states[month] = getCalendarStates(calendar);
+            }
+            return states;
+        }
+
+        function onSave() {
             var request, payload;
 
-            request = new XMLHttpRequest();
-            request.open("POST", location.href + "&ocal_save=1");
-            request.setRequestHeader("Content-Type", "application/json");
-            // FIXME: JSON.stringify
-            payload = JSON.stringify(getAllCalendarStates());
             // FIXME: error reporting
-            request.onreadystatechange = function () {
+            function onReadyChangeState() {
                 if (request.readyState === 4 && request.status === 200) {
                     saveButton.disabled = true;
                     removeListener(window, "beforeunload", warning);
                 }
-            };
+            }
+
+            request = new XMLHttpRequest();
+            request.open("POST", location.href + "&ocal_save=1");
+            request.setRequestHeader("Content-Type", "application/json");
+            payload = JSON.stringify(getAllCalendarStates());
+            request.onreadystatechange = onReadyChangeState;
             request.send(payload);
         }
 
-        buttons = document.getElementsByTagName("button");
-        for (i = 0; i < buttons.length; i += 1) {
-            button = buttons[i];
-            if (button.className === "ocal_save") {
-                saveButton = button;
-                saveButton.onclick = save;
-            }
-        }
-    }
-
-    function makeClickable() {
-        var tables, i, table;
-
-        tables = document.getElementsByTagName("table");
-        for (i = 0; i < tables.length; i += 1) {
-            table = tables[i];
-            if (table.className === "ocal_calendar") {
-                table.onclick = onClick;
-            }
-        }
-    }
-
-    function init() {
-        var states, i;
-
-        function selectState(event) {
+        function onSelectState(event) {
             var target, cells, i;
 
             event = event || window.event;
             target = event.target || event.srcElement;
             currentState = +target.className.substr("ocal_state_".length);
             target.style.borderWidth = "3px";
-            cells = document.querySelectorAll(".ocal_calendar td");
+            cells = element.querySelectorAll(".ocal_calendar td");
             for (i = 0; i < cells.length; i += 1) {
                 cells[i].style.cursor = "pointer";
             }
         }
 
-        states = document.querySelectorAll(".ocal_toolbar span");
-        for (i = 0; i < states.length; i += 1) {
-            states[i].onclick = selectState;
+        function init() {
+            var elements, i;
+
+            elements = element.querySelectorAll(".ocal_calendar");
+            for (i = 0; i < elements.length; i += 1) {
+                elements[i].onclick = onClick;
+            }
+
+            elements = element.querySelectorAll(".ocal_toolbar span");
+            for (i = 0; i < elements.length; i += 1) {
+                elements[i].onclick = onSelectState;
+            }
+
+            saveButton = element.querySelector(".ocal_save");
+            saveButton.onclick = onSave;
+        }
+
+        init();
+    }
+
+    function init() {
+        var editors, i;
+
+        editors = document.querySelectorAll(".ocal_calendars");
+        for (i = 0; i < editors.length; i += 1) {
+            initEditor(editors[i]);
         }
     }
 
-    makeClickable();
-    addSaveHandler();
     init();
 }());
