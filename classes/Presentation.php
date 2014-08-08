@@ -280,10 +280,10 @@ class Ocal_Calendars
     protected function renderPagination()
     {
         return '<div class="ocal_pagination">'
-            . $this->renderPaginationLink(0, -1, 'prev_year')
-            . $this->renderPaginationLink(-1, 0, 'prev_month')
-            . $this->renderPaginationLink(false, false, 'today')
-            . $this->renderPaginationLink(1, 0, 'next_month')
+            . $this->renderPaginationLink(0, -1, 'prev_year') . ' '
+            . $this->renderPaginationLink(-1, 0, 'prev_month') . ' '
+            . $this->renderPaginationLink(false, false, 'today') . ' '
+            . $this->renderPaginationLink(1, 0, 'next_month') . ' '
             . $this->renderPaginationLink(0, 1, 'next_year')
             . '</div>';
     }
