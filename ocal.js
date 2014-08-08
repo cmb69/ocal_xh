@@ -26,7 +26,7 @@
     }
 
     function initEditor(element) {
-        var currentState, saveButton;
+        var currentState, saveButton, statusbar;
 
         function warning(event) {
             var confirmation = "Unsaved changes!";
@@ -36,7 +36,7 @@
         }
 
         function onClick(event) {
-            var target;
+            var target, state;
 
             if (typeof currentState !== "number") {
                 return;
@@ -44,9 +44,13 @@
             event = event || window.event;
             target = event.target || event.srcElement;
             if (target.className.indexOf("ocal_state_") === 0) {
-                target.className = "ocal_state_" + currentState;
-                saveButton.disabled = false;
-                addListener(window, "beforeunload", warning);
+                state = +target.className.substr(("ocal_state_").length);
+                if (state !== currentState) {
+                    target.className = "ocal_state_" + currentState;
+                    saveButton.disabled = false;
+                    statusbar.innerHTML = "";
+                    addListener(window, "beforeunload", warning);
+                }
             }
         }
 
@@ -78,13 +82,15 @@
         }
 
         function onSave() {
-            var request, payload;
+            var request, payload, loaderbar;
 
             // FIXME: error reporting
             function onReadyChangeState() {
                 if (request.readyState === 4 && request.status === 200) {
                     saveButton.disabled = true;
                     removeListener(window, "beforeunload", warning);
+                    loaderbar.style.display = "none";
+                    statusbar.innerHTML = request.responseText;
                 }
             }
 
@@ -94,6 +100,8 @@
             payload = JSON.stringify(getAllCalendarStates());
             request.onreadystatechange = onReadyChangeState;
             request.send(payload);
+            loaderbar = element.querySelector(".ocal_loaderbar");
+            loaderbar.style.display = "block";
         }
 
         function onSelectState(event) {
@@ -124,6 +132,7 @@
 
             saveButton = element.querySelector(".ocal_save");
             saveButton.onclick = onSave;
+            statusbar = element.querySelector(".ocal_statusbar");
         }
 
         init();

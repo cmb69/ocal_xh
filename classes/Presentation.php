@@ -147,7 +147,7 @@ EOT;
     public function renderCalendar($monthCount)
     {
         if (XH_ADM && isset($_GET['ocal_save'])) {
-            $this->saveStates();
+            echo $this->saveStates();
             exit;
         }
         $db = new Ocal_Db();
@@ -163,6 +163,8 @@ EOT;
      */
     protected function saveStates()
     {
+        global $plugin_tx;
+
         $payload = file_get_contents('php://input');
         $states = XH_decodeJson($payload);
         $db = new Ocal_Db();
@@ -174,6 +176,7 @@ EOT;
             }
         }
         $db->saveOccupancy($occupancy);
+        return XH_message('success', $plugin_tx['ocal']['message_saved']);
     }
 }
 
@@ -241,7 +244,9 @@ class Ocal_Calendars
         $html = '<div class="ocal_calendars">'
             . $this->renderPagination();
         if (XH_ADM) {
-            $html .= $this->renderToolbar();
+            $html .= $this->renderToolbar()
+                . $this->renderLoaderbar()
+                . $this->renderStatusbar();
         }
         $month = new Ocal_Month($this->month, $this->year);
         while ($monthCount) {
@@ -342,6 +347,33 @@ class Ocal_Calendars
             . $plugin_tx['ocal']['label_save'] . '</button>'
             . '</div>';
         return $html;
+    }
+
+    /**
+     * Renders the Ajax loader bar.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The paths of system files and folders.
+     */
+    protected function renderLoaderbar()
+    {
+        global $pth;
+
+        $src = $pth['folder']['plugins'] . 'ocal/images/ajax-loader-bar.gif';
+        return '<div class="ocal_loaderbar">'
+            . tag('img src="' . $src . '" alt="loading"')
+            . '</div>';
+    }
+
+    /**
+     * Renders the status bar.
+     *
+     * @return string (X)HTML.
+     */
+    protected function renderStatusbar()
+    {
+        return '<div class="ocal_statusbar"></div>';
     }
 }
 

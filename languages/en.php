@@ -8,6 +8,7 @@ $plugin_tx['ocal']['label_today']="Today";
 $plugin_tx['ocal']['label_next_month']="Next&nbsp;Month";
 $plugin_tx['ocal']['label_next_year']="Next&nbsp;Year";
 $plugin_tx['ocal']['label_save']="Save";
+$plugin_tx['ocal']['message_saved']="Successfully saved.";
 $plugin_tx['ocal']['alt_logo']="Calendar";
 
 ?>

@@ -7,8 +7,11 @@
 .ocal_pagination {
     margin: 1em 0;
 }
-.ocal_toolbar {
+.ocal_toolbar, .ocal_loaderbar {
     margin: 1em 0;
+}
+.ocal_loaderbar {
+    display: none;
 }
 .ocal_toolbar span {
     display: inline-block;
