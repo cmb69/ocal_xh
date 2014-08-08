@@ -7,6 +7,7 @@ $plugin_tx['bcal']['label_prev_month']="Previous Month";
 $plugin_tx['bcal']['label_today']="Today";
 $plugin_tx['bcal']['label_next_month']="Next Month";
 $plugin_tx['bcal']['label_next_year']="Next Year";
+$plugin_tx['bcal']['label_save']="Save";
 $plugin_tx['bcal']['alt_logo']="Calendar";
 
 ?>

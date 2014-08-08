@@ -46,6 +46,19 @@ class Bcal_Db
     }
 
     /**
+     * Saves an occupancy.
+     *
+     * @param Bcal_Occupancy $occupancy An occupancy.
+     *
+     * @return void
+     */
+    public function saveOccupancy(Bcal_Occupancy $occupancy)
+    {
+        $filename = $this->getFoldername() . 'test.dat';
+        file_put_contents($filename, serialize($occupancy));
+    }
+
+    /**
      * Returns the data foldername.
      *
      * @return string
@@ -83,6 +96,16 @@ class Bcal_Occupancy
     protected $states;
 
     /**
+     * Initializes a new instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->states = array();
+    }
+
+    /**
      * Returns a state.
      *
      * @param string $date An ISO date (YYYY-MM-DD).
@@ -108,7 +131,11 @@ class Bcal_Occupancy
      */
     public function setState($date, $state)
     {
-        $this->states[$date] = $state;
+        if ($state) {
+            $this->states[$date] = $state;
+        } else {
+            unset($this->states[$date]);
+        }
     }
 }
 

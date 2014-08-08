@@ -146,10 +146,34 @@ EOT;
      */
     public function renderCalendar($monthCount)
     {
+        if (XH_ADM && isset($_GET['bcal_save'])) {
+            $this->saveStates();
+            exit;
+        }
         $db = new BCal_Db();
         $occupancy = $db->findOccupancy();
         $view = new Bcal_Calendars($occupancy);
         return $view->render($monthCount);
+    }
+
+    /**
+     * Saves the states.
+     *
+     * @return void
+     */
+    protected function saveStates()
+    {
+        $payload = file_get_contents('php://input');
+        $states = XH_decodeJson($payload);
+        $db = new BCal_Db();
+        $occupancy = $db->findOccupancy();
+        foreach (get_object_vars($states) as $month => $states) {
+            foreach ($states as $i => $state) {
+                $date = sprintf('%s-%02d', $month, $i + 1);
+                $occupancy->setState($date, $state);
+            }
+        }
+        $db->saveOccupancy($occupancy);
     }
 }
 
@@ -213,8 +237,12 @@ class Bcal_Calendars
      */
     public function render($monthCount)
     {
+        $this->emitScriptElements();
         $html = '<div class="bcal_calendars">'
             . $this->renderPagination();
+        if (XH_ADM) {
+            $html .= $this->renderToolbar();
+        }
         $month = new Bcal_Month($this->month, $this->year);
         while ($monthCount) {
             $calendar = new Bcal_MonthCalendar($month, $this->occupancy);
@@ -224,6 +252,24 @@ class Bcal_Calendars
         }
         $html .= '</div>';
         return $html;
+    }
+
+    /**
+     * Emits the script elements.
+     *
+     * @return void
+     *
+     * @global array The paths of system files and folders.
+     * @global string The (X)HTML to insert at the bottom of the body element.
+     */
+    protected function emitScriptElements()
+    {
+        global $pth, $bjs;
+
+        if (XH_ADM) {
+            $bjs .= '<script type="text/javascript" src="'
+                . $pth['folder']['plugins'] . 'bcal/bcal.js"></script>';
+        }
     }
 
     /**
@@ -276,8 +322,28 @@ class Bcal_Calendars
         return '<a href="' . $url . '">' . $plugin_tx['bcal']['label_'. $label]
             . '</a>';
     }
-}
 
+    /**
+     * Renders the toolbar.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The localization of the plugins.
+     */
+    protected function renderToolbar()
+    {
+        global $plugin_tx;
+
+        $html = '<div class="bcal_toolbar">';
+        for ($i = 0; $i <= 3; $i++) {
+            $html .= '<span class="bcal_state_' . $i . '"></span>';
+        }
+        $html .= '<button type="button" class="bcal_save" disabled="disabled">'
+            . $plugin_tx['bcal']['label_save'] . '</button>'
+            . '</div>';
+        return $html;
+    }
+}
 
 /**
  * The month calendars.
@@ -326,12 +392,16 @@ class Bcal_MonthCalendar
     public function render()
     {
         $day = $this->month->getDayOffset();
-        $html = '<table class="bcal_calendar">'
+        $html = '<table class="bcal_calendar" data-month="'
+            . $this->month->getIso() . '">'
             . $this->renderHeading()
             . $this->renderDaynames();
         for ($row = 0; $row < 6; $row++) {
             $html .= $this->renderWeekStartingWith($day);
             $day += 7;
+            if ($day > $this->month->getLastDay()) {
+                break;
+            }
         }
         $html .= '</table>';
         return $html;

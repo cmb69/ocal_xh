@@ -1,5 +1,5 @@
 /*
- * Calendar
+ * Calendars
  */
 .bcal_calendars {
     text-align: center;
@@ -10,23 +10,48 @@
 .bcal_pagination a {
     margin: 0 1em;
 }
+.bcal_toolbar {
+    margin: 1em 0;
+}
+.bcal_toolbar span {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 1em;
+    vertical-align: middle;
+}
+.bcal_save {
+    vertical-align: middle;
+}
 .bcal_calendar {
     display: inline-block;
     margin: 0 0.5em 1em 0.5em;
-    border: 1px solid #888;
     padding: 0 0.5em;
+    vertical-align: top;
+    border-collapse: collapse;
 }
 .bcal_calendar td {
-    width: 1em;
-    height: 1em;
-    text-align: right;
+    padding: 0.2em;
+    text-align: center;
 }
 
-.bcal_state_0, .bcal_state_1 {
+.bcal_state_0, .bcal_state_1, .bcal_state_2, .bcal_state_3 {
     border: 1px solid #888;
+}
+.bcal_state_0 {
+    background: white;
+    color: black;
 }
 .bcal_state_1 {
     background: green;
+    color: white;
+}
+.bcal_state_2 {
+    background: yellow;
+    color: black;
+}
+.bcal_state_3 {
+    background: red;
     color: white;
 }
 

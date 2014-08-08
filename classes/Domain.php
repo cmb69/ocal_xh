@@ -105,6 +105,16 @@ class Bcal_Month
     }
 
     /**
+     * Returns an ISO formatted date (YYYY-MM).
+     *
+     * @return string
+     */
+    public function getIso()
+    {
+        return sprintf('%04d-%02d', $this->year, $this->month);
+    }
+
+    /**
      * Returns the next month.
      *
      * @return Bcal_Month

@@ -48,7 +48,10 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
 
         vfsStreamWrapper::register();
         vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
-        $pth['folder']['content'] = vfsStream::url('test/');
+        $pth['folder'] = array(
+            'content' => vfsStream::url('test/'),
+            'plugins' => vfsStream::url('test/')
+        );
         $plugin_tx['bcal'] = array(
             'date_months' => 'January,February,March,April,May,June,July,August,'
                 . 'September,October,November,December',
@@ -57,7 +60,8 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
             'label_prev_month' => 'Previous Month',
             'label_today' => 'Today',
             'label_next_month' => 'Next Month',
-            'label_next_year' => 'Next Year'
+            'label_next_year' => 'Next Year',
+            'label_save' => 'Save'
         );
     }
 
