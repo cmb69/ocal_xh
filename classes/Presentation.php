@@ -148,6 +148,7 @@ EOT;
     public function renderCalendar($name, $monthCount)
     {
         if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $name) {
+            ob_end_clean(); // necessary, if called from template
             echo $this->saveStates($name);
             exit;
         }
