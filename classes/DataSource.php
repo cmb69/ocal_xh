@@ -69,7 +69,7 @@ class Ocal_Db
     {
         global $pth;
 
-        $foldername = $pth['folder']['content'] . 'occupancy/';
+        $foldername = $pth['folder']['content'] . 'ocal/';
         if (!file_exists($foldername)) {
             mkdir($foldername, 0777, true);
         }
