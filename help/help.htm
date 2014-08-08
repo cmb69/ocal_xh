@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<title>Ocal_XH - Manual</title>
+<link rel="stylesheet" type="text/css" href="./stylesheet.css">
+</head>
+
+<body>
+
+<h1>Ocal_XH – a CMSimple_XH Plugin</h1>
+<img src="../ocal.png" style="float: left" alt="Calendar">
+<p>Ocal_XH facilitates to present calendars on your website which display the
+occupancy of a certain location or other rental, so visitors can easily see whether
+the item is available on a certain date or interval. Each calendar is only meant
+for a single rental; however, you can display multiple calendars on a single page.</p>
+<p>The plugin does neither provide any actual booking facilities (however, you
+may be able to combine it with a mail form like <a
+href="http://3-magi.net/?CMSimple_XH/Advancedform_XH">Advancedform_XH</a>), nor
+can it be used as an event calendar, such as <a
+href="http://frankziesing.de/cmsimple/en/?Welcome:Calendar">Calendar</a>.</p>
+
+<ul id="nav">
+<li><a href="#notice">Important Notice</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#settings">Settings</a></li>
+<li><a href="#usage">Usage</a>
+<ul>
+<li><a href="#usage-admin">Administration</a></li>
+</ul>
+</li>
+<li><a href="#limitations">Limitations</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#credits">Credits</a></li>
+</ul>
+
+<div id="body">
+
+<p><strong>Please do read this documentation <em>before</em> you encounter any
+problems!</strong></p>
+
+<h2 id="notice">Important Notice</h2>
+<p><strong>Ocal_XH is merely a draft&mdash;many features are missing yet, and
+what is there might change. It is a so called alpha version. Use with utmost
+caution!</strong></p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2 id="requirements">Requirements</h2>
+<p>Ocal_XH is a plugin for CMSimple_XH. It requires CMSimple_XH &ge; 1.6 and
+PHP &ge; 5.1.</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2 id="installation">Installation</h2>
+<p>The installation is done as with many other CMSimple_XH plugins.
+See the <a href="http://www.cmsimple-xh.org/wiki/doku.php/installation">
+CMSimple_XH wiki</a> for further details.</p>
+<ol>
+<li>Backup the data on your server.</li>
+<li>Unzip the distribution on your computer.</li>
+<li>Upload the whole directory ocal/ to your server into CMSimple_XH's plugins/
+directory.</li>
+<li>Set write permissions for the subdirectories css/<!--, config/--> and
+languages/.</li>
+<!--<li>Browse to Ocal_XH's administration (Plugins &rarr; Ocal), and check
+if all requirements are fulfilled.</li>-->
+</ol>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2 id="settings">Settings</h2>
+<p>The plugin's configuration is done as with many other CMSimple_XH plugins in
+the website's back-end. Select Plugins &rarr; Ocal.</p>
+<!--<p>You can change the default settings of Ocal_XH under "Config". Hints for
+the options will be displayed when hovering over the help icon with your
+mouse.</p>-->
+<p>Localization is done under "Language". You can translate the character
+strings to your own language (if there is no appropriate language file
+available), or customize them according to your needs.</p>
+<p>The look of Ocal_XH can be customized under "Stylesheet".</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2 id="usage">Usage</h2>
+<p>To display an occupancy calendar on a page, use:</p>
+<pre>{{{ocal('%OCCUPANCY_NAME%', %NUMBER_OF_MONTHS%);}}}</pre>
+<p>%OCCUPANCY_NAME% is an arbitrary name, that must only consist of the letters
+a-z, the digits 0-9 and minus signs. %NUMBER_OF_MONTHS% specifies the number of
+monthly calendars that shall be displayed simultaneously.</p>
+<p>To display an occupancy calendar in the template, use:</p>
+<pre>&lt;?php echo ocal('%OCCUPANCY_NAME%', %NUMBER_OF_MONTHS%);?&gt;</pre>
+<p>Note that you can put an arbitrary amount of occupancy calendars on a single
+page, even for the same occupancy (what might make sense if you like to present
+a large interval, say a year, on a page, and only a small interval, say a single
+month, in the template).</p>
+<p>Some examples:</p>
+<pre>{{{ocal('holiday-appartment', 12);}}}
+&lt;?php echo ocal('holiday-appartment', 1);?&gt;
+{{{ocal('rickshaw', 2);}}}
+{{{ocal('rubber-raft-1', 6);}}}
+{{{ocal('rubber-raft-2', 6);}}}</pre>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h3 id="usage-admin">Administration</h2>
+<p>The administration of the occupancy calendars happens on the pages where they
+are displayed. When you're logged in as administrator, you'll see a toolbar
+where you can pick one of the available states by clicking it. Then you can
+click individual dates in the displayed calendars to assign them this state.
+When you're finished, you have to save your modifications.</p>
+<p>Currently, four states are available:</p>
+<ul>
+<li>0 (white): non applicable</li>
+<li>1 (green): available</li>
+<li>2 (yellow): reserved or partly available</li>
+<li>3 (red): (fully) booked out</li>
+</ul>
+<p>Note that the administration requires JavaScript and a somewhat contemporary
+browser (e.g. IE < 8 is not supported).</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2 id="limitations">Limitations</h2>
+<p>Currently, the occupancy states are displayed via CSS only, so some visitors
+might not be able to see them.</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2 id="license">License</h2>
+<p>Ocal_XH is licensed under <a
+href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>.</p>
+<p>&copy; 2014 Christoph M. Becker</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2 id="credits">Credits</h2>
+<p>Ocal_XH is inspired by the occcal plugin of <a
+href="http://cmsimple-styles.com/">CMSimple-Styles.com</a>. Many thanks to Jens
+Broecher for having this nice idea.</p>
+<p>The plugin icon is designed by <a
+href="http://deviantdark.deviantart.com/">deviantdark</a>. Many thanks for
+publishing the icon under LGPL.</p>
+<!--<p>This plugin uses free applications icons from <a-->
+<!--href="http://www.aha-soft.com/">Aha-Soft</a>. Many thanks for making these icons-->
+<!--freely available.</p>-->
+<!--<p>Many thanks to the community at the <a-->
+<!--href="http://www.cmsimpleforum.com/">CMSimple_XH forum</a> for tips,-->
+<!--suggestions and testing</p>-->
+<p>And last but not least many thanks to <a href="http://harteg.dk/">Peter
+Harteg</a>, the "father" of CMSimple, and all developers of <a
+href="http://www.cmsimple-xh.org/"> CMSimple_XH</a> without whom this amazing
+CMS wouldn't exist.</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+</div>
+
+</body>
+
+</html>

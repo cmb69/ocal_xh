@@ -1,4 +1,5 @@
 * German localization
-* manuals
 * file locking
-* document CSS requirement
+* i18n of unload confirmation
+* restrict names
+* dehighlight other states after selection
