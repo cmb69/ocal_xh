@@ -61,7 +61,8 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
             'label_today' => 'Today',
             'label_next_month' => 'Next Month',
             'label_next_year' => 'Next Year',
-            'label_save' => 'Save'
+            'label_save' => 'Save',
+            'message_unsaved_changes' => 'Unsaved changes will be lost'
         );
     }
 
