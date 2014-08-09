@@ -147,6 +147,13 @@ EOT;
      */
     public function renderCalendar($name, $monthCount)
     {
+        global $plugin_tx;
+
+        if (!preg_match('/^[a-z0-9-]+$/', $name)) {
+            return XH_message(
+                'fail', $plugin_tx['ocal']['error_occupancy_name']
+            );
+        }
         if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $name) {
             ob_end_clean(); // necessary, if called from template
             echo $this->saveStates($name);

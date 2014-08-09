@@ -9,6 +9,7 @@ $plugin_tx['ocal']['label_next_month']="Next&nbsp;Month";
 $plugin_tx['ocal']['label_next_year']="Next&nbsp;Year";
 $plugin_tx['ocal']['label_save']="Save";
 $plugin_tx['ocal']['message_saved']="Successfully saved.";
+$plugin_tx['ocal']['error_occupancy_name']="An occupancy name may only contain the letters a-z, the digits 0-9 and minus signs!";
 $plugin_tx['ocal']['alt_logo']="Calendar";
 
 ?>
