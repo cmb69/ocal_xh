@@ -276,15 +276,23 @@ class Ocal_Calendars
      *
      * @return void
      *
-     * @global array The paths of system files and folders.
+     * @global array  The paths of system files and folders.
      * @global string The (X)HTML to insert at the bottom of the body element.
+     * @global array  The localization of the plugins.
      */
     protected function emitScriptElements()
     {
-        global $pth, $bjs;
+        global $pth, $bjs, $plugin_tx;
 
         if (XH_ADM) {
-            $bjs .= '<script type="text/javascript" src="'
+            $config = array(
+                'message_unsaved_changes'
+                    => $plugin_tx['ocal']['message_unsaved_changes']
+            );
+            $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
+                . 'var OCAL = ' . XH_encodeJson($config) . ';'
+                . '/* ]]> */</script>'
+                . '<script type="text/javascript" src="'
                 . $pth['folder']['plugins'] . 'ocal/ocal.js"></script>';
         }
     }

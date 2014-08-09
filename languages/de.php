@@ -9,6 +9,7 @@ $plugin_tx['ocal']['label_next_month']="Nächster&nbsp;Monat";
 $plugin_tx['ocal']['label_next_year']="Nächstes&nbsp;Jahr";
 $plugin_tx['ocal']['label_save']="Speichern";
 $plugin_tx['ocal']['message_saved']="Erfolgreich gespeichert.";
+$plugin_tx['ocal']['message_unsaved_changes']="Es gibt ungesicherte Änderungen, die beim Verlassen der Seite verloren gehen!";
 $plugin_tx['ocal']['error_occupancy_name']="Ein Belegungs-Name darf nur die Buchstaben a-z, die Ziffern 0-9 and Minus-Zeichen enthalten!";
 $plugin_tx['ocal']['alt_logo']="Kalender";
 

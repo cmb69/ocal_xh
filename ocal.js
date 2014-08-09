@@ -6,6 +6,8 @@
  * @version   $Id$
  */
 
+/*global OCAL */
+
 (function () {
     "use strict";
 
@@ -29,7 +31,7 @@
         var occupancy, currentState, saveButton, statusbar;
 
         function warning(event) {
-            var confirmation = "Unsaved changes!";
+            var confirmation = OCAL.message_unsaved_changes;
 
             (event || window.event).returnValue = confirmation;
             return confirmation;
