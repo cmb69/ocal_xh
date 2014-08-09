@@ -108,10 +108,14 @@
         }
 
         function onSelectState(event) {
-            var target, cells, i;
+            var target, elements, cells, i;
 
             event = event || window.event;
             target = event.target || event.srcElement;
+            elements = element.querySelectorAll(".ocal_toolbar span");
+            for (i = 0; i < elements.length; i += 1) {
+                elements[i].style.borderWidth = "";
+            }
             currentState = +target.className.substr("ocal_state_".length);
             target.style.borderWidth = "3px";
             cells = element.querySelectorAll(".ocal_calendar td");
