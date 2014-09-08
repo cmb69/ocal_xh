@@ -26,6 +26,33 @@
 class Ocal_Db
 {
     /**
+     * The lock file handle.
+     *
+     * @var resource
+     */
+    protected $lockFile;
+
+    /**
+     * Initializes a new instance.
+     *
+     * @param int $lockMode A locking mode (LOCK_SH or LOCK_EX).
+     */
+    public function __construct($lockMode)
+    {
+        $lockFilename = $this->getFoldername() . '.lock';
+        $this->lockFile = fopen($lockFilename, 'a');
+        flock($this->lockFile, (int) $lockMode);
+    }
+
+    /**
+     * Finalizes an instance.
+     */
+    public function __destruct()
+    {
+        flock($this->lockFile, LOCK_UN);
+    }
+
+    /**
      * Finds and returns an occupancy object.
      *
      * @param string $name An occupancy name.

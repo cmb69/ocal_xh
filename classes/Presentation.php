@@ -163,8 +163,9 @@ EOT;
             echo $this->saveStates($name);
             exit;
         }
-        $db = new Ocal_Db();
+        $db = new Ocal_Db(LOCK_SH);
         $occupancy = $db->findOccupancy($name);
+        $db = null;
         $view = new Ocal_Calendars($occupancy);
         return $view->render($monthCount);
     }
@@ -181,7 +182,7 @@ EOT;
         global $plugin_tx;
 
         $states = XH_decodeJson($_POST['ocal_states']);
-        $db = new Ocal_Db();
+        $db = new Ocal_Db(LOCK_EX);
         $occupancy = $db->findOccupancy($name);
         foreach (get_object_vars($states) as $month => $states) {
             foreach ($states as $i => $state) {
@@ -190,6 +191,7 @@ EOT;
             }
         }
         $db->saveOccupancy($occupancy);
+        $db = null;
         return XH_message('success', $plugin_tx['ocal']['message_saved']);
     }
 }
