@@ -102,7 +102,8 @@
                 location.href + "&ocal_name=" + occupancy + "&ocal_save=1"
             );
             tokenInput = element.querySelector("input[name=xh_csrf_token]");
-            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.setRequestHeader("Content-Type",
+                    "application/x-www-form-urlencoded");
             payload = "ocal_states=" +
                     encodeURIComponent(JSON.stringify(getAllCalendarStates())) +
                     "&xh_csrf_token=" + tokenInput.value;
