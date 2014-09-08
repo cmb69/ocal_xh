@@ -536,7 +536,13 @@ class Ocal_MonthCalendar
                 $this->month->getMonth(), $day
             );
             $state = $this->occupancy->getState($date);
-            return '<td class="ocal_state_' . $state . '">' . $day . '</td>';
+            if ($date == date('Y-m-d')) {
+                $today = ' ocal_today';
+            } else {
+                $today = '';
+            }
+            return '<td class="ocal_state_' . $state . $today . '">' . $day
+                . '</td>';
         } else {
             return '<td>&nbsp;</td>';
         }

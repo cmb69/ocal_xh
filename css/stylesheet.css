@@ -34,6 +34,9 @@
     padding: 0.2em;
     text-align: center;
 }
+.ocal_today {
+    font-weight: bold;
+}
 
 .ocal_state_0, .ocal_state_1, .ocal_state_2, .ocal_state_3 {
     border: 1px solid #888;
