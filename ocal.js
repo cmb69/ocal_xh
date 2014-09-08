@@ -84,7 +84,7 @@
         }
 
         function onSave() {
-            var request, payload, loaderbar;
+            var request, tokenInput, payload, loaderbar;
 
             // FIXME: error reporting
             function onReadyChangeState() {
@@ -101,8 +101,11 @@
                 "POST",
                 location.href + "&ocal_name=" + occupancy + "&ocal_save=1"
             );
-            request.setRequestHeader("Content-Type", "application/json");
-            payload = JSON.stringify(getAllCalendarStates());
+            tokenInput = element.querySelector("input[name=xh_csrf_token]");
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            payload = "ocal_states=" +
+                    encodeURIComponent(JSON.stringify(getAllCalendarStates())) +
+                    "&xh_csrf_token=" + tokenInput.value;
             request.onreadystatechange = onReadyChangeState;
             request.send(payload);
             loaderbar = element.querySelector(".ocal_loaderbar");

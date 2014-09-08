@@ -15,6 +15,7 @@
  */
 
 require_once './vendor/autoload.php';
+require_once '../../cmsimple/classes/CSRFProtection.php';
 require_once './classes/DataSource.php';
 require_once './classes/Domain.php';
 require_once './classes/Presentation.php';
@@ -39,12 +40,13 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
      *
      * @return void
      *
-     * @global array The paths of system files and folders.
-     * @global array The localization of the plugins.
+     * @global array             The paths of system files and folders.
+     * @global array             The localization of the plugins.
+     * @global XH_CSRFProtection The CSRF protector.
      */
     public function setUp()
     {
-        global $pth, $plugin_tx;
+        global $pth, $plugin_tx, $_XH_csrfProtection;
 
         vfsStreamWrapper::register();
         vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
@@ -64,6 +66,8 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
             'label_save' => 'Save',
             'message_unsaved_changes' => 'Unsaved changes will be lost'
         );
+        $_XH_csrfProtection = $this->getMockBuilder('XH_CSRFProtection')
+            ->disableOriginalConstructor()->getMock();
     }
 
     /**

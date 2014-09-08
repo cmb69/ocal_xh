@@ -144,10 +144,13 @@ EOT;
      * @param int    $monthCount A month count.
      *
      * @return string (X)HTML.
+     *
+     * @global array             The localization of the plugins.
+     * @global XH_CRSFProtection The CSRF protector.
      */
     public function renderCalendar($name, $monthCount)
     {
-        global $plugin_tx;
+        global $plugin_tx, $_XH_csrfProtection;
 
         if (!preg_match('/^[a-z0-9-]+$/', $name)) {
             return XH_message(
@@ -155,6 +158,7 @@ EOT;
             );
         }
         if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $name) {
+            $_XH_csrfProtection->check();
             ob_end_clean(); // necessary, if called from template
             echo $this->saveStates($name);
             exit;
@@ -176,8 +180,7 @@ EOT;
     {
         global $plugin_tx;
 
-        $payload = file_get_contents('php://input');
-        $states = XH_decodeJson($payload);
+        $states = XH_decodeJson($_POST['ocal_states']);
         $db = new Ocal_Db();
         $occupancy = $db->findOccupancy($name);
         foreach (get_object_vars($states) as $month => $states) {
@@ -248,12 +251,17 @@ class Ocal_Calendars
      * @param int $monthCount A number of months.
      *
      * @return string (X)HTML.
+     *
+     * @global XH_CSRFProtection The CSRF protector.
      */
     public function render($monthCount)
     {
+        global $_XH_csrfProtection;
+
         $this->emitScriptElements();
         $html = '<div class="ocal_calendars" data-name="'
-            . $this->occupancy->getName()  . '">'
+            . $this->occupancy->getName() . '">'
+            . $_XH_csrfProtection->tokenInput()
             . $this->renderPagination();
         if (XH_ADM) {
             $html .= $this->renderToolbar()
