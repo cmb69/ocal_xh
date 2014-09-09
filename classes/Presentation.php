@@ -393,7 +393,9 @@ class Ocal_Calendars
 
         $html = '<div class="ocal_toolbar">';
         for ($i = 0; $i <= 3; $i++) {
-            $html .= '<span class="ocal_state_' . $i . '"></span>';
+            $alt = $plugin_tx['ocal']['alt_state_' . $i];
+            $title = $alt ? ' title="' . $alt . '"' : '';
+            $html .= '<span class="ocal_state_' . $i . '"' . $title . '></span>';
         }
         $html .= '<button type="button" class="ocal_save" disabled="disabled">'
             . $plugin_tx['ocal']['label_save'] . '</button>'
@@ -551,9 +553,13 @@ class Ocal_MonthCalendar
      * @param int $day A day.
      *
      * @return string (X)HTML.
+     *
+     * @global array The localization of the plugins.
      */
     protected function renderDay($day)
     {
+        global $plugin_tx;
+
         if ($day >= 1 && $day <= $this->month->getLastDay()) {
             $date = sprintf(
                 '%04d-%02d-%02d', $this->month->getYear(),
@@ -565,8 +571,10 @@ class Ocal_MonthCalendar
             } else {
                 $today = '';
             }
-            return '<td class="ocal_state_' . $state . $today . '">' . $day
-                . '</td>';
+            $alt = $plugin_tx['ocal']['alt_state_' . $state];
+            $title = $alt ? ' title="' . $alt . '"' : '';
+            return '<td class="ocal_state_' . $state . $today . '"' . $title . '>'
+                . $day . '</td>';
         } else {
             return '<td>&nbsp;</td>';
         }

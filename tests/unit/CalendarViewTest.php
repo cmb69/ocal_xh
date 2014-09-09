@@ -51,7 +51,7 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
         vfsStreamWrapper::register();
         vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
         $pth['folder'] = array(
-            'content' => vfsStream::url('test/'),
+            'base' => vfsStream::url('test/'),
             'plugins' => vfsStream::url('test/')
         );
         $plugin_tx['ocal'] = array(
@@ -64,6 +64,10 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
             'label_next_month' => 'Next Month',
             'label_next_year' => 'Next Year',
             'label_save' => 'Save',
+            'alt_state_0' => '',
+            'alt_state_1' => 'available',
+            'alt_state_2' => 'reserved',
+            'alt_state_3' => 'booked',
             'message_unsaved_changes' => 'Unsaved changes will be lost'
         );
         $_XH_csrfProtection = $this->getMockBuilder('XH_CSRFProtection')
