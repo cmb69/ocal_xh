@@ -43,6 +43,10 @@ class Ocal_Controller
             if (isset($ocal) && $ocal == 'true') {
                 $this->_handleAdministration();
             }
+        } else {
+            if (isset($_GET['ocal_month']) || isset($_GET['ocal_year'])) {
+                XH_afterPluginLoading(array($this, 'disallowIndexing'));
+            }
         }
     }
 
@@ -135,6 +139,20 @@ EOT;
     <a href="http://3-magi.net/" target="_blank">Christoph M. Becker</a>
 </p>
 EOT;
+    }
+
+    /**
+     * Disallow indexing the page by setting meta robots appropriately.
+     *
+     * @return void
+     *
+     * @global array The configuration of the core.
+     */
+    public function disallowIndexing()
+    {
+        global $cf;
+
+        $cf['meta']['robots'] = 'noindex';
     }
 
     /**
