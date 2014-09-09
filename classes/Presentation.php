@@ -257,10 +257,10 @@ class Ocal_Calendars
     {
         $now = time();
         $this->month = isset($_GET['ocal_month'])
-            ? $_GET['ocal_month']
+            ? max(1, min(12, (int) $_GET['ocal_month']))
             : date('n', $now);
         $this->year = isset($_GET['ocal_year'])
-            ? $_GET['ocal_year']
+            ? (int) $_GET['ocal_year']
             : date('Y', $now);
         $this->occupancy = $occupancy;
     }
