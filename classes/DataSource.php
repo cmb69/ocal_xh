@@ -67,9 +67,7 @@ class Ocal_Db
         } else {
             $contents = false;
         }
-        if ($contents) {
-            // FIXME: error check
-            $occupancy = unserialize($contents);
+        if ($contents && ($occupancy = unserialize($contents))) {
             $occupancy->setName($name);
         } else {
             $occupancy = new Ocal_Occupancy($name);

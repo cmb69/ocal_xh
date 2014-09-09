@@ -86,13 +86,19 @@
         function onSave() {
             var request, tokenInput, payload, loaderbar;
 
-            // FIXME: error reporting
             function onReadyChangeState() {
-                if (request.readyState === 4 && request.status === 200) {
-                    saveButton.disabled = true;
-                    removeListener(window, "beforeunload", warning);
-                    loaderbar.style.display = "none";
-                    statusbar.innerHTML = request.responseText;
+                if (request.readyState === 4) {
+                    if (request.status === 200) {
+                        saveButton.disabled = true;
+                        removeListener(window, "beforeunload", warning);
+                        loaderbar.style.display = "none";
+                        statusbar.innerHTML = request.responseText;
+                    } else {
+                        loaderbar.style.display = "none";
+                        statusbar.innerHTML = "<p class=\"xh_fail\">"
+                                + request.status + " " + request.statusText
+                                + "</p>";
+                    }
                 }
             }
 

@@ -200,6 +200,10 @@ EOT;
         global $plugin_tx;
 
         $states = XH_decodeJson($_POST['ocal_states']);
+        if (!is_object($states)) {
+            header('HTTP/1.0 400 Bad Request');
+            exit;
+        }
         $db = new Ocal_Db(LOCK_EX);
         $occupancy = $db->findOccupancy($name);
         foreach (get_object_vars($states) as $month => $states) {
