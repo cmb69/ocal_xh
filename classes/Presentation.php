@@ -219,7 +219,7 @@ EOT;
 }
 
 /**
- * The calendars.
+ * The abstract views.
  *
  * @category CMSimple_XH
  * @package  Ocal
@@ -227,7 +227,7 @@ EOT;
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_Calendars
+abstract class Ocal_View
 {
     /**
      * The occupancy.
@@ -268,7 +268,19 @@ class Ocal_Calendars
             : date('Y', $now);
         $this->occupancy = $occupancy;
     }
+}
 
+/**
+ * The calendars.
+ *
+ * @category CMSimple_XH
+ * @package  Ocal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
+ */
+class Ocal_Calendars extends Ocal_View
+{
     /**
      * Renders the calendars.
      *
@@ -285,10 +297,10 @@ class Ocal_Calendars
         $this->emitScriptElements();
         $html = '<div class="ocal_calendars" data-name="'
             . $this->occupancy->getName() . '">'
-            . $_XH_csrfProtection->tokenInput()
             . $this->renderPagination();
         if (XH_ADM) {
-            $html .= $this->renderToolbar()
+            $html .= $_XH_csrfProtection->tokenInput()
+                . $this->renderToolbar()
                 . $this->renderLoaderbar()
                 . $this->renderStatusbar();
         }
@@ -393,7 +405,7 @@ class Ocal_Calendars
 
         $html = '<div class="ocal_toolbar">';
         for ($i = 0; $i <= 3; $i++) {
-            $alt = $plugin_tx['ocal']['alt_state_' . $i];
+            $alt = $plugin_tx['ocal']['label_state_' . $i];
             $title = $alt ? ' title="' . $alt . '"' : '';
             $html .= '<span class="ocal_state" data-ocal_state="' . $i . '"'
                 . $title . '></span>';
@@ -433,7 +445,7 @@ class Ocal_Calendars
 }
 
 /**
- * The month calendars.
+ * The abstract month views.
  *
  * @category CMSimple_XH
  * @package  Ocal
@@ -441,7 +453,7 @@ class Ocal_Calendars
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_MonthCalendar
+abstract class Ocal_MonthView
 {
     /**
      * The month.
@@ -470,7 +482,20 @@ class Ocal_MonthCalendar
         $this->month = $month;
         $this->occupancy = $occupancy;
     }
+}
 
+
+/**
+ * The month calendars.
+ *
+ * @category CMSimple_XH
+ * @package  Ocal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
+ */
+class Ocal_MonthCalendar extends Ocal_MonthView
+{
     /**
      * Renders the month calendar.
      *
@@ -568,7 +593,7 @@ class Ocal_MonthCalendar
             );
             $state = $this->occupancy->getState($date);
             $today = ($date == date('Y-m-d')) ? ' ocal_today' : '';
-            $alt = $plugin_tx['ocal']['alt_state_' . $state];
+            $alt = $plugin_tx['ocal']['label_state_' . $state];
             $title = $alt ? ' title="' . $alt . '"' : '';
             return '<td class="ocal_state' . $today . '" data-ocal_state="'
                 . $state . '"' . $title . '>' . $day . '</td>';
