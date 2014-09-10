@@ -395,7 +395,8 @@ class Ocal_Calendars
         for ($i = 0; $i <= 3; $i++) {
             $alt = $plugin_tx['ocal']['alt_state_' . $i];
             $title = $alt ? ' title="' . $alt . '"' : '';
-            $html .= '<span class="ocal_state" data-ocal_state="' . $i . '"' . $title . '></span>';
+            $html .= '<span class="ocal_state" data-ocal_state="' . $i . '"'
+                . $title . '></span>';
         }
         $html .= '<button type="button" class="ocal_save" disabled="disabled">'
             . $plugin_tx['ocal']['label_save'] . '</button>'
