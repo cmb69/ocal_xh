@@ -395,7 +395,7 @@ class Ocal_Calendars
         for ($i = 0; $i <= 3; $i++) {
             $alt = $plugin_tx['ocal']['alt_state_' . $i];
             $title = $alt ? ' title="' . $alt . '"' : '';
-            $html .= '<span class="ocal_state_' . $i . '"' . $title . '></span>';
+            $html .= '<span class="ocal_state" data-ocal_state="' . $i . '"' . $title . '></span>';
         }
         $html .= '<button type="button" class="ocal_save" disabled="disabled">'
             . $plugin_tx['ocal']['label_save'] . '</button>'
@@ -566,15 +566,11 @@ class Ocal_MonthCalendar
                 $this->month->getMonth(), $day
             );
             $state = $this->occupancy->getState($date);
-            if ($date == date('Y-m-d')) {
-                $today = ' ocal_today';
-            } else {
-                $today = '';
-            }
+            $today = ($date == date('Y-m-d')) ? ' ocal_today' : '';
             $alt = $plugin_tx['ocal']['alt_state_' . $state];
             $title = $alt ? ' title="' . $alt . '"' : '';
-            return '<td class="ocal_state_' . $state . $today . '"' . $title . '>'
-                . $day . '</td>';
+            return '<td class="ocal_state' . $today . '" data-ocal_state="'
+                . $state . '"' . $title . '>' . $day . '</td>';
         } else {
             return '<td>&nbsp;</td>';
         }

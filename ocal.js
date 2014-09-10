@@ -45,10 +45,10 @@
             }
             event = event || window.event;
             target = event.target || event.srcElement;
-            if (target.className.indexOf("ocal_state_") === 0) {
-                state = +target.className.substr(("ocal_state_").length);
+            if (target.className.indexOf("ocal_state") > -1) {
+                state = +target.getAttribute("data-ocal_state");
                 if (state !== currentState) {
-                    target.className = "ocal_state_" + currentState;
+                    target.setAttribute("data-ocal_state", currentState);
                     saveButton.disabled = false;
                     statusbar.innerHTML = "";
                     addListener(window, "beforeunload", warning);
@@ -63,8 +63,8 @@
             cells = calendar.getElementsByTagName("td");
             for (i = 0; i < cells.length; i += 1) {
                 cell = cells[i];
-                if (cell.className.indexOf("ocal_state_") === 0) {
-                    states.push(cell.className.substr(("ocal_state_").length));
+                if (cell.className.indexOf("ocal_state") > -1) {
+                    states.push(cell.getAttribute("data-ocal_state"));
                 }
             }
             return states;
@@ -128,9 +128,9 @@
             for (i = 0; i < elements.length; i += 1) {
                 elements[i].style.borderWidth = "";
             }
-            currentState = +target.className.substr("ocal_state_".length);
+            currentState = +target.getAttribute("data-ocal_state");
             target.style.borderWidth = "3px";
-            cells = element.querySelectorAll(".ocal_calendar td");
+            cells = element.querySelectorAll(".ocal_calendar td.ocal_state");
             for (i = 0; i < cells.length; i += 1) {
                 cells[i].style.cursor = "pointer";
             }

@@ -38,22 +38,22 @@
     font-weight: bold;
 }
 
-.ocal_state_0, .ocal_state_1, .ocal_state_2, .ocal_state_3 {
+.ocal_state {
     border: 1px solid #888;
 }
-.ocal_state_0 {
+.ocal_state[data-ocal_state="0"] {
     background: white;
     color: black;
 }
-.ocal_state_1 {
+.ocal_state[data-ocal_state="1"] {
     background: green;
     color: white;
 }
-.ocal_state_2 {
+.ocal_state[data-ocal_state="2"] {
     background: yellow;
     color: black;
 }
-.ocal_state_3 {
+.ocal_state[data-ocal_state="3"] {
     background: red;
     color: white;
 }
