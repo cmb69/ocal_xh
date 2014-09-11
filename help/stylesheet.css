@@ -6,12 +6,12 @@ body {
     background: #ffffe1;
 }
 
-#body {
-    margin-left: 17em;
+p {
+    text-align: justify;
 }
 
-#body p {
-    text-align: justify;
+#body {
+    margin-left: 17em;
 }
 
 #nav {
