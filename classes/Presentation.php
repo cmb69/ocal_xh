@@ -184,7 +184,7 @@ EOT;
         $db = new Ocal_Db(LOCK_SH);
         $occupancy = $db->findOccupancy($name);
         $db = null;
-        $view = new Ocal_Calendars($occupancy);
+        $view = $this->getView($occupancy);
         return $view->render($monthCount);
     }
 
@@ -215,6 +215,24 @@ EOT;
         $db->saveOccupancy($occupancy);
         $db = null;
         return XH_message('success', $plugin_tx['ocal']['message_saved']);
+    }
+
+    /**
+     * Returns the requested view.
+     *
+     * @param Ocal_Occupancy $occupancy An occupancy.
+     *
+     * @return Ocal_View
+     */
+    protected function getView($occupancy)
+    {
+        $mode = isset($_GET['ocal_mode']) ? $_GET['ocal_mode'] : 'calendar';
+        switch ($mode) {
+        case 'list':
+            return new Ocal_ListView($occupancy);
+        default:
+            return new Ocal_Calendars($occupancy);
+        }
     }
 }
 
@@ -251,6 +269,13 @@ abstract class Ocal_View
     protected $year;
 
     /**
+     * The mode ('calendar' or 'list').
+     *
+     * @var string
+     */
+    protected $mode;
+
+    /**
      * Initializes a new instance.
      *
      * @param Ocal_Occupancy $occupancy An occupancy.
@@ -268,77 +293,28 @@ abstract class Ocal_View
             : date('Y', $now);
         $this->occupancy = $occupancy;
     }
-}
 
-/**
- * The calendars.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
-class Ocal_Calendars extends Ocal_View
-{
     /**
-     * Renders the calendars.
-     *
-     * @param int $monthCount A number of months.
+     * Renders a link to switch the view mode.
      *
      * @return string (X)HTML.
      *
-     * @global XH_CSRFProtection The CSRF protector.
-     */
-    public function render($monthCount)
-    {
-        global $_XH_csrfProtection;
-
-        $this->emitScriptElements();
-        $html = '<div class="ocal_calendars" data-name="'
-            . $this->occupancy->getName() . '">'
-            . $this->renderPagination();
-        if (XH_ADM) {
-            $html .= $_XH_csrfProtection->tokenInput()
-                . $this->renderToolbar()
-                . $this->renderLoaderbar()
-                . $this->renderStatusbar();
-        }
-        $month = new Ocal_Month($this->month, $this->year);
-        while ($monthCount) {
-            $calendar = new Ocal_MonthCalendar($month, $this->occupancy);
-            $html .= $calendar->render();
-            $monthCount--;
-            $month = $month->getNextMonth();
-        }
-        $html .= '</div>';
-        return $html;
-    }
-
-    /**
-     * Emits the script elements.
-     *
-     * @return void
-     *
-     * @global array  The paths of system files and folders.
-     * @global string The (X)HTML to insert at the bottom of the body element.
+     * @global string The script name.
+     * @global string The requested page URL.
      * @global array  The localization of the plugins.
      */
-    protected function emitScriptElements()
+    protected function renderModeLink()
     {
-        global $pth, $bjs, $plugin_tx;
+        global $sn, $su, $plugin_tx;
 
-        if (XH_ADM) {
-            $config = array(
-                'message_unsaved_changes'
-                    => $plugin_tx['ocal']['message_unsaved_changes']
-            );
-            $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
-                . 'var OCAL = ' . XH_encodeJson($config) . ';'
-                . '/* ]]> */</script>'
-                . '<script type="text/javascript" src="'
-                . $pth['folder']['plugins'] . 'ocal/ocal.js"></script>';
+        $url = $sn . '?' . $su;
+        if ($this->mode == 'calendar') {
+            $url .= '&amp;ocal_mode=list';
         }
+        $label = $this->mode == 'calendar'
+            ? $plugin_tx['ocal']['label_list_view']
+            : $plugin_tx['ocal']['label_calendar_view'];
+        return '<p class="ocal_mode"><a href="' . $url . '">' . $label . '</a></p>';
     }
 
     /**
@@ -348,13 +324,13 @@ class Ocal_Calendars extends Ocal_View
      */
     protected function renderPagination()
     {
-        return '<div class="ocal_pagination">'
+        return '<p class="ocal_pagination">'
             . $this->renderPaginationLink(0, -1, 'prev_year') . ' '
             . $this->renderPaginationLink(-1, 0, 'prev_month') . ' '
             . $this->renderPaginationLink(false, false, 'today') . ' '
             . $this->renderPaginationLink(1, 0, 'next_month') . ' '
             . $this->renderPaginationLink(0, 1, 'next_year')
-            . '</div>';
+            . '</p>';
     }
 
     /**
@@ -385,11 +361,100 @@ class Ocal_Calendars extends Ocal_View
                 $month = 1;
                 $year += 1;
             }
-            $url = $sn . '?' . $su . '&amp;ocal_year=' . $year
-                . '&amp;ocal_month=' . $month;
+            $url = $sn . '?' . $su
+                . '&amp;ocal_year=' . $year . '&amp;ocal_month=' . $month;
+        }
+        if ($this->mode == 'list') {
+            $url .= '&amp;ocal_mode=list';
         }
         return '<a href="' . $url . '">' . $plugin_tx['ocal']['label_'. $label]
             . '</a>';
+    }
+}
+
+/**
+ * The calendars.
+ *
+ * @category CMSimple_XH
+ * @package  Ocal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
+ */
+class Ocal_Calendars extends Ocal_View
+{
+    /**
+     * Initializes a new instance.
+     *
+     * @param Ocal_Occupancy $occupancy An occupancy.
+     *
+     * @return void
+     */
+    public function __construct(Ocal_Occupancy $occupancy)
+    {
+        parent::__construct($occupancy);
+        $this->mode = 'calendar';
+    }
+
+    /**
+     * Renders the calendars.
+     *
+     * @param int $monthCount A number of months.
+     *
+     * @return string (X)HTML.
+     *
+     * @global XH_CSRFProtection The CSRF protector.
+     */
+    public function render($monthCount)
+    {
+        global $_XH_csrfProtection;
+
+        $this->emitScriptElements();
+        $html = '<div class="ocal_calendars" data-name="'
+            . $this->occupancy->getName() . '">'
+            . $this->renderModeLink();
+        if (XH_ADM) {
+            $html .= $_XH_csrfProtection->tokenInput()
+                . $this->renderToolbar()
+                . $this->renderLoaderbar()
+                . $this->renderStatusbar();
+        }
+        $month = new Ocal_Month($this->month, $this->year);
+        while ($monthCount) {
+            $calendar = new Ocal_MonthCalendar($month, $this->occupancy);
+            $html .= $calendar->render();
+            $monthCount--;
+            $month = $month->getNextMonth();
+        }
+        $html .= $this->renderPagination()
+            . '</div>';
+        return $html;
+    }
+
+    /**
+     * Emits the script elements.
+     *
+     * @return void
+     *
+     * @global array  The paths of system files and folders.
+     * @global string The (X)HTML to insert at the bottom of the body element.
+     * @global array  The localization of the plugins.
+     */
+    protected function emitScriptElements()
+    {
+        global $pth, $bjs, $plugin_tx;
+
+        if (XH_ADM) {
+            $config = array(
+                'message_unsaved_changes'
+                    => $plugin_tx['ocal']['message_unsaved_changes']
+            );
+            $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
+                . 'var OCAL = ' . XH_encodeJson($config) . ';'
+                . '/* ]]> */</script>'
+                . '<script type="text/javascript" src="'
+                . $pth['folder']['plugins'] . 'ocal/ocal.js"></script>';
+        }
     }
 
     /**
@@ -445,6 +510,54 @@ class Ocal_Calendars extends Ocal_View
 }
 
 /**
+ * The list views.
+ *
+ * @category CMSimple_XH
+ * @package  Ocal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
+ */
+class Ocal_ListView extends Ocal_View
+{
+    /**
+     * Initializes a new instance.
+     *
+     * @param Ocal_Occupancy $occupancy An occupancy.
+     *
+     * @return void
+     */
+    public function __construct(Ocal_Occupancy $occupancy)
+    {
+        parent::__construct($occupancy);
+        $this->mode = 'list';
+    }
+
+    /**
+     * Renders the list view.
+     *
+     * @param int $monthCount A number of months.
+     *
+     * @return string (X)HTML.
+     */
+    public function render($monthCount)
+    {
+        $html = $this->renderModeLink()
+            . '<dl class="ocal_list">';
+        $month = new Ocal_Month($this->month, $this->year);
+        while ($monthCount) {
+            $calendar = new Ocal_MonthList($month, $this->occupancy);
+            $html .= $calendar->render();
+            $monthCount--;
+            $month = $month->getNextMonth();
+        }
+        $html .= '</dl>'
+            . $this->renderPagination();
+        return $html;
+    }
+}
+
+/**
  * The abstract month views.
  *
  * @category CMSimple_XH
@@ -482,8 +595,22 @@ abstract class Ocal_MonthView
         $this->month = $month;
         $this->occupancy = $occupancy;
     }
-}
 
+    /**
+     * Returns a formatted date.
+     *
+     * @param int $day A day number.
+     *
+     * @return string
+     */
+    protected function formatDate($day)
+    {
+        return sprintf(
+            '%04d-%02d-%02d', $this->month->getYear(),
+            $this->month->getMonth(), $day
+        );
+    }
+}
 
 /**
  * The month calendars.
@@ -587,10 +714,7 @@ class Ocal_MonthCalendar extends Ocal_MonthView
         global $plugin_tx;
 
         if ($day >= 1 && $day <= $this->month->getLastDay()) {
-            $date = sprintf(
-                '%04d-%02d-%02d', $this->month->getYear(),
-                $this->month->getMonth(), $day
-            );
+            $date = $this->formatDate($day);
             $state = $this->occupancy->getState($date);
             $today = ($date == date('Y-m-d')) ? ' ocal_today' : '';
             $alt = $plugin_tx['ocal']['label_state_' . $state];
@@ -600,6 +724,96 @@ class Ocal_MonthCalendar extends Ocal_MonthView
         } else {
             return '<td>&nbsp;</td>';
         }
+    }
+}
+
+/**
+ * The month lists.
+ *
+ * @category CMSimple_XH
+ * @package  Ocal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
+ */
+class Ocal_MonthList extends Ocal_MonthView
+{
+    /**
+     * Renders the month list.
+     *
+     * @return string (X)HTML.
+     */
+    public function render()
+    {
+        global $plugin_tx;
+
+        $html = $this->renderHeading() . '<dd><dl>';
+        foreach ($this->getList() as $range => $state) {
+            $label = $plugin_tx['ocal']['label_state_' . $state];
+            if ($label != '') {
+                $html .= '<dt>' . $range . '</dt>'
+                    . '<dd>' . $label . '</dd>';
+            }
+        }
+        $html .= '</dl></dd>';
+        return $html;
+    }
+
+    /**
+     * Renders the heading.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The localization of the plugins.
+     */
+    protected function renderHeading()
+    {
+        global $plugin_tx;
+
+        $monthnames = explode(',', $plugin_tx['ocal']['date_months']);
+        return  '<dt>' . $monthnames[$this->month->getMonth() - 1]
+            . ' ' . $this->month->getYear() . '</dt>';
+    }
+
+    /**
+     * Returns a map from formatted day ranges to states.
+     *
+     * @return array
+     */
+    protected function getList()
+    {
+        $list = array();
+        $currentRange = array();
+        $currentState = -1;
+        for ($day = 1; $day <= $this->month->getLastDay(); $day++) {
+            $date = $this->formatDate($day);
+            $state = $this->occupancy->getState($date);
+            if ($currentState == -1 || $state == $currentState) {
+                $currentRange[] = $day;
+            } else {
+                $list[$this->formatRange($currentRange)] = $currentState;
+                $currentRange = array($day);
+            }
+            $currentState = $state;
+        }
+        $list[$this->formatRange($currentRange)] = $currentState;
+        return $list;
+    }
+
+    /**
+     * Returns a formatted day range.
+     *
+     * @param array $range An array of successive days.
+     *
+     * @return string
+     */
+    protected function formatRange($range)
+    {
+        $string = $range[0] . '.';
+        if (count($range) > 1) {
+            $string .= '&ndash;' . $range[count($range) - 1] . '.';
+        }
+        return $string;
     }
 }
 

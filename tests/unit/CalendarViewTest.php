@@ -58,6 +58,8 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
             'date_months' => 'January,February,March,April,May,June,July,August,'
                 . 'September,October,November,December',
             'date_days' => 'M,T,W,T,F,S,S',
+            'label_calendar_view' => 'Calendar view',
+            'label_list_view' => 'List view',
             'label_prev_year' => 'Previous Year',
             'label_prev_month' => 'Previous Month',
             'label_today' => 'Today',

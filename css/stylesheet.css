@@ -4,9 +4,6 @@
 .ocal_calendars {
     text-align: center;
 }
-.ocal_pagination {
-    margin: 1em 0;
-}
 .ocal_toolbar, .ocal_loaderbar {
     margin: 1em 0;
 }
@@ -38,6 +35,9 @@
     font-weight: bold;
 }
 
+/**
+ * States
+ */
 .ocal_state {
     border: 1px solid #888;
 }
@@ -57,6 +57,37 @@
     background: red;
     color: white;
 }
+
+/**
+ * Lists
+ */
+.ocal_list {}
+.ocal_list>dt {
+    font-weight: bold;
+}
+.ocal_list>dd {
+    margin-left: 0;
+}
+.ocal_list dl {
+    overflow: hidden;
+}
+.ocal_list dl dt {
+    float: left;
+    clear: left;
+    width: 5em;
+    text-align: right;
+}
+.ocal_list dl dd {
+    margin-left: 6em;
+}
+
+/*
+ * Pagination
+ */
+.ocal_pagination {
+    margin: 1em 0;
+}
+.ocal_mode {}
 
 /*
  * Back-end

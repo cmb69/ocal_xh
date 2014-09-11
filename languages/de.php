@@ -2,6 +2,8 @@
 
 $plugin_tx['ocal']['date_months']="Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember";
 $plugin_tx['ocal']['date_days']="Mo,Di,Mi,Do,Fr,Sa,So";
+$plugin_tx['ocal']['label_calendar_view']="Kalenderansicht";
+$plugin_tx['ocal']['label_list_view']="Listenansicht";
 $plugin_tx['ocal']['label_prev_year']="Voriges&nbsp;Jahr";
 $plugin_tx['ocal']['label_prev_month']="Voriger&nbsp;Monat";
 $plugin_tx['ocal']['label_today']="Heute";
