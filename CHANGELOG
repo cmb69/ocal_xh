@@ -1,2 +1,11 @@
+Version 1.0beta1 -- released 2014-09-11
+* fixed CSRF vulnerability
+* changed storage path, so the same data can be used across multiple languages
+* moved state info from class to data-* attribute
+* added alternative list view
+* added CSS class to mark present day (sugg. by Termin)
+* added title attributes for the states
+* added meta robots noindex for other months than the present one
+
 Version 1.0alpha1 -- released 2014-08-09
 * initial release
