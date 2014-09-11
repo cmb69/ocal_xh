@@ -658,8 +658,8 @@ class Ocal_MonthCalendar extends Ocal_MonthView
         global $plugin_tx;
 
         $monthnames = explode(',', $plugin_tx['ocal']['date_months']);
-        return '<th colspan="7">' . $monthnames[$this->month->getMonth() - 1]
-            . ' ' . $this->month->getYear() . '</th>';
+        return '<tr><th colspan="7">' . $monthnames[$this->month->getMonth() - 1]
+            . ' ' . $this->month->getYear() . '</th></tr>';
     }
 
     /**
