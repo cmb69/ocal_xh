@@ -84,7 +84,7 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
     public function testRendersCalendar()
     {
         $this->subject = new Ocal_Controller();
-        $this->assertTag(
+        @$this->assertTag(
             array(
                 'tag' => 'table',
                 'attributes' => array('class' => 'ocal_calendar')
