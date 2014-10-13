@@ -13,9 +13,10 @@
 <img src="../ocal.png" style="float: left" alt="Calendar">
 <p>Ocal_XH facilitates to present calendars on your website which display the
 occupancy of a certain location or other rental, so visitors can easily see
-whether the item is available on a certain date or interval. Each calendar is
-only meant for a single rental; however, you can display multiple calendars on a
-single page. Visitors are able to switch between a calendar and a list view.</p>
+whether the item is available on a certain date or (hourly) interval. Each
+calendar is only meant for a single rental; however, you can display multiple
+calendars on a single page. Visitors are able to switch between a calendar and a
+list view.</p>
 <p>The plugin does neither provide any actual booking facilities (however, you
 may be able to combine it with a mail form like <a
 href="http://3-magi.net/?CMSimple_XH/Advancedform_XH">Advancedform_XH</a>), nor
@@ -71,9 +72,8 @@ if all requirements are fulfilled.</li>-->
 <h2 id="settings">Settings</h2>
 <p>The plugin's configuration is done as with many other CMSimple_XH plugins in
 the website's back-end. Select Plugins &rarr; Ocal.</p>
-<!--<p>You can change the default settings of Ocal_XH under "Config". Hints for
-the options will be displayed when hovering over the help icon with your
-mouse.</p>-->
+<p>You can change the default settings of Ocal_XH under "Config". Hints for the
+options will be displayed when hovering over the help icon with your mouse.</p>
 <p>Localization is done under "Language". You can translate the character
 strings to your own language (if there is no appropriate language file
 available), or customize them according to your needs.</p>
@@ -81,13 +81,20 @@ available), or customize them according to your needs.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2 id="usage">Usage</h2>
-<p>To display an occupancy calendar on a page, use:</p>
+<p>To display a <em>daily</em> occupancy calendar on a <em>page</em>, use:</p>
 <pre>{{{ocal('%OCCUPANCY_NAME%', %NUMBER_OF_MONTHS%);}}}</pre>
-<p>%OCCUPANCY_NAME% is an arbitrary name, that must only consist of the letters
-a-z, the digits 0-9 and minus signs. %NUMBER_OF_MONTHS% specifies the number of
-monthly calendars that shall be displayed simultaneously.</p>
-<p>To display an occupancy calendar in the template, use:</p>
+<p>To display an <em>hourly</em> occupancy calendar on a <em>page</em>, use:</p>
+<pre>{{{ocal_hourly('%OCCUPANCY_NAME%', %NUMBER_OF_WEEKS%);}}}</pre>
+<p>To display a <em>daily</em> occupancy calendar in the <em>template</em>,
+use:</p>
 <pre>&lt;?php echo ocal('%OCCUPANCY_NAME%', %NUMBER_OF_MONTHS%);?&gt;</pre>
+<p>To display an <em>hourly</em> occupancy calendar in the <em>template</em>,
+use:</p>
+<pre>&lt;?php echo ocal_hourly('%OCCUPANCY_NAME%', %NUMBER_OF_WEEKS%);?&gt;</pre>
+<p>%OCCUPANCY_NAME% is an arbitrary name, that must only consist of the letters
+a-z, the digits 0-9 and minus signs. %NUMBER_OF_MONTHS% resp. %NUMBER_OF_WEEKS%
+specifies the number of monthly calendars that shall be displayed
+simultaneously.</p>
 <p>Note that you can put an arbitrary amount of occupancy calendars on a single
 page, even for the same occupancy (what might make sense if you like to present
 a large interval, say a year, on a page, and only a small interval, say a single
@@ -95,7 +102,7 @@ month, in the template).</p>
 <p>Some examples:</p>
 <pre>{{{ocal('holiday-appartment', 12);}}}
 &lt;?php echo ocal('holiday-appartment', 1);?&gt;
-{{{ocal('rickshaw', 2);}}}
+{{{ocal_hourly('rickshaw', 2);}}}
 {{{ocal('rubber-raft-1', 6);}}}
 {{{ocal('rubber-raft-2', 6);}}}</pre>
 <div class="toplink"><a href="#">back to top</a></div>

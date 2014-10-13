@@ -14,10 +14,10 @@
 <p>Ocal_XH ermöglicht es Kalender auf Ihrer Website zu präsentieren, die die
 Belegung bestimmter Örtlichkeiten oder anderer Mietgegenstände anzeigen, so dass
 Besucher leicht sehen können, ob ein Posten an einem bestimmten Datum oder in
-einem bestimmten Zeitraum verfügbar ist. Jeder Kalender ist nur für einen
-einzigen Mietgegenstand gedacht; allerdings können sie mehrere Kalender auf
-einer einzigen Seite anzeigen. Besucher sind in der Lage zwischen einer
-Kalender- und einer Listenansicht umzuschalten.</p>
+einem bestimmten (stündlichen) Zeitraum verfügbar ist. Jeder Kalender ist nur
+für einen einzigen Mietgegenstand gedacht; allerdings können sie mehrere
+Kalender auf einer einzigen Seite anzeigen. Besucher sind in der Lage zwischen
+einer Kalender- und einer Listenansicht umzuschalten.</p>
 <p>Das Plugin bietet weder tatsächliche Buchungsmöglichkeiten (allerdings können
 Sie es u.U. mit einem Mailformular wie <a
 href="http://3-magi.net/de/?CMSimple_XH/Advancedform_XH">Advancedform_XH</a>
@@ -76,9 +76,9 @@ prüfen Sie, ob alle Voraussetzungen für den Betrieb erfüllt sind.</li>-->
 <p>Die Konfiguration des Plugins erfolgt wie bei vielen anderen
 CMSimple_XH-Plugins auch im Administrationsbereich der Homepage. Wählen Sie
 Plugins &rarr; Ocal.</p>
-<!--<p>Sie können die Original-Einstellungen von Ocal_XH unter "Konfiguration"-->
-<!--ändern. Beim Überfahren der Hilfe-Icons mit der Maus werden Hinweise zu den-->
-<!--Einstellungen angezeigt.</p>-->
+<p>Sie können die Original-Einstellungen von Ocal_XH unter "Konfiguration"
+ändern. Beim Überfahren der Hilfe-Icons mit der Maus werden Hinweise zu den
+Einstellungen angezeigt.</p>
 <p>Die Lokalisierung wird unter "Sprache" vorgenommen. Sie können die
 Zeichenketten in Ihre eigene Sprache übersetzen (falls keine entsprechende
 Sprachdatei zur Verfügung steht), oder sie entsprechend Ihren Anforderungen
@@ -87,13 +87,22 @@ anpassen.</p>
 <div class="toplink"><a href="#">zum Seitenanfang</a></div>
 
 <h2 id="usage">Verwendung</h2>
-<p>Um einen Belegungskalender auf einer Seite anzuzeigen, verwenden Sie:</p>
+<p>Um einen <em>täglichen</em> Belegungskalender auf einer <em>Seite</em>
+anzuzeigen, verwenden Sie:</p>
 <pre>{{{ocal('%NAME_DER_BELEGUNG%', %ANZAHL_DER_MONATE%);}}}</pre>
-<p>%NAME_DER_BELEGUNG% ist ein beliebiger Name, der nur aus den Buchstaben a-z,
-den Ziffern 0-9 und dem Minuszeichen bestehen darf. %ANZAHL_DER_MONATE% gibt die
-Anzahl der Monatskalender an, die gleichzeitig angezeigt werden sollen.</p>
-<p>Um einen Belegungskalender im Template anzuzeigen, verwenden Sie:</p>
+<p>Um einen <em>stündlichen</em> Belegungskalender auf einer <em>Seite</em>
+anzuzeigen, verwenden Sie:</p>
+<pre>{{{ocal('%NAME_DER_BELEGUNG%', %ANZAHL_DER_WOCHEN%);}}}</pre>
+<p>Um einen <em>täglichen</em> Belegungskalender im <em>Template</em>
+anzuzeigen, verwenden Sie:</p>
 <pre>&lt;?php echo ocal('%NAME_DER_BELEGUNG%', %ANZAHL_DER_MONATE%);?&gt;</pre>
+<p>Um einen <em>stündlichen</em> Belegungskalender im <em>Template</em>
+anzuzeigen, verwenden Sie:</p>
+<pre>&lt;?php echo ocal('%NAME_DER_BELEGUNG%', %ANZAHL_DER_WOCHEN%);?&gt;</pre>
+<p>%NAME_DER_BELEGUNG% ist ein beliebiger Name, der nur aus den Buchstaben a-z,
+den Ziffern 0-9 und dem Minuszeichen bestehen darf. %ANZAHL_DER_MONATE% bzw.
+%ANZAHL_DER_WOCHEN% gibt die Anzahl der Monatskalender an, die gleichzeitig
+angezeigt werden sollen.</p>
 <p>Beachten Sie, dass Sie eine beliebige Anzahl von Belegungskalendern auf einer
 einzelnen Seite platzieren können, sogar für die selbe Belegung (was sinnvoll
 sein könnte, wenn Sie auf einer Seite einen langen Zeitraum, z.B. ein Jahr,
@@ -102,7 +111,7 @@ im Template).</p>
 <p>Einige Beispiele:</p>
 <pre>{{{ocal('ferienwohnung', 12);}}}
 &lt;?php echo ocal('ferienwohnung', 1);?&gt;
-{{{ocal('rikscha', 2);}}}
+{{{ocal_hourly('rikscha', 2);}}}
 {{{ocal('schlauchboot-1', 6);}}}
 {{{ocal('schlauchboot-2', 6);}}}</pre>
 <div class="toplink"><a href="#">zum Seitenanfang</a></div>
