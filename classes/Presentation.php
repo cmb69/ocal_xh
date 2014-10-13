@@ -44,7 +44,9 @@ class Ocal_Controller
                 $this->_handleAdministration();
             }
         } else {
-            if (isset($_GET['ocal_month']) || isset($_GET['ocal_year'])) {
+            if (isset($_GET['ocal_week']) || isset($_GET['ocal_month'])
+                || isset($_GET['ocal_year'])
+            ) {
                 XH_afterPluginLoading(array($this, 'disallowIndexing'));
             }
         }
@@ -152,7 +154,7 @@ EOT;
     {
         global $cf;
 
-        $cf['meta']['robots'] = 'noindex';
+        $cf['meta']['robots'] = 'noindex, nofollow';
     }
 
     /**
