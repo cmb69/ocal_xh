@@ -4,7 +4,8 @@
  * Testing the CSRF protection.
  *
  * The environment variable CMSIMPLEDIR has to be set to the installation folder
- * (e.g. / or /cmsimple_xh/).
+ * (e.g. / or /cmsimple_xh/). There has to be a page "Ocal" with the call
+ * <code>ocal('test')</code> on it.
  *
  * PHP version 5
  *
