@@ -199,16 +199,18 @@ class Ocal_Week
     /**
      * Returns the next week.
      *
+     * @param int $offset The week offset.
+     *
      * @return Ocal_Week
      */
-    public function getNextWeek()
+    public function getNextWeek($offset = 1)
     {
         $date = new DateTime();
         $date->setISODate($this->year, $this->week);
-        $date->modify('+1 week');
+        $date->modify(sprintf('+%-d week', $offset));
         $week = $date->format('W');
         $year = $date->format('o');
-        return new Ocal_Week($week, $year);
+        return new self($week, $year);
     }
 }
 

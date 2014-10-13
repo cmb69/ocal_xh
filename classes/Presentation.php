@@ -634,14 +634,57 @@ class Ocal_WeekCalendars extends Ocal_Calendars
                 . $this->renderStatusbar();
         }
         $week = new Ocal_Week($this->week, $this->year);
-        while ($weekCount) {
+        $i = $weekCount;
+        while ($i) {
             $calendar = new Ocal_WeekCalendar($week, $this->occupancy);
             $html .= $calendar->render();
-            $weekCount--;
+            $i--;
             $week = $week->getNextWeek();
         }
-        $html .= '</div>';
+        $html .= $this->renderPagination2($weekCount) . '</div>';
         return $html;
+    }
+    /**
+     * Renders the pagination.
+     *
+     * @return string (X)HTML.
+     */
+    protected function renderPagination2($weekCount)
+    {
+        return '<p class="ocal_pagination">'
+            . $this->renderPaginationLink2(-$weekCount, 'prev_interval') . ' '
+            . $this->renderPaginationLink2(false, 'today') . ' '
+            . $this->renderPaginationLink2($weekCount, 'next_interval')
+            . '</p>';
+    }
+
+    /**
+     * Renders a pagination link.
+     *
+     * @param int    $offset A week offset.
+     * @param string $label  A label key.
+     *
+     * @return string (X)HTML.
+     *
+     * @todo Restrict links to reasonable range, to avoid search engines
+     *       searching infinitely.
+     */
+    protected function renderPaginationLink2($offset, $label)
+    {
+        global $sn, $su, $plugin_tx;
+
+        $url = $sn . '?' . $su;
+        if ($offset) {
+            $week = new Ocal_Week($this->week, $this->year);
+            $week = $week->getNextWeek($offset);
+            $url .= '&amp;ocal_year=' . $week->getYear()
+                . '&amp;ocal_week=' . $week->getWeek();
+        }
+        if ($this->mode == 'list') {
+            $url .= '&amp;ocal_mode=list';
+        }
+        return '<a href="' . $url . '">' . $plugin_tx['ocal']['label_'. $label]
+            . '</a>';
     }
 }
 
@@ -1034,7 +1077,7 @@ class Ocal_WeekCalendar extends Ocal_WeekView
         $pcf = $plugin_cf['ocal'];
         $html = '<table class="ocal_calendar" data-week="'
             . $this->week->getIso() . '">';
-        $html .= $this->renderDaynames();
+        $html .= $this->renderHeading() . $this->renderDaynames();
         for ($i = $pcf['hour_first']; $i <= $pcf['hour_last']; $i++) {
             $html .= '<tr>';
             for ($j = 1; $j <= 7; $j++) {
@@ -1044,6 +1087,22 @@ class Ocal_WeekCalendar extends Ocal_WeekView
         }
         $html .= '</table>';
         return $html;
+    }
+
+    /**
+     * Renders the heading.
+     *
+     * @return string (X)HTML.
+     */
+    protected function renderHeading()
+    {
+        $date = new DateTime();
+        $date->setISODate($this->week->getYear(), $this->week->getWeek(), 1);
+        $from = $date->format('j.n.Y');
+        $date->setISODate($this->week->getYear(), $this->week->getWeek(), 7);
+        $to = $date->format('j.n.Y');
+        return '<tr><th colspan="7">' . $from
+            . '&ndash;' . $to . '</th></tr>';
     }
 
     /**
