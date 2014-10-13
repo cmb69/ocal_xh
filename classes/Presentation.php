@@ -296,7 +296,11 @@ EOT;
         $mode = isset($_GET['ocal_mode']) ? $_GET['ocal_mode'] : 'calendar';
         switch ($mode) {
         case 'list':
-            return new Ocal_ListView($occupancy);
+            if ($occupancy instanceof Ocal_HourlyOccupancy) {
+                return new Ocal_WeekCalendars($occupancy);
+            } else {
+                return new Ocal_ListView($occupancy);
+            }
         default:
             if ($occupancy instanceof Ocal_HourlyOccupancy) {
                 return new Ocal_WeekCalendars($occupancy);
