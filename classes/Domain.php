@@ -51,8 +51,6 @@ class Ocal_Month
      *
      * @param int $month A month.
      * @param int $year  A year.
-     *
-     * @return void
      */
     public function __construct($month, $year)
     {
@@ -128,6 +126,89 @@ class Ocal_Month
             $year += 1;
         }
         return new Ocal_Month($month, $year);
+    }
+}
+
+/**
+ * The weeks.
+ *
+ * @category CMSimple_XH
+ * @package  Ocal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
+ */
+class Ocal_Week
+{
+    /**
+     * The week.
+     *
+     * @var int
+     */
+    protected $week;
+
+    /**
+     * The year.
+     *
+     * @var int
+     */
+    protected $year;
+
+    /**
+     * Initializes a new instance.
+     *
+     * @param int $week A week.
+     * @param int $year A year.
+     */
+    public function __construct($week, $year)
+    {
+        $this->week = (int) $week;
+        $this->year = (int) $year;
+    }
+
+    /**
+     * Returns the week.
+     *
+     * @return int
+     */
+    public function getWeek()
+    {
+        return $this->week;
+    }
+
+    /**
+     * Returns the year.
+     *
+     * @return int
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * Returns an ISO formatted date (YYYY-WW).
+     *
+     * @return string
+     */
+    public function getIso()
+    {
+        return sprintf('%04d-%02d', $this->year, $this->week);
+    }
+
+    /**
+     * Returns the next week.
+     *
+     * @return Ocal_Week
+     */
+    public function getNextWeek()
+    {
+        $date = new DateTime();
+        $date->setISODate($this->year, $this->week);
+        $date->modify('+1 week');
+        $week = $date->format('W');
+        $year = $date->format('o');
+        return new Ocal_Week($week, $year);
     }
 }
 

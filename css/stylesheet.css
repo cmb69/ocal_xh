@@ -1,7 +1,7 @@
 /*
  * Calendars
  */
-.ocal_calendars {
+.ocal_calendars, .ocal_week_calendars {
     text-align: center;
 }
 .ocal_toolbar, .ocal_loaderbar {

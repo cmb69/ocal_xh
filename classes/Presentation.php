@@ -218,6 +218,68 @@ EOT;
     }
 
     /**
+     * Renders a week calendar.
+     *
+     * @param string $name      A calendar name.
+     * @param int    $weekCount A week count.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array             The localization of the plugins.
+     * @global XH_CRSFProtection The CSRF protector.
+     */
+    public function renderWeekCalendar($name, $weekCount)
+    {
+        global $plugin_tx, $_XH_csrfProtection;
+
+        if (!preg_match('/^[a-z0-9-]+$/', $name)) {
+            return XH_message(
+                'fail', $plugin_tx['ocal']['error_occupancy_name']
+            );
+        }
+        if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $name) {
+            $_XH_csrfProtection->check();
+            ob_end_clean(); // necessary, if called from template
+            echo $this->saveHourlyStates($name);
+            exit;
+        }
+        $db = new Ocal_Db(LOCK_SH);
+        $occupancy = $db->findOccupancy($name, true);
+        $db = null;
+        $view = $this->getView($occupancy);
+        return $view->render($weekCount);
+    }
+
+    /**
+     * Saves the states.
+     *
+     * @param string $name A calendar name.
+     *
+     * @return void
+     */
+    protected function saveHourlyStates($name)
+    {
+        global $plugin_tx;
+
+        $states = XH_decodeJson($_POST['ocal_states']);
+        if (!is_object($states)) {
+            header('HTTP/1.0 400 Bad Request');
+            exit;
+        }
+        $db = new Ocal_Db(LOCK_EX);
+        $occupancy = $db->findOccupancy($name, true);
+        foreach (get_object_vars($states) as $week => $states) {
+            foreach ($states as $i => $state) {
+                $date = sprintf('%s-%02d-%02d', $week, $i % 7 + 1, $i / 7);
+                $occupancy->setState($date, $state);
+            }
+        }
+        $db->saveOccupancy($occupancy);
+        $db = null;
+        return XH_message('success', $plugin_tx['ocal']['message_saved']);
+    }
+
+    /**
      * Returns the requested view.
      *
      * @param Ocal_Occupancy $occupancy An occupancy.
@@ -231,7 +293,11 @@ EOT;
         case 'list':
             return new Ocal_ListView($occupancy);
         default:
-            return new Ocal_Calendars($occupancy);
+            if ($occupancy instanceof Ocal_HourlyOccupancy) {
+                return new Ocal_WeekCalendars($occupancy);
+            } else {
+                return new Ocal_Calendars($occupancy);
+            }
         }
     }
 }
@@ -262,11 +328,25 @@ abstract class Ocal_View
     protected $month;
 
     /**
+     * The week.
+     *
+     * @var int
+     */
+    protected $week;
+
+    /**
      * The year.
      *
      * @var int
      */
     protected $year;
+
+    /**
+     * The ISO 8601 year.
+     *
+     * @var int
+     */
+    protected $isoYear;
 
     /**
      * The mode ('calendar' or 'list').
@@ -288,9 +368,15 @@ abstract class Ocal_View
         $this->month = isset($_GET['ocal_month'])
             ? max(1, min(12, (int) $_GET['ocal_month']))
             : date('n', $now);
+        $this->week = isset($_GET['ocal_week'])
+            ? max(1, min(53, (int) $_GET['ocal_week']))
+            : date('W', $now);
         $this->year = isset($_GET['ocal_year'])
             ? (int) $_GET['ocal_year']
             : date('Y', $now);
+        $this->isoYear = isset($_GET['ocal_year'])
+            ? (int) $_GET['ocal_year']
+            : date('o', $now);
         $this->occupancy = $occupancy;
     }
 
@@ -506,6 +592,51 @@ class Ocal_Calendars extends Ocal_View
     protected function renderStatusbar()
     {
         return '<div class="ocal_statusbar"></div>';
+    }
+}
+
+/**
+ * The week calendars.
+ *
+ * @category CMSimple_XH
+ * @package  Ocal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
+ */
+class Ocal_WeekCalendars extends Ocal_Calendars
+{
+    /**
+     * Renders the week calendars.
+     *
+     * @param int $weekCount A number of weeks.
+     *
+     * @return string (X)HTML.
+     *
+     * @global XH_CSRFProtection The CSRF protector.
+     */
+    public function render($weekCount)
+    {
+        global $_XH_csrfProtection;
+
+        $this->emitScriptElements();
+        $html = '<div class="ocal_week_calendars" data-name="'
+            . $this->occupancy->getName() . '">';
+        if (XH_ADM) {
+            $html .= $_XH_csrfProtection->tokenInput()
+                . $this->renderToolbar()
+                . $this->renderLoaderbar()
+                . $this->renderStatusbar();
+        }
+        $week = new Ocal_Week($this->week, $this->year);
+        while ($weekCount) {
+            $calendar = new Ocal_WeekCalendar($week, $this->occupancy);
+            $html .= $calendar->render();
+            $weekCount--;
+            $week = $week->getNextWeek();
+        }
+        $html .= '</div>';
+        return $html;
     }
 }
 
@@ -814,6 +945,136 @@ class Ocal_MonthList extends Ocal_MonthView
             $string .= '&ndash;' . $range[count($range) - 1] . '.';
         }
         return $string;
+    }
+}
+
+/**
+ * The abstract week views.
+ *
+ * @category CMSimple_XH
+ * @package  Ocal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
+ */
+abstract class Ocal_WeekView
+{
+    /**
+     * The week.
+     *
+     * @var Ocal_Week
+     */
+    protected $week;
+
+    /**
+     * The occupancy.
+     *
+     * @var Ocal_Occupancy $occupancy.
+     */
+    protected $occupancy;
+
+    /**
+     * Initializes a new instance.
+     *
+     * @param Ocal_Week      $week      A week.
+     * @param Ocal_Occupancy $occupancy An occupancy.
+     *
+     * @return void
+     */
+    public function __construct(Ocal_Week $week, Ocal_Occupancy $occupancy)
+    {
+        $this->week = $week;
+        $this->occupancy = $occupancy;
+    }
+
+    /**
+     * Returns a formatted date.
+     *
+     * @param int $day  A day.
+     * @param int $hour An hour.
+     *
+     * @return string
+     */
+    protected function formatDate($day, $hour)
+    {
+        return sprintf(
+            '%04d-%02d-%02d-%02d', $this->week->getYear(),
+            $this->week->getWeek(), $day, $hour
+        );
+    }
+}
+
+/**
+ * The week calendars.
+ *
+ * @category CMSimple_XH
+ * @package  Ocal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
+ */
+class Ocal_WeekCalendar extends Ocal_WeekView
+{
+    /**
+     * Renders the week calendar.
+     *
+     * @return string (X)HTML.
+     */
+    public function render()
+    {
+        $html = '<table class="ocal_calendar" data-week="'
+            . $this->week->getIso() . '">';
+        $html .= $this->renderDaynames();
+        for ($i = 0; $i < 24; $i++) {
+            $html .= '<tr>';
+            for ($j = 1; $j <= 7; $j++) {
+                $html .= $this->renderHour($j, $i);
+            }
+            $html .= '</tr>';
+        }
+        $html .= '</table>';
+        return $html;
+    }
+
+    /**
+     * Renders the daynames.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The localization of the plugins.
+     */
+    protected function renderDaynames()
+    {
+        global $plugin_tx;
+
+        $daynames = explode(',', $plugin_tx['ocal']['date_days']);
+        $html = '<tr>';
+        foreach ($daynames as $dayname) {
+            $html .= '<th>' . $dayname . '</th>';
+        }
+        $html .= '</tr>';
+        return $html;
+    }
+
+    /**
+     * Renders an hour table cell.
+     *
+     * @param int $day  A day.
+     * @param int $hour An hour.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The localization of the plugins.
+     */
+    protected function renderHour($day, $hour)
+    {
+        global $plugin_tx;
+
+        $state = $this->occupancy->getState($this->formatDate($day, $hour));
+        $alt = $plugin_tx['ocal']['label_state_' . $state];
+        $title = $alt ? ' title="' . $alt . '"' : '';
+        return '<td class="ocal_state" data-ocal_state="' . $state . '"'
+            . $title . '>' . $hour . '</td>';
     }
 }
 

@@ -55,11 +55,12 @@ class Ocal_Db
     /**
      * Finds and returns an occupancy object.
      *
-     * @param string $name An occupancy name.
+     * @param string $name   An occupancy name.
+     * @param bool   $hourly Whether the occupancy is hourly.
      *
      * @return Ocal_Occupancy
      */
-    public function findOccupancy($name)
+    public function findOccupancy($name, $hourly = false)
     {
         $filename = $this->getFoldername() . $name . '.dat';
         if (is_readable($filename)) {
@@ -70,7 +71,11 @@ class Ocal_Db
         if ($contents && ($occupancy = unserialize($contents))) {
             $occupancy->setName($name);
         } else {
-            $occupancy = new Ocal_Occupancy($name);
+            if ($hourly) {
+                $occupancy = new Ocal_HourlyOccupancy($name);
+            } else {
+                $occupancy = new Ocal_Occupancy($name);
+            }
         }
         return $occupancy;
     }
@@ -222,6 +227,19 @@ class Ocal_Occupancy implements Serializable
     {
         $this->states = unserialize($data);
     }
+}
+
+/**
+ * The hourly occupancies.
+ *
+ * @category CMSimple_XH
+ * @package  Ocal
+ * @author   Christoph M. Becker <cmbecker69@gmx.de>
+ * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
+ */
+class Ocal_HourlyOccupancy extends Ocal_Occupancy
+{
 }
 
 ?>

@@ -68,6 +68,23 @@ function ocal($name, $monthCount = 1)
 }
 
 /**
+ * Renders a week calendar.
+ *
+ * @param string $name      A calendar name.
+ * @param int    $weekCount A week count.
+ *
+ * @return string (X)HTML.
+ *
+ * @global Ocal_Controller The plugin controller.
+ */
+function Ocal_hourly($name, $weekCount = 1)
+{
+    global $_Ocal_controller;
+
+    return $_Ocal_controller->renderWeekCalendar($name, $weekCount);
+}
+
+/**
  * The plugin controller.
  *
  * @var Ocal_Controller
