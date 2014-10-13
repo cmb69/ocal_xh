@@ -1,3 +1,8 @@
+Version 1.0beta2 -- released 2014-10-14
+* lifted requirements to PHP 5.2.0
+* added hourly occupancies (suggested by hixi)
+* added meta robots nofollow for other weeks/months/years than the present one
+
 Version 1.0beta1 -- released 2014-09-11
 * fixed CSRF vulnerability
 * changed storage path, so the same data can be used across multiple languages
