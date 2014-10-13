@@ -29,18 +29,14 @@ class Ocal_Controller
      * Dispatches according to the request.
      *
      * @return void
-     *
-     * @global string Whether the plugin administration is requested.
      */
     public function dispatch()
     {
-        global $ocal;
-
         if (XH_ADM) {
             if (function_exists('XH_registerStandardPluginMenuItems')) {
                 XH_registerStandardPluginMenuItems(false);
             }
-            if (isset($ocal) && $ocal == 'true') {
+            if ($this->isAdministrationRequested()) {
                 $this->_handleAdministration();
             }
         } else {
@@ -50,6 +46,22 @@ class Ocal_Controller
                 XH_afterPluginLoading(array($this, 'disallowIndexing'));
             }
         }
+    }
+
+    /**
+     * Returns whether the plugin administration is requested.
+     *
+     * @return bool
+     *
+     * @global string Whether the plugin administration is requested.
+     */
+    protected function isAdministrationRequested()
+    {
+        global $ocal;
+
+        return function_exists('XH_wantsPluginAdministration')
+            && XH_wantsPluginAdministration('ocal')
+            || isset($ocal) && $ocal == 'true';
     }
 
     /**
