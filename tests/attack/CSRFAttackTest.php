@@ -4,8 +4,8 @@
  * Testing the CSRF protection.
  *
  * The environment variable CMSIMPLEDIR has to be set to the installation folder
- * (e.g. / or /cmsimple_xh/). There has to be a page "Ocal" with the call
- * <code>ocal('test')</code> on it.
+ * (e.g. / or /cmsimple_xh/). There has to be a page "Ocal" with the calls
+ * <code>ocal('test')</code> and <code>ocal_hourly('hourly')</code> on it.
  *
  * PHP version 5
  *
@@ -122,6 +122,10 @@ class CSRFAttackTest extends PHPUnit_Framework_TestCase
             array(
                 array('dummy' => 'foo'),
                 'Ocal&ocal_save=1&ocal_name=test&normal'
+            ),
+            array(
+                array('dummy' => 'foo'),
+                'Ocal&ocal_save=1&ocal_name=hourly&normal'
             )
         );
     }
