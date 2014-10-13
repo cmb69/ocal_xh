@@ -648,8 +648,11 @@ class Ocal_WeekCalendars extends Ocal_Calendars
         $html .= $this->renderPagination2($weekCount) . '</div>';
         return $html;
     }
+
     /**
      * Renders the pagination.
+     *
+     * @param int $weekCount A week count.
      *
      * @return string (X)HTML.
      */
