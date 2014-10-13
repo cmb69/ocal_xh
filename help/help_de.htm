@@ -89,20 +89,20 @@ anpassen.</p>
 <h2 id="usage">Verwendung</h2>
 <p>Um einen <em>täglichen</em> Belegungskalender auf einer <em>Seite</em>
 anzuzeigen, verwenden Sie:</p>
-<pre>{{{ocal('%NAME_DER_BELEGUNG%', %ANZAHL_DER_MONATE%);}}}</pre>
+<pre>{{{ocal('NAME_DER_BELEGUNG', ANZAHL_DER_MONATE);}}}</pre>
 <p>Um einen <em>stündlichen</em> Belegungskalender auf einer <em>Seite</em>
 anzuzeigen, verwenden Sie:</p>
-<pre>{{{ocal('%NAME_DER_BELEGUNG%', %ANZAHL_DER_WOCHEN%);}}}</pre>
+<pre>{{{ocal_hourly('NAME_DER_BELEGUNG', ANZAHL_DER_WOCHEN);}}}</pre>
 <p>Um einen <em>täglichen</em> Belegungskalender im <em>Template</em>
 anzuzeigen, verwenden Sie:</p>
-<pre>&lt;?php echo ocal('%NAME_DER_BELEGUNG%', %ANZAHL_DER_MONATE%);?&gt;</pre>
+<pre>&lt;?php echo ocal('NAME_DER_BELEGUNG', ANZAHL_DER_MONATE);?&gt;</pre>
 <p>Um einen <em>stündlichen</em> Belegungskalender im <em>Template</em>
 anzuzeigen, verwenden Sie:</p>
-<pre>&lt;?php echo ocal('%NAME_DER_BELEGUNG%', %ANZAHL_DER_WOCHEN%);?&gt;</pre>
-<p>%NAME_DER_BELEGUNG% ist ein beliebiger Name, der nur aus den Buchstaben a-z,
-den Ziffern 0-9 und dem Minuszeichen bestehen darf. %ANZAHL_DER_MONATE% bzw.
-%ANZAHL_DER_WOCHEN% gibt die Anzahl der Monatskalender an, die gleichzeitig
-angezeigt werden sollen.</p>
+<pre>&lt;?php echo ocal_hourly('NAME_DER_BELEGUNG', ANZAHL_DER_WOCHEN);?&gt;</pre>
+<p>NAME_DER_BELEGUNG ist ein beliebiger Name, der nur aus den Buchstaben a-z,
+den Ziffern 0-9 und dem Minuszeichen bestehen darf. ANZAHL_DER_MONATE bzw.
+ANZAHL_DER_WOCHEN gibt die Anzahl der Kalender an, die gleichzeitig angezeigt
+werden sollen.</p>
 <p>Beachten Sie, dass Sie eine beliebige Anzahl von Belegungskalendern auf einer
 einzelnen Seite platzieren können, sogar für die selbe Belegung (was sinnvoll
 sein könnte, wenn Sie auf einer Seite einen langen Zeitraum, z.B. ein Jahr,

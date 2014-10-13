@@ -82,19 +82,18 @@ available), or customize them according to your needs.</p>
 
 <h2 id="usage">Usage</h2>
 <p>To display a <em>daily</em> occupancy calendar on a <em>page</em>, use:</p>
-<pre>{{{ocal('%OCCUPANCY_NAME%', %NUMBER_OF_MONTHS%);}}}</pre>
+<pre>{{{ocal('OCCUPANCY_NAME', NUMBER_OF_MONTHS);}}}</pre>
 <p>To display an <em>hourly</em> occupancy calendar on a <em>page</em>, use:</p>
-<pre>{{{ocal_hourly('%OCCUPANCY_NAME%', %NUMBER_OF_WEEKS%);}}}</pre>
+<pre>{{{ocal_hourly('OCCUPANCY_NAME', NUMBER_OF_WEEKS);}}}</pre>
 <p>To display a <em>daily</em> occupancy calendar in the <em>template</em>,
 use:</p>
-<pre>&lt;?php echo ocal('%OCCUPANCY_NAME%', %NUMBER_OF_MONTHS%);?&gt;</pre>
+<pre>&lt;?php echo ocal('OCCUPANCY_NAME', NUMBER_OF_MONTHS);?&gt;</pre>
 <p>To display an <em>hourly</em> occupancy calendar in the <em>template</em>,
 use:</p>
-<pre>&lt;?php echo ocal_hourly('%OCCUPANCY_NAME%', %NUMBER_OF_WEEKS%);?&gt;</pre>
-<p>%OCCUPANCY_NAME% is an arbitrary name, that must only consist of the letters
-a-z, the digits 0-9 and minus signs. %NUMBER_OF_MONTHS% resp. %NUMBER_OF_WEEKS%
-specifies the number of monthly calendars that shall be displayed
-simultaneously.</p>
+<pre>&lt;?php echo ocal_hourly('OCCUPANCY_NAME', NUMBER_OF_WEEKS);?&gt;</pre>
+<p>OCCUPANCY_NAME is an arbitrary name, that must only consist of the letters
+a-z, the digits 0-9 and minus signs. NUMBER_OF_MONTHS resp. NUMBER_OF_WEEKS
+specifies the number of calendars that shall be displayed simultaneously.</p>
 <p>Note that you can put an arbitrary amount of occupancy calendars on a single
 page, even for the same occupancy (what might make sense if you like to present
 a large interval, say a year, on a page, and only a small interval, say a single
