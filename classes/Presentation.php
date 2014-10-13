@@ -256,10 +256,13 @@ EOT;
      * @param string $name A calendar name.
      *
      * @return void
+     *
+     * @global array The configuration of the plugins.
+     * @global array The localization of the plugins.
      */
     protected function saveHourlyStates($name)
     {
-        global $plugin_tx;
+        global $plugin_cf, $plugin_tx;
 
         $states = XH_decodeJson($_POST['ocal_states']);
         if (!is_object($states)) {
@@ -270,7 +273,9 @@ EOT;
         $occupancy = $db->findOccupancy($name, true);
         foreach (get_object_vars($states) as $week => $states) {
             foreach ($states as $i => $state) {
-                $date = sprintf('%s-%02d-%02d', $week, $i % 7 + 1, $i / 7);
+                $day = $i % 7 + 1;
+                $hour = $i / 7 + $plugin_cf['ocal']['hour_first'];
+                $date = sprintf('%s-%02d-%02d', $week, $day, $hour);
                 $occupancy->setState($date, $state);
             }
         }
@@ -1019,13 +1024,18 @@ class Ocal_WeekCalendar extends Ocal_WeekView
      * Renders the week calendar.
      *
      * @return string (X)HTML.
+     *
+     * @global array The configuration of the plugins.
      */
     public function render()
     {
+        global $plugin_cf;
+
+        $pcf = $plugin_cf['ocal'];
         $html = '<table class="ocal_calendar" data-week="'
             . $this->week->getIso() . '">';
         $html .= $this->renderDaynames();
-        for ($i = 0; $i < 24; $i++) {
+        for ($i = $pcf['hour_first']; $i <= $pcf['hour_last']; $i++) {
             $html .= '<tr>';
             for ($j = 1; $j <= 7; $j++) {
                 $html .= $this->renderHour($j, $i);

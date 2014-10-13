@@ -19,4 +19,7 @@ $plugin_tx['ocal']['message_unsaved_changes']="Es gibt ungesicherte Änderungen,
 $plugin_tx['ocal']['error_occupancy_name']="Ein Belegungs-Name darf nur die Buchstaben a-z, die Ziffern 0-9 and Minus-Zeichen enthalten!";
 $plugin_tx['ocal']['alt_logo']="Kalender";
 
+$plugin_tx['ocal']['cf_hour_first']="Die erste Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";
+$plugin_tx['ocal']['cf_hour_last']="Die letzte Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";
+
 ?>

@@ -19,4 +19,7 @@ $plugin_tx['ocal']['message_unsaved_changes']="There are unsaved changes that wi
 $plugin_tx['ocal']['error_occupancy_name']="An occupancy name may only contain the letters a-z, the digits 0-9 and minus signs!";
 $plugin_tx['ocal']['alt_logo']="Calendar";
 
+$plugin_tx['ocal']['cf_hour_first']="The first hour that shall be displayed in the hourly occupancy calendars.";
+$plugin_tx['ocal']['cf_hour_last']="The last hour that shall be displayed in the hourly occupancy calendars.";
+
 ?>
