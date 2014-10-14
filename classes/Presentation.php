@@ -831,7 +831,7 @@ class Ocal_MonthCalendar extends Ocal_MonthView
     public function render()
     {
         $day = $this->month->getDayOffset();
-        $html = '<table class="ocal_calendar" data-month="'
+        $html = '<table class="ocal_calendar" data-ocal_date="'
             . $this->month->getIso() . '">'
             . $this->renderHeading()
             . $this->renderDaynames();
@@ -1096,7 +1096,7 @@ class Ocal_WeekCalendar extends Ocal_WeekView
         global $plugin_cf;
 
         $pcf = $plugin_cf['ocal'];
-        $html = '<table class="ocal_calendar" data-week="'
+        $html = '<table class="ocal_calendar" data-ocal_date="'
             . $this->week->getIso() . '">';
         $html .= $this->renderHeading() . $this->renderDaynames();
         for ($i = $pcf['hour_first']; $i <= $pcf['hour_last']; $i++) {
