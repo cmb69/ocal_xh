@@ -30,147 +30,152 @@ var OCAL = OCAL || {};
         }
     }
 
+    function bind(func, obj) {
+        var args = Array.prototype.slice.call(arguments, 2);
+
+        return function () {
+            func.apply(obj, args.concat(Array.prototype.slice.call(arguments)));
+        };
+    }
+
     /**
      * The calendar widgets.
+     *
+     * @class
      */
     OCAL.Widget = function (element) {
-        var that, elements, i;
+        var elements, i, listener;
 
-        function onClick(event) {
-            that.onClick(event);
-        }
-
-        function onSelectState(event) {
-            that.onSelectState(event);
-        }
-
-        that = this;
         this.element = element;
         this.occupancy = element.getAttribute("data-name");
 
         elements = element.querySelectorAll(".ocal_calendar");
+        listener = bind(this.onClick, this);
         for (i = 0; i < elements.length; i += 1) {
-            elements[i].onclick = onClick;
+            elements[i].onclick = listener;
         }
 
         elements = element.querySelectorAll(".ocal_toolbar span");
+        listener = bind(this.onSelectState, this);
         for (i = 0; i < elements.length; i += 1) {
-            elements[i].onclick = onSelectState;
+            elements[i].onclick = listener;
         }
 
         this.saveButton = element.querySelector(".ocal_save");
-        this.saveButton.onclick = function () {
-            that.onSave();
-        };
+        this.saveButton.onclick = bind(this.onSave, this);
         this.statusbar = element.querySelector(".ocal_statusbar");
     };
 
-    OCAL.Widget.prototype.warning = function (event) {
-        var confirmation = OCAL.message_unsaved_changes;
+    OCAL.Widget.prototype = {
+        constructor: OCAL.Widget,
 
-        (event || window.event).returnValue = confirmation;
-        return confirmation;
-    };
+        warning: function (event) {
+            var confirmation = OCAL.message_unsaved_changes;
 
-    OCAL.Widget.prototype.onClick = function (event) {
-        var target, state;
+            (event || window.event).returnValue = confirmation;
+            return confirmation;
+        },
 
-        if (typeof this.currentState !== "number") {
-            return;
-        }
-        event = event || window.event;
-        target = event.target || event.srcElement;
-        if (target.className.indexOf("ocal_state") > -1) {
-            state = +target.getAttribute("data-ocal_state");
-            if (state !== this.currentState) {
-                target.setAttribute("data-ocal_state", this.currentState);
-                this.saveButton.disabled = false;
-                this.statusbar.innerHTML = "";
-                addListener(window, "beforeunload", this.warning);
+        onClick: function (event) {
+            var target, state;
+
+            if (typeof this.currentState !== "number") {
+                return;
             }
-        }
-    };
-
-    OCAL.Widget.prototype.getCalendarStates = function (calendar) {
-        var states, cells, i, cell;
-
-        states = [];
-        cells = calendar.getElementsByTagName("td");
-        for (i = 0; i < cells.length; i += 1) {
-            cell = cells[i];
-            if (cell.className.indexOf("ocal_state") > -1) {
-                states.push(cell.getAttribute("data-ocal_state"));
+            event = event || window.event;
+            target = event.target || event.srcElement;
+            if (target.className.indexOf("ocal_state") > -1) {
+                state = +target.getAttribute("data-ocal_state");
+                if (state !== this.currentState) {
+                    target.setAttribute("data-ocal_state", this.currentState);
+                    this.saveButton.disabled = false;
+                    this.statusbar.innerHTML = "";
+                    addListener(window, "beforeunload", this.warning);
+                }
             }
-        }
-        return states;
-    };
+        },
 
-    OCAL.Widget.prototype.getAllCalendarStates = function () {
-        var states, calendars, i, calendar, date;
+        getCalendarStates: function (calendar) {
+            var states, cells, i, cell;
 
-        states = {};
-        calendars = this.element.querySelectorAll(".ocal_calendar");
-        for (i = 0; i < calendars.length; i += 1) {
-            calendar = calendars[i];
-            date = calendar.getAttribute("data-ocal_date");
-            states[date] = this.getCalendarStates(calendar);
-        }
-        return states;
-    };
-
-    OCAL.Widget.prototype.onReadyStateChange = function (request, loaderbar) {
-        if (request.readyState === 4) {
-            if (request.status === 200) {
-                this.saveButton.disabled = true;
-                removeListener(window, "beforeunload", this.warning);
-                loaderbar.style.display = "none";
-                this.statusbar.innerHTML = request.responseText;
-            } else {
-                loaderbar.style.display = "none";
-                this.statusbar.innerHTML = "<p class=\"xh_fail\">"
-                        + request.status + " " + request.statusText
-                        + "</p>";
+            states = [];
+            cells = calendar.getElementsByTagName("td");
+            for (i = 0; i < cells.length; i += 1) {
+                cell = cells[i];
+                if (cell.className.indexOf("ocal_state") > -1) {
+                    states.push(cell.getAttribute("data-ocal_state"));
+                }
             }
-        }
-    };
+            return states;
+        },
 
-    OCAL.Widget.prototype.onSave = function () {
-        var that, request, tokenInput, payload, loaderbar;
+        getAllCalendarStates: function () {
+            var states, calendars, i, calendar, date;
 
-        that = this;
-        request = new XMLHttpRequest();
-        request.open(
-            "POST",
-            location.href + "&ocal_name=" + this.occupancy + "&ocal_save=1"
-        );
-        tokenInput = this.element.querySelector("input[name=xh_csrf_token]");
-        request.setRequestHeader("Content-Type",
-                "application/x-www-form-urlencoded");
-        payload = "ocal_states=" +
-            encodeURIComponent(JSON.stringify(this.getAllCalendarStates())) +
-            "&xh_csrf_token=" + tokenInput.value;
-        request.onreadystatechange = function () {
-            that.onReadyStateChange(request, loaderbar);
-        };
-        request.send(payload);
-        loaderbar = this.element.querySelector(".ocal_loaderbar");
-        loaderbar.style.display = "block";
-    };
+            states = {};
+            calendars = this.element.querySelectorAll(".ocal_calendar");
+            for (i = 0; i < calendars.length; i += 1) {
+                calendar = calendars[i];
+                date = calendar.getAttribute("data-ocal_date");
+                states[date] = this.getCalendarStates(calendar);
+            }
+            return states;
+        },
 
-    OCAL.Widget.prototype.onSelectState = function (event) {
-        var target, elements, cells, i;
+        onReadyStateChange: function (request, loaderbar) {
+            if (request.readyState === 4) {
+                if (request.status === 200) {
+                    this.saveButton.disabled = true;
+                    removeListener(window, "beforeunload", this.warning);
+                    loaderbar.style.display = "none";
+                    this.statusbar.innerHTML = request.responseText;
+                } else {
+                    loaderbar.style.display = "none";
+                    this.statusbar.innerHTML = "<p class=\"xh_fail\">"
+                            + request.status + " " + request.statusText
+                            + "</p>";
+                }
+            }
+        },
 
-        event = event || window.event;
-        target = event.target || event.srcElement;
-        elements = this.element.querySelectorAll(".ocal_toolbar span");
-        for (i = 0; i < elements.length; i += 1) {
-            elements[i].style.borderWidth = "";
-        }
-        this.currentState = +target.getAttribute("data-ocal_state");
-        target.style.borderWidth = "3px";
-        cells = this.element.querySelectorAll(".ocal_calendar td.ocal_state");
-        for (i = 0; i < cells.length; i += 1) {
-            cells[i].style.cursor = "pointer";
+        onSave: function () {
+            var request, tokenInput, payload, loaderbar, states;
+
+            request = new XMLHttpRequest();
+            request.open(
+                "POST",
+                location.href + "&ocal_name=" + this.occupancy + "&ocal_save=1"
+            );
+            tokenInput =
+                this.element.querySelector("input[name=xh_csrf_token]");
+            request.setRequestHeader("Content-Type",
+                    "application/x-www-form-urlencoded");
+            states = JSON.stringify(this.getAllCalendarStates());
+            payload = "ocal_states=" + encodeURIComponent(states) +
+                "&xh_csrf_token=" + tokenInput.value;
+            loaderbar = this.element.querySelector(".ocal_loaderbar");
+            request.onreadystatechange =
+                bind(this.onReadyStateChange, this, request, loaderbar);
+            request.send(payload);
+            loaderbar.style.display = "block";
+        },
+
+        onSelectState: function (event) {
+            var target, elements, cells, i;
+
+            event = event || window.event;
+            target = event.target || event.srcElement;
+            elements = this.element.querySelectorAll(".ocal_toolbar span");
+            for (i = 0; i < elements.length; i += 1) {
+                elements[i].style.borderWidth = "";
+            }
+            this.currentState = +target.getAttribute("data-ocal_state");
+            target.style.borderWidth = "3px";
+            cells =
+                this.element.querySelectorAll(".ocal_calendar td.ocal_state");
+            for (i = 0; i < cells.length; i += 1) {
+                cells[i].style.cursor = "pointer";
+            }
         }
     };
 
