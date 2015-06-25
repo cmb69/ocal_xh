@@ -82,25 +82,25 @@ class Ocal_WeekCalendars extends Ocal_Calendars
      *
      * @return string (X)HTML.
      *
+     * @global array The localization of the plugins.
+     *
      * @todo Restrict links to reasonable range, to avoid search engines
      *       searching infinitely.
      */
     protected function renderPaginationLink2($offset, $label)
     {
-        global $sn, $su, $plugin_tx;
+        global $plugin_tx;
 
-        $url = $sn . '?' . $su;
+        $params = array('ocal_mode' => $this->mode == 'list' ? 'list' : 'calendar');
         if ($offset) {
             $week = new Ocal_Week($this->week, $this->year);
             $week = $week->getNextWeek($offset);
-            $url .= '&amp;ocal_year=' . $week->getYear()
-                . '&amp;ocal_week=' . $week->getWeek();
+            $params['ocal_year'] = $week->getYear();
+            $params['ocal_week'] = $week->getWeek();
         }
-        if ($this->mode == 'list') {
-            $url .= '&amp;ocal_mode=list';
-        }
-        return '<a href="' . $url . '">' . $plugin_tx['ocal']['label_'. $label]
-            . '</a>';
+        $url = $this->modifyUrl($params);
+        return '<a href="' . XH_hsc($url) . '">'
+            . $plugin_tx['ocal']['label_'. $label] . '</a>';
     }
 }
 

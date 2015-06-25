@@ -96,22 +96,19 @@ abstract class Ocal_View
      *
      * @return string (X)HTML.
      *
-     * @global string The script name.
-     * @global string The requested page URL.
      * @global array  The localization of the plugins.
      */
     protected function renderModeLink()
     {
-        global $sn, $su, $plugin_tx;
+        global $plugin_tx;
 
-        $url = $sn . '?' . $su;
-        if ($this->mode == 'calendar') {
-            $url .= '&amp;ocal_mode=list';
-        }
+        $mode = $this->mode == 'calendar' ? 'list' : 'calendar';
+        $url = $this->modifyUrl(array('ocal_mode' => $mode));
         $label = $this->mode == 'calendar'
             ? $plugin_tx['ocal']['label_list_view']
             : $plugin_tx['ocal']['label_calendar_view'];
-        return '<p class="ocal_mode"><a href="' . $url . '">' . $label . '</a></p>';
+        return '<p class="ocal_mode"><a href="' . XH_hsc($url) . '">' . $label
+            . '</a></p>';
     }
 
     /**
@@ -139,15 +136,20 @@ abstract class Ocal_View
      *
      * @return string (X)HTML.
      *
+     * @global array The localization of the plugins.
+     *
      * @todo Restrict links to reasonable range, to avoid search engines
      *       searching infinitely.
      */
     protected function renderPaginationLink($month, $year, $label)
     {
-        global $sn, $su, $plugin_tx;
+        global $plugin_tx;
 
+        $mode = $this->mode == 'list' ? 'list' : 'calendar';
         if ($month === false && $year === false) {
-            $url = $sn . '?' . $su;
+            $url = $this->modifyUrl(
+                array('ocal_year' => '', 'ocal_month' => '', 'ocal_mode' => $mode)
+            );
         } else {
             $month = $this->month + $month;
             $year = $this->year + $year;
@@ -158,14 +160,35 @@ abstract class Ocal_View
                 $month = 1;
                 $year += 1;
             }
-            $url = $sn . '?' . $su
-                . '&amp;ocal_year=' . $year . '&amp;ocal_month=' . $month;
+            $url = $this->modifyUrl(
+                array(
+                    'ocal_year' => $year, 'ocal_month' => $month,
+                    'ocal_mode' => $mode
+                )
+            );
         }
-        if ($this->mode == 'list') {
-            $url .= '&amp;ocal_mode=list';
-        }
-        return '<a href="' . $url . '">' . $plugin_tx['ocal']['label_'. $label]
-            . '</a>';
+        return '<a href="' . XH_hsc($url) . '">'
+            . $plugin_tx['ocal']['label_'. $label] . '</a>';
+    }
+
+    /**
+     * Returns the current URL with modified parameters.
+     *
+     * @param array $newParams An array of parameters to modify.
+     *
+     * @return string
+     *
+     * @global string The script name.
+     */
+    protected function modifyUrl(array $newParams)
+    {
+        global $sn;
+
+        parse_str($_SERVER['QUERY_STRING'], $params);
+        unset($params['ocal_ajax']);
+        $params = array_merge($params, $newParams);
+        $query = str_replace('=&', '&', http_build_query($params));
+        return $sn . '?' . $query;
     }
 }
 
