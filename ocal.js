@@ -143,7 +143,8 @@ var OCAL = OCAL || {};
             request = new XMLHttpRequest();
             request.open(
                 "POST",
-                location.href + "&ocal_name=" + this.occupancy + "&ocal_save=1"
+                location.href.replace(/#.*$/, "") + "&ocal_name=" +
+                    this.occupancy + "&ocal_save=1"
             );
             tokenInput =
                 this.element.querySelector("input[name=xh_csrf_token]");
