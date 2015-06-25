@@ -198,7 +198,14 @@ EOT;
         $occupancy = $db->findOccupancy($name);
         $db = null;
         $view = $this->getView($occupancy);
-        return $view->render($monthCount);
+        $html = $view->render($monthCount);
+        if (isset($_GET['ocal_ajax'])) {
+            header('Content-Type: text/html; charset=UTF-8');
+            echo $html;
+            exit;
+        } else {
+            return $html;
+        }
     }
 
     /**
@@ -260,7 +267,14 @@ EOT;
         $occupancy = $db->findOccupancy($name, true);
         $db = null;
         $view = $this->getView($occupancy);
-        return $view->render($weekCount);
+        $html = $view->render($weekCount);
+        if (isset($_GET['ocal_ajax'])) {
+            header('Content-Type: text/html; charset=UTF-8');
+            echo $html;
+            exit;
+        } else {
+            return $html;
+        }
     }
 
     /**

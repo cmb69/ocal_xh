@@ -96,6 +96,8 @@ class Ocal_Calendars extends Ocal_View
                 . '<script type="text/javascript" src="'
                 . $pth['folder']['plugins'] . 'ocal/ocal.js"></script>';
         }
+        $bjs .= '<script type="text/javascript" src="'
+            . $pth['folder']['plugins'] . 'ocal/ocal-front.js"></script>';
     }
 
     /**
