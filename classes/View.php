@@ -147,9 +147,9 @@ abstract class Ocal_View
 
         $mode = $this->mode == 'list' ? 'list' : 'calendar';
         if ($month === false && $year === false) {
-            $url = $this->modifyUrl(
-                array('ocal_year' => '', 'ocal_month' => '', 'ocal_mode' => $mode)
-            );
+            $date = new DateTime();
+            $year = $date->format('Y');
+            $month = $date->format('n');
         } else {
             $month = $this->month + $month;
             $year = $this->year + $year;
@@ -160,13 +160,13 @@ abstract class Ocal_View
                 $month = 1;
                 $year += 1;
             }
-            $url = $this->modifyUrl(
-                array(
-                    'ocal_year' => $year, 'ocal_month' => $month,
-                    'ocal_mode' => $mode
-                )
-            );
         }
+        $url = $this->modifyUrl(
+            array(
+                'ocal_year' => $year, 'ocal_month' => $month,
+                'ocal_mode' => $mode
+            )
+        );
         return '<a href="' . XH_hsc($url) . '">'
             . $plugin_tx['ocal']['label_'. $label] . '</a>';
     }

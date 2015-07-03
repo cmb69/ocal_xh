@@ -97,6 +97,10 @@ class Ocal_WeekCalendars extends Ocal_Calendars
             $week = $week->getNextWeek($offset);
             $params['ocal_year'] = $week->getYear();
             $params['ocal_week'] = $week->getWeek();
+        } else {
+            $date = new DateTime();
+            $params['ocal_year'] = $date->format('o');
+            $params['ocal_week'] = $date->format('W');
         }
         $url = $this->modifyUrl($params);
         return '<a href="' . XH_hsc($url) . '">'
