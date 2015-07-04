@@ -110,7 +110,6 @@
         <jsMin targetDir="dist" suffix="" failOnError="false">
             <fileset dir="export">
                 <include name="ocal.js"/>
-                <include name="ocal-front.js"/>
             </fileset>
         </jsMin>
         <move todir="dist">

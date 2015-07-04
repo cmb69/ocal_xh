@@ -85,19 +85,16 @@ class Ocal_Calendars extends Ocal_View
     {
         global $pth, $bjs, $plugin_tx;
 
-        if (XH_ADM) {
-            $config = array(
-                'message_unsaved_changes'
-                    => $plugin_tx['ocal']['message_unsaved_changes']
-            );
-            $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
-                . 'var OCAL = ' . XH_encodeJson($config) . ';'
-                . '/* ]]> */</script>'
-                . '<script type="text/javascript" src="'
-                . $pth['folder']['plugins'] . 'ocal/ocal.js"></script>';
-        }
-        $bjs .= '<script type="text/javascript" src="'
-            . $pth['folder']['plugins'] . 'ocal/ocal-front.js"></script>';
+        $config = array(
+            'message_unsaved_changes'
+                => $plugin_tx['ocal']['message_unsaved_changes'],
+            'isAdmin' => XH_ADM
+        );
+        $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
+            . 'var OCAL = ' . XH_encodeJson($config) . ';'
+            . '/* ]]> */</script>'
+            . '<script type="text/javascript" src="'
+            . $pth['folder']['plugins'] . 'ocal/ocal.js"></script>';
     }
 
     /**
