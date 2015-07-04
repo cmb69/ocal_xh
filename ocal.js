@@ -13,6 +13,8 @@ var OCAL = OCAL || {};
 (function () {
     "use strict";
 
+    var init, unsavedChanges;
+
     function on(element, event, listener) {
         if (typeof element.addEventListener !== "undefined") {
             element.addEventListener(event, listener);
@@ -50,20 +52,15 @@ var OCAL = OCAL || {};
         }
     }
 
-    /**
-     * The calendar widgets.
-     *
-     * @class
-     */
+    function warning(event) {
+        var confirmation = OCAL.message_unsaved_changes;
+
+        (event || window.event).returnValue = confirmation;
+        return confirmation;
+    }
+
     function makeEditor(element) {
         var elements, occupancy, saveButton, statusbar, currentState;
-
-        function warning(event) {
-            var confirmation = OCAL.message_unsaved_changes;
-
-            (event || window.event).returnValue = confirmation;
-            return confirmation;
-        }
 
         function onClick(event) {
             var target, state;
@@ -80,6 +77,7 @@ var OCAL = OCAL || {};
                     saveButton.disabled = false;
                     statusbar.innerHTML = "";
                     on(window, "beforeunload", warning);
+                    unsavedChanges = true;
                 }
             }
         }
@@ -114,6 +112,7 @@ var OCAL = OCAL || {};
                 if (request.status === 200) {
                     saveButton.disabled = true;
                     off(window, "beforeunload", warning);
+                    unsavedChanges = false;
                     loaderbar.style.display = "none";
                     statusbar.innerHTML = request.responseText;
                 } else {
@@ -197,33 +196,45 @@ var OCAL = OCAL || {};
         each(editors, makeEditor);
     }
 
-    if (OCAL.isAdmin) {
-        initAdmin();
+    function onPaginationClick(event) {
+        var target, request, calendar;
+
+        if (unsavedChanges) {
+            if (window.confirm(OCAL.message_unsaved_changes)) {
+                unsavedChanges = false;
+                off(window, "beforeunload", warning);
+            } else {
+                return false;
+            }
+        }
+        event = event || window.event;
+        target = event.target || event.srcElement;
+        request = new XMLHttpRequest();
+        request.open("GET", target.href + "&ocal_ajax=1");
+        request.onreadystatechange = function () {
+            if (request.readyState === 4) {
+                calendar.outerHTML = request.responseText;
+                init();
+            }
+        };
+        request.send(null);
+        calendar = target.parentNode.parentNode;
+        calendar.style.opacity = 0.2;
+        return false;
     }
 
-    function init() {
+    init = function () {
         var elements;
 
+        unsavedChanges = false;
         elements = document.querySelectorAll(".ocal_pagination a");
         each(elements, function (element) {
-            element.onclick = function () {
-                var request, calendar;
-
-                request = new XMLHttpRequest();
-                request.open("GET", this.href + "&ocal_ajax=1");
-                request.onreadystatechange = function () {
-                    if (request.readyState === 4) {
-                        calendar.outerHTML = request.responseText;
-                        init();
-                    }
-                };
-                request.send(null);
-                calendar = element.parentNode.parentNode;
-                calendar.style.opacity = 0.2;
-                return false;
-            };
+            element.onclick = onPaginationClick;
         });
-    }
+        if (OCAL.isAdmin) {
+            initAdmin();
+        }
+    };
 
-    init();
+    on(window, "load", init);
 }());
