@@ -92,6 +92,31 @@ abstract class Ocal_View
     }
 
     /**
+     * Emits the script elements.
+     *
+     * @return void
+     *
+     * @global array  The paths of system files and folders.
+     * @global string The (X)HTML to insert at the bottom of the body element.
+     * @global array  The localization of the plugins.
+     */
+    protected function emitScriptElements()
+    {
+        global $pth, $bjs, $plugin_tx;
+
+        $config = array(
+            'message_unsaved_changes'
+                => $plugin_tx['ocal']['message_unsaved_changes'],
+            'isAdmin' => XH_ADM
+        );
+        $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
+            . 'var OCAL = ' . XH_encodeJson($config) . ';'
+            . '/* ]]> */</script>'
+            . '<script type="text/javascript" src="'
+            . $pth['folder']['plugins'] . 'ocal/ocal.js"></script>';
+    }
+
+    /**
      * Renders a link to switch the view mode.
      *
      * @return string (X)HTML.
@@ -109,6 +134,33 @@ abstract class Ocal_View
             : $plugin_tx['ocal']['label_calendar_view'];
         return '<p class="ocal_mode"><a href="' . XH_hsc($url) . '">' . $label
             . '</a></p>';
+    }
+
+    /**
+     * Renders the Ajax loader bar.
+     *
+     * @return string (X)HTML.
+     *
+     * @global array The paths of system files and folders.
+     */
+    protected function renderLoaderbar()
+    {
+        global $pth;
+
+        $src = $pth['folder']['plugins'] . 'ocal/images/ajax-loader-bar.gif';
+        return '<div class="ocal_loaderbar">'
+            . tag('img src="' . $src . '" alt="loading"')
+            . '</div>';
+    }
+
+    /**
+     * Renders the status bar.
+     *
+     * @return string (X)HTML.
+     */
+    protected function renderStatusbar()
+    {
+        return '<div class="ocal_statusbar"></div>';
     }
 
     /**

@@ -56,10 +56,9 @@ class Ocal_Calendars extends Ocal_View
             . $this->renderModeLink();
         if (XH_ADM) {
             $html .= $_XH_csrfProtection->tokenInput()
-                . $this->renderToolbar()
-                . $this->renderLoaderbar()
-                . $this->renderStatusbar();
+                . $this->renderToolbar();
         }
+        $html .= $this->renderLoaderbar() . $this->renderStatusbar();
         $month = new Ocal_Month($this->month, $this->year);
         while ($monthCount) {
             $calendar = new Ocal_MonthCalendar($month, $this->occupancy);
@@ -70,31 +69,6 @@ class Ocal_Calendars extends Ocal_View
         $html .= $this->renderPagination()
             . '</div>';
         return $html;
-    }
-
-    /**
-     * Emits the script elements.
-     *
-     * @return void
-     *
-     * @global array  The paths of system files and folders.
-     * @global string The (X)HTML to insert at the bottom of the body element.
-     * @global array  The localization of the plugins.
-     */
-    protected function emitScriptElements()
-    {
-        global $pth, $bjs, $plugin_tx;
-
-        $config = array(
-            'message_unsaved_changes'
-                => $plugin_tx['ocal']['message_unsaved_changes'],
-            'isAdmin' => XH_ADM
-        );
-        $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
-            . 'var OCAL = ' . XH_encodeJson($config) . ';'
-            . '/* ]]> */</script>'
-            . '<script type="text/javascript" src="'
-            . $pth['folder']['plugins'] . 'ocal/ocal.js"></script>';
     }
 
     /**
@@ -121,32 +95,6 @@ class Ocal_Calendars extends Ocal_View
         return $html;
     }
 
-    /**
-     * Renders the Ajax loader bar.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The paths of system files and folders.
-     */
-    protected function renderLoaderbar()
-    {
-        global $pth;
-
-        $src = $pth['folder']['plugins'] . 'ocal/images/ajax-loader-bar.gif';
-        return '<div class="ocal_loaderbar">'
-            . tag('img src="' . $src . '" alt="loading"')
-            . '</div>';
-    }
-
-    /**
-     * Renders the status bar.
-     *
-     * @return string (X)HTML.
-     */
-    protected function renderStatusbar()
-    {
-        return '<div class="ocal_statusbar"></div>';
-    }
 }
 
 ?>

@@ -46,7 +46,9 @@ class Ocal_ListView extends Ocal_View
      */
     public function render($monthCount)
     {
-        $html = $this->renderModeLink()
+        $this->emitScriptElements();
+        $html = '<div>' . $this->renderModeLink()
+            . $this->renderLoaderbar() . $this->renderStatusbar()
             . '<dl class="ocal_list">';
         $month = new Ocal_Month($this->month, $this->year);
         while ($monthCount) {
@@ -56,7 +58,7 @@ class Ocal_ListView extends Ocal_View
             $month = $month->getNextMonth();
         }
         $html .= '</dl>'
-            . $this->renderPagination();
+            . $this->renderPagination() . '</div>';
         return $html;
     }
 }
