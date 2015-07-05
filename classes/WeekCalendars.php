@@ -42,10 +42,9 @@ class Ocal_WeekCalendars extends Ocal_Calendars
             . $this->occupancy->getName() . '">';
         if (XH_ADM) {
             $html .= $_XH_csrfProtection->tokenInput()
-                . $this->renderToolbar()
-                . $this->renderLoaderbar()
-                . $this->renderStatusbar();
+                . $this->renderToolbar();
         }
+        $html .= $this->renderLoaderbar() . $this->renderStatusbar();
         $week = new Ocal_Week($this->week, $this->year);
         $i = $weekCount;
         while ($i) {
