@@ -3,12 +3,17 @@
  */
 .ocal_calendars, .ocal_week_calendars {
     text-align: center;
+    position: relative;
 }
 .ocal_toolbar, .ocal_loaderbar {
     margin: 1em 0;
 }
 .ocal_loaderbar {
     display: none;
+    /*position: absolute;*/
+    /*left: 40%;*/
+    /*top: 40%;*/
+    /*z-index: 1;*/
 }
 .ocal_toolbar span {
     display: inline-block;
@@ -26,6 +31,7 @@
     padding: 0 0.5em;
     vertical-align: top;
     border-collapse: collapse;
+    /*min-height: 14em;*/
 }
 .ocal_calendar td {
     padding: 0.2em;
