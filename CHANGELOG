@@ -1,3 +1,11 @@
+Version 1.0beta3 -- released 2015-07-05
+* fixed bug, where saving failed when the requested URL contained a fragment
+  (reported by Holger)
+* fixed bug, where query parameters of other plugins were ignored for the
+  pagination and mode links (reported by Holger)
+* implemented pagination via Ajax as progressive enhancement (suggested by
+  Holger)
+
 Version 1.0beta2 -- released 2014-10-14
 * lifted requirements to PHP 5.2.0
 * added hourly occupancies (suggested by hixi)
