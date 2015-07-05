@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dc4ca577b11c50df3e5bc731bf8ced76",
+    "hash": "a72b0b6e9b5ff069a81f0233b662b7e9",
     "packages": [],
     "packages-dev": [
         {
@@ -163,6 +163,63 @@
                 "reverse-engineer"
             ],
             "time": "2015-06-18 11:30:46"
+        },
+        {
+            "name": "bartlett/umlwriter",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/llaville/umlwriter.git",
+                "reference": "c883bf1f80370397198c5eae0615173380fa6119"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/llaville/umlwriter/zipball/c883bf1f80370397198c5eae0615173380fa6119",
+                "reference": "c883bf1f80370397198c5eae0615173380fa6119",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "sebastian/version": "~1.0",
+                "symfony/console": "~2.5"
+            },
+            "require-dev": {
+                "andrewsville/php-token-reflection": "~1.4",
+                "bartlett/php-reflect": "3.0.*@dev"
+            },
+            "suggest": {
+                "andrewsville/php-token-reflection": "Reverse-engine, alternative solution",
+                "bartlett/php-reflect": "Reverse-engine, default solution"
+            },
+            "bin": [
+                "bin/umlwriter"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Bartlett\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Laurent Laville",
+                    "email": "pear@laurent-laville.org",
+                    "homepage": "https://github.com/llaville",
+                    "role": "Lead"
+                }
+            ],
+            "description": "Create UML class diagrams from your PHP source.",
+            "homepage": "http://php5.laurent-laville.org/umlwriter/",
+            "keywords": [
+                "graphviz",
+                "plantuml",
+                "uml"
+            ],
+            "time": "2015-04-02 11:07:20"
         },
         {
             "name": "doctrine/collections",
@@ -743,16 +800,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.1.6",
+            "version": "2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "631e365cf26bb2c078683e8d9bcf8bc631ac4d44"
+                "reference": "07e27765596d72c378a6103e80da5d84e802f1e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/631e365cf26bb2c078683e8d9bcf8bc631ac4d44",
-                "reference": "631e365cf26bb2c078683e8d9bcf8bc631ac4d44",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/07e27765596d72c378a6103e80da5d84e802f1e4",
+                "reference": "07e27765596d72c378a6103e80da5d84e802f1e4",
                 "shasum": ""
             },
             "require": {
@@ -801,7 +858,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-19 07:11:55"
+            "time": "2015-06-30 06:52:35"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -983,16 +1040,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.7.5",
+            "version": "4.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "f6701ef3faea759acd1910a7751d8d102a7fd5bc"
+                "reference": "0ebabb4cda7d066be8391dfdbaf57fe70ac9a99b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f6701ef3faea759acd1910a7751d8d102a7fd5bc",
-                "reference": "f6701ef3faea759acd1910a7751d8d102a7fd5bc",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0ebabb4cda7d066be8391dfdbaf57fe70ac9a99b",
+                "reference": "0ebabb4cda7d066be8391dfdbaf57fe70ac9a99b",
                 "shasum": ""
             },
             "require": {
@@ -1051,20 +1108,20 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-21 07:23:36"
+            "time": "2015-06-30 06:53:57"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "2.3.4",
+            "version": "2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "92408bb1968a81b3217a6fdf6c1a198da83caa35"
+                "reference": "1c330b1b6e1ea8fd15f2fbea46770576e366855c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/92408bb1968a81b3217a6fdf6c1a198da83caa35",
-                "reference": "92408bb1968a81b3217a6fdf6c1a198da83caa35",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/1c330b1b6e1ea8fd15f2fbea46770576e366855c",
+                "reference": "1c330b1b6e1ea8fd15f2fbea46770576e366855c",
                 "shasum": ""
             },
             "require": {
@@ -1106,7 +1163,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-06-11 15:55:48"
+            "time": "2015-07-04 05:41:32"
         },
         {
             "name": "sebastian/comparator",

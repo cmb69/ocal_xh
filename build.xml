@@ -88,6 +88,11 @@
         </apply>
     </target>
 
+    <target name="uml" description="generates UML diagram">
+        <mkdir dir="doc"/>
+        <exec command="umlwriter diagram:render --reflector=reflect --processor=graphviz classes | dot -Tpng -o doc/uml.png"/>
+    </target>
+
     <target name="doc" description="generates the developer documentation"
             depends="php-doc,js-doc"/>
 
