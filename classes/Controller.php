@@ -8,7 +8,7 @@
  * @category  CMSimple_XH
  * @package   Ocal
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
- * @copyright 2014-2015 Christoph M. Becker <http://3-magi.net/>
+ * @copyright 2014-2016 Christoph M. Becker <http://3-magi.net/>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
@@ -148,7 +148,7 @@ EOT;
     private function _renderCopyright()
     {
         return <<<EOT
-<p>Copyright &copy; 2014-2015
+<p>Copyright &copy; 2014-2016
     <a href="http://3-magi.net/" target="_blank">Christoph M. Becker</a>
 </p>
 EOT;

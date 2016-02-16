@@ -8,7 +8,7 @@
  * @category  Testing
  * @package   Ocal
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
- * @copyright 2014-2015 Christoph M. Becker <http://3-magi.net>
+ * @copyright 2014-2016 Christoph M. Becker <http://3-magi.net>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
@@ -147,7 +147,7 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         @$this->assertTag(
             array(
                 'tag' => 'p',
-                'content' => "Copyright \xC2\xA9 2014-2015",
+                'content' => "Copyright \xC2\xA9 2014-2016",
                 'child' => array(
                     'tag' => 'a',
                     'attributes' => array(
