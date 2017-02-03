@@ -89,8 +89,8 @@
     </target>
 
     <target name="uml" description="generates UML diagram">
-        <mkdir dir="doc"/>
-        <exec command="umlwriter diagram:render --reflector=reflect --processor=graphviz classes | dot -Tpng -o doc/uml.png"/>
+        <exec command="umlwriter diagram:render --reflector=reflect --processor=graphviz classes | dot -Tpng -o UML.png"
+              logoutput="true"/>
     </target>
 
     <target name="doc" description="generates the developer documentation"
