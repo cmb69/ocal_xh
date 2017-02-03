@@ -200,9 +200,13 @@ EOT;
         $view = $this->getView($occupancy);
         $html = $view->render($monthCount);
         if (isset($_GET['ocal_ajax'])) {
-            header('Content-Type: text/html; charset=UTF-8');
-            echo $html;
-            exit;
+            if ($_GET['ocal_name'] == $name) {
+                header('Content-Type: text/html; charset=UTF-8');
+                echo $html;
+                exit;
+            } else {
+                return;
+            }
         } else {
             return $html;
         }
@@ -269,9 +273,13 @@ EOT;
         $view = $this->getView($occupancy);
         $html = $view->render($weekCount);
         if (isset($_GET['ocal_ajax'])) {
-            header('Content-Type: text/html; charset=UTF-8');
-            echo $html;
-            exit;
+            if ($_GET['ocal_name'] == $name) {
+                header('Content-Type: text/html; charset=UTF-8');
+                echo $html;
+                exit;
+            } else {
+                return;
+            }
         } else {
             return $html;
         }

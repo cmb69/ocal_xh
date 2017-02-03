@@ -194,7 +194,7 @@ var OCAL = OCAL || {};
     }
 
     function onPaginationClick(event) {
-        var target, request, calendar;
+        var target, request, calendar, url;
 
         if (unsavedChanges) {
             if (window.confirm(OCAL.message_unsaved_changes)) {
@@ -206,8 +206,11 @@ var OCAL = OCAL || {};
         }
         event = event || window.event;
         target = event.target || event.srcElement;
+        calendar = target.parentNode.parentNode;
         request = new XMLHttpRequest();
-        request.open("GET", target.href + "&ocal_ajax=1");
+        url = target.href + "&ocal_name=" + calendar.getAttribute("data-name") +
+            "&ocal_ajax=1";
+        request.open("GET", url);
         request.onreadystatechange = function () {
             if (request.readyState === 4) {
                 if (request.status === 200) {
@@ -225,7 +228,6 @@ var OCAL = OCAL || {};
             }
         };
         request.send(null);
-        calendar = target.parentNode.parentNode;
         each(find(calendar, ".ocal_loaderbar"), function (bar) {
             bar.style.display = "block";
         });
