@@ -99,6 +99,7 @@
                 <exclude name="coverage.xml"/>
                 <exclude name="ocal.komodoproject"/>
                 <exclude name="phpcompatinfo.*"/>
+                <exclude name="README.md"/>
                 <exclude name="tests/**"/>
                 <exclude name="TODO"/>
             </fileset>
