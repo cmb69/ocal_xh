@@ -1,6 +1,5 @@
 *.komodoproject
 .komodotools
-doc
 tests/coverage
 UML.png
 vendor
