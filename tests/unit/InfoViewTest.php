@@ -1,16 +1,8 @@
 <?php
 
 /**
- * Testing the info view.
- *
- * PHP version 5
- *
- * @category  Testing
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
@@ -22,40 +14,19 @@ require_once '../../cmsimple/adminfuncs.php';
 use PHPUnit_Framework_TestCase;
 use PHPUnit_Extensions_MockFunction;
 
-/**
- * Testing the info view.
- *
- * @category Testing
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class InfoViewTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * The subject under test.
-     *
      * @var Controller
      */
-    private $_subject;
+    private $subject;
 
-    /**
-     * Sets up the test fixture.
-     *
-     * @return void
-     *
-     * @global string Whether the plugin administration is requested.
-     * @global string The (X)HTML of the contents area.
-     * @global array  The paths of system files and folders.
-     * @global array  The localization of the plugins.
-     */
     public function setUp()
     {
         global $ocal, $o, $pth, $plugin_tx;
 
-        $this->_defineConstant('XH_ADM', true);
-        $this->_defineConstant('OCAL_VERSION', '1.0');
+        $this->defineConstant('XH_ADM', true);
+        $this->defineConstant('OCAL_VERSION', '1.0');
         $ocal = 'true';
         $o = '';
         $pth = array(
@@ -64,23 +35,12 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         $plugin_tx = array(
             'ocal' => array('alt_logo' => 'Calendar')
         );
-        $this->_subject = new Controller();
-        $rspmiMock = new PHPUnit_Extensions_MockFunction(
-            'XH_registerStandardPluginMenuItems', $this->_subject
-        );
-        $printPluginAdminMock = new PHPUnit_Extensions_MockFunction(
-            'print_plugin_admin', $this->_subject
-        );
-        $this->_subject->dispatch();
+        $this->subject = new Controller();
+        $rspmiMock = new PHPUnit_Extensions_MockFunction('XH_registerStandardPluginMenuItems', $this->subject);
+        $printPluginAdminMock = new PHPUnit_Extensions_MockFunction('print_plugin_admin', $this->subject);
+        $this->subject->dispatch();
     }
 
-    /**
-     * Tests that the heading is rendered.
-     *
-     * @return void
-     *
-     * @global string The (X)HTML of the contents area.
-     */
     public function testRendersHeading()
     {
         global $o;
@@ -94,13 +54,6 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Tests that the plugin logo is rendered.
-     *
-     * @return void
-     *
-     * @global string The (X)HTML of the contents area.
-     */
     public function testRendersLogo()
     {
         global $o;
@@ -118,13 +71,6 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Tests that the version info is rendered.
-     *
-     * @return void
-     *
-     * @global string The (X)HTML of the contents area.
-     */
     public function testRendersVersion()
     {
         global $o;
@@ -138,13 +84,6 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Tests that the copyright info is rendered.
-     *
-     * @return void
-     *
-     * @global string The (X)HTML of the contents area.
-     */
     public function testRendersCopyright()
     {
         global $o;
@@ -166,13 +105,6 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Tests that the license info is rendered.
-     *
-     * @return void
-     *
-     * @global string The (X)HTML of the contents area.
-     */
     public function testRendersLicense()
     {
         global $o;
@@ -188,14 +120,10 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * (Re)defines a constant.
-     *
-     * @param string $name  A name.
-     * @param string $value A value.
-     *
-     * @return void
+     * @param string $name
+     * @param string $value
      */
-    private function _defineConstant($name, $value)
+    private function defineConstant($name, $value)
     {
         if (!defined($name)) {
             define($name, $value);
@@ -204,5 +132,3 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         }
     }
 }
-
-?>

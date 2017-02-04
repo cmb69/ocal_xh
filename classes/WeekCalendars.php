@@ -1,41 +1,19 @@
 <?php
 
 /**
- * The week calendars.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
 
 use DateTime;
 
-/**
- * The week calendars.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class WeekCalendars extends Calendars
 {
     /**
-     * Renders the week calendars.
-     *
-     * @param int $weekCount A number of weeks.
-     *
-     * @return string (X)HTML.
-     *
-     * @global XH_CSRFProtection The CSRF protector.
+     * @param int $weekCount
+     * @return string
      */
     public function render($weekCount)
     {
@@ -62,11 +40,8 @@ class WeekCalendars extends Calendars
     }
 
     /**
-     * Renders the pagination.
-     *
-     * @param int $weekCount A week count.
-     *
-     * @return string (X)HTML.
+     * @param int $weekCount
+     * @return string
      */
     protected function renderPagination2($weekCount)
     {
@@ -78,17 +53,9 @@ class WeekCalendars extends Calendars
     }
 
     /**
-     * Renders a pagination link.
-     *
-     * @param int    $offset A week offset.
-     * @param string $label  A label key.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
-     *
-     * @todo Restrict links to reasonable range, to avoid search engines
-     *       searching infinitely.
+     * @param int $offset
+     * @param string $label
+     * @return string
      */
     protected function renderPaginationLink2($offset, $label)
     {
@@ -110,5 +77,3 @@ class WeekCalendars extends Calendars
             . $plugin_tx['ocal']['label_'. $label] . '</a>';
     }
 }
-
-?>

@@ -1,38 +1,14 @@
 <?php
 
 /**
- * The calendars.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
 
-/**
- * The calendars.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class Calendars extends View
 {
-    /**
-     * Initializes a new instance.
-     *
-     * @param Occupancy $occupancy An occupancy.
-     *
-     * @return void
-     */
     public function __construct(Occupancy $occupancy)
     {
         parent::__construct($occupancy);
@@ -40,13 +16,8 @@ class Calendars extends View
     }
 
     /**
-     * Renders the calendars.
-     *
-     * @param int $monthCount A number of months.
-     *
-     * @return string (X)HTML.
-     *
-     * @global XH_CSRFProtection The CSRF protector.
+     * @param int $monthCount
+     * @return string
      */
     public function render($monthCount)
     {
@@ -74,11 +45,7 @@ class Calendars extends View
     }
 
     /**
-     * Renders the toolbar.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
+     * @return string
      */
     protected function renderToolbar()
     {
@@ -96,7 +63,4 @@ class Calendars extends View
             . '</div>';
         return $html;
     }
-
 }
-
-?>

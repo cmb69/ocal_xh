@@ -1,39 +1,18 @@
 <?php
 
 /**
- * The week calendars.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
 
 use DateTime;
 
-/**
- * The week calendars.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class WeekCalendar extends WeekView
 {
     /**
-     * Renders the week calendar.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The configuration of the plugins.
+     * @return string
      */
     public function render()
     {
@@ -55,9 +34,7 @@ class WeekCalendar extends WeekView
     }
 
     /**
-     * Renders the heading.
-     *
-     * @return string (X)HTML.
+     * @return string
      */
     protected function renderHeading()
     {
@@ -71,11 +48,7 @@ class WeekCalendar extends WeekView
     }
 
     /**
-     * Renders the daynames.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
+     * @return string
      */
     protected function renderDaynames()
     {
@@ -91,14 +64,9 @@ class WeekCalendar extends WeekView
     }
 
     /**
-     * Renders an hour table cell.
-     *
-     * @param int $day  A day.
-     * @param int $hour An hour.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
+     * @param int $day
+     * @param int $hour
+     * @return string
      */
     protected function renderHour($day, $hour)
     {
@@ -111,5 +79,3 @@ class WeekCalendar extends WeekView
             . $title . '>' . $hour . '</td>';
     }
 }
-
-?>

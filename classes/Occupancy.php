@@ -1,53 +1,28 @@
 <?php
 
 /**
- * The occupancies.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
 namespace Ocal;
 
 use Serializable;
 
-/**
- * The occupancies.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class Occupancy implements Serializable
 {
     /**
-     * The name.
-     *
      * @var string
      */
     protected $name;
 
     /**
-     * The states.
-     *
      * @var array<date,state>
      */
     protected $states;
 
     /**
-     * Initializes a new instance.
-     *
-     * @param string $name A name.
-     *
-     * @return void
+     * @param string $name
      */
     public function __construct($name)
     {
@@ -56,8 +31,6 @@ class Occupancy implements Serializable
     }
 
     /**
-     * Returns the name.
-     *
      * @return string
      */
     public function getName()
@@ -66,11 +39,7 @@ class Occupancy implements Serializable
     }
 
     /**
-     * Sets the name.
-     *
-     * @param string $name A name.
-     *
-     * @return void
+     * @param string $name
      */
     public function setName($name)
     {
@@ -78,10 +47,7 @@ class Occupancy implements Serializable
     }
 
     /**
-     * Returns a state.
-     *
-     * @param string $date An ISO date (YYYY-MM-DD).
-     *
+     * @param string $date
      * @return int
      */
     public function getState($date)
@@ -94,12 +60,8 @@ class Occupancy implements Serializable
     }
 
     /**
-     * Sets a state.
-     *
-     * @param string $date  An ISO date (YYYY-MM-DD).
-     * @param int    $state A state.
-     *
-     * @return void
+     * @param string $date
+     * @param int $state
      */
     public function setState($date, $state)
     {
@@ -111,8 +73,6 @@ class Occupancy implements Serializable
     }
 
     /**
-     * Returns the serialized representation.
-     *
      * @return string
      */
     public function serialize()
@@ -121,16 +81,10 @@ class Occupancy implements Serializable
     }
 
     /**
-     * Sets the internal state.
-     *
-     * @param string $data A serialized representation.
-     *
-     * @return void
+     * @param string $data
      */
     public function unserialize($data)
     {
         $this->states = unserialize($data);
     }
 }
-
-?>

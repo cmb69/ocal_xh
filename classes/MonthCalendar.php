@@ -1,35 +1,16 @@
 <?php
 
 /**
- * The month calendars.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
 
-/**
- * The month calendars.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class MonthCalendar extends MonthView
 {
     /**
-     * Renders the month calendar.
-     *
-     * @return string (X)HTML.
+     * @return string
      */
     public function render()
     {
@@ -50,11 +31,7 @@ class MonthCalendar extends MonthView
     }
 
     /**
-     * Renders the heading.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
+     * @return string
      */
     protected function renderHeading()
     {
@@ -66,11 +43,7 @@ class MonthCalendar extends MonthView
     }
 
     /**
-     * Renders the daynames.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
+     * @return string
      */
     protected function renderDaynames()
     {
@@ -86,11 +59,8 @@ class MonthCalendar extends MonthView
     }
 
     /**
-     * Renders a week table row.
-     *
-     * @param int $day A day.
-     *
-     * @return string (X)HTML.
+     * @param int $day
+     * @return string
      */
     protected function renderWeekStartingWith($day)
     {
@@ -104,13 +74,8 @@ class MonthCalendar extends MonthView
     }
 
     /**
-     * Renders a day table cell.
-     *
-     * @param int $day A day.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
+     * @param int $day
+     * @return string
      */
     protected function renderDay($day)
     {
@@ -129,5 +94,3 @@ class MonthCalendar extends MonthView
         }
     }
 }
-
-?>

@@ -1,16 +1,8 @@
 <?php
 
 /**
- * Testing the calendar views.
- *
- * PHP version 5
- *
- * @category  Testing
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
@@ -23,26 +15,8 @@ use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStream;
 
-/**
- * Testing the calendar views.
- *
- * @category Testing
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class CalendarViewTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * Sets up the test fixture.
-     *
-     * @return void
-     *
-     * @global array             The paths of system files and folders.
-     * @global array             The localization of the plugins.
-     * @global XH_CSRFProtection The CSRF protector.
-     */
     public function setUp()
     {
         global $pth, $plugin_tx, $_XH_csrfProtection;
@@ -75,11 +49,6 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
     }
 
-    /**
-     * Tests that a calendar is rendered.
-     *
-     * @return void
-     */
     public function testRendersCalendar()
     {
         $this->subject = new Controller();
@@ -87,9 +56,8 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
             array(
                 'tag' => 'table',
                 'attributes' => array('class' => 'ocal_calendar')
-            ), $this->subject->renderCalendar('test', 3)
+            ),
+            $this->subject->renderCalendar('test', 3)
         );
     }
 }
-
-?>

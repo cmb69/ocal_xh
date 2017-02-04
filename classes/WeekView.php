@@ -1,53 +1,24 @@
 <?php
 
 /**
- * The abstract week views.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
 
-/**
- * The abstract week views.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 abstract class WeekView
 {
     /**
-     * The week.
-     *
      * @var Week
      */
     protected $week;
 
     /**
-     * The occupancy.
-     *
-     * @var Occupancy $occupancy.
+     * @var Occupancy
      */
     protected $occupancy;
 
-    /**
-     * Initializes a new instance.
-     *
-     * @param Week      $week      A week.
-     * @param Occupancy $occupancy An occupancy.
-     *
-     * @return void
-     */
     public function __construct(Week $week, Occupancy $occupancy)
     {
         $this->week = $week;
@@ -55,20 +26,12 @@ abstract class WeekView
     }
 
     /**
-     * Returns a formatted date.
-     *
-     * @param int $day  A day.
-     * @param int $hour An hour.
-     *
+     * @param int $day
+     * @param int $hour
      * @return string
      */
     protected function formatDate($day, $hour)
     {
-        return sprintf(
-            '%04d-%02d-%02d-%02d', $this->week->getYear(),
-            $this->week->getWeek(), $day, $hour
-        );
+        return sprintf('%04d-%02d-%02d-%02d', $this->week->getYear(), $this->week->getWeek(), $day, $hour);
     }
 }
-
-?>

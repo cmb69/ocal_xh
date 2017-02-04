@@ -1,16 +1,8 @@
 <?php
 
 /**
- * The main "program".
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 /*
@@ -33,20 +25,12 @@ EOT
 class_alias('Ocal\Occupancy', 'Ocal_Occupancy');
 class_alias('Ocal\HourlyOccupancy', 'Ocal_HourlyOccupancy');
 
-/**
- * The plugin version.
- */
 define('OCAL_VERSION', '@OCAL_VERSION@');
 
 /**
- * Renders a calendar.
- *
- * @param string $name       A calendar name.
- * @param int    $monthCount A month count.
- *
- * @return string (X)HTML.
- *
- * @global Ocal\Controller The plugin controller.
+ * @param string $name
+ * @param int $monthCount
+ * @return string
  */
 function ocal($name, $monthCount = 1)
 {
@@ -56,14 +40,9 @@ function ocal($name, $monthCount = 1)
 }
 
 /**
- * Renders a week calendar.
- *
- * @param string $name      A calendar name.
- * @param int    $weekCount A week count.
- *
- * @return string (X)HTML.
- *
- * @global Ocal\Controller The plugin controller.
+ * @param string $name
+ * @param int $weekCount
+ * @return string
  */
 function Ocal_hourly($name, $weekCount = 1)
 {
@@ -72,12 +51,5 @@ function Ocal_hourly($name, $weekCount = 1)
     return $_Ocal_controller->renderWeekCalendar($name, $weekCount);
 }
 
-/**
- * The plugin controller.
- *
- * @var Ocal\Controller
- */
 $_Ocal_controller = new Ocal\Controller();
 $_Ocal_controller->dispatch();
-
-?>

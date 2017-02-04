@@ -1,36 +1,14 @@
 <?php
 
 /**
- * The controllers.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
 
-/**
- * The controllers.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class Controller
 {
-    /**
-     * Dispatches according to the request.
-     *
-     * @return void
-     */
     public function dispatch()
     {
         if (XH_ADM) {
@@ -38,7 +16,7 @@ class Controller
                 XH_registerStandardPluginMenuItems(false);
             }
             if ($this->isAdministrationRequested()) {
-                $this->_handleAdministration();
+                $this->handleAdministration();
             }
         } else {
             if (isset($_GET['ocal_week']) || isset($_GET['ocal_month'])
@@ -50,11 +28,7 @@ class Controller
     }
 
     /**
-     * Returns whether the plugin administration is requested.
-     *
      * @return bool
-     *
-     * @global string Whether the plugin administration is requested.
      */
     protected function isAdministrationRequested()
     {
@@ -65,48 +39,35 @@ class Controller
             || isset($ocal) && $ocal == 'true';
     }
 
-    /**
-     * Handles the plugin administration.
-     *
-     * @return void
-     *
-     * @global string The value of the <var>admin</var> GP parameter.
-     * @global string The value of the <var>action</var> GP parameter.
-     * @global string The (X)HTML fragment to insert into the contents area.
-     */
-    private function _handleAdministration()
+    private function handleAdministration()
     {
         global $admin, $action, $o;
 
         $o .= print_plugin_admin('off');
         switch ($admin) {
-        case '':
-            $o .= $this->_renderInfo();
-            break;
-        default:
-            $o .= plugin_admin_common($action, $admin, 'ocal');
+            case '':
+                $o .= $this->renderInfo();
+                break;
+            default:
+                $o .= plugin_admin_common($action, $admin, 'ocal');
         }
     }
 
     /**
-     * Renders the plugin info.
-     *
-     * @return string (X)HTML.
+     * @return string
      */
-    private function _renderInfo()
+    private function renderInfo()
     {
         return '<h1>Ocal</h1>'
-            . $this->_renderLogo()
+            . $this->renderLogo()
             . '<p>Version: ' . OCAL_VERSION . '</p>'
-            . $this->_renderCopyright() . $this->_renderLicense();
+            . $this->renderCopyright() . $this->renderLicense();
     }
 
     /**
-     * Renders the license info.
-     *
-     * @return string (X)HTML.
+     * @return string
      */
-    private function _renderLicense()
+    private function renderLicense()
     {
         return <<<EOT
 <p class="ocal_license">This program is free software: you can redistribute
@@ -125,14 +86,9 @@ EOT;
     }
 
     /**
-     * Renders the plugin logo.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The paths of system files and folders.
-     * @global array The localization of the plugins.
+     * @return string
      */
-    private function _renderLogo()
+    private function renderLogo()
     {
         global $pth, $plugin_tx;
 
@@ -143,11 +99,9 @@ EOT;
     }
 
     /**
-     * Renders the copyright info.
-     *
-     * @return string (X)HTML.
+     * @return string
      */
-    private function _renderCopyright()
+    private function renderCopyright()
     {
         return <<<EOT
 <p>Copyright &copy; 2014-2017
@@ -156,13 +110,6 @@ EOT;
 EOT;
     }
 
-    /**
-     * Disallow indexing the page by setting meta robots appropriately.
-     *
-     * @return void
-     *
-     * @global array The configuration of the core.
-     */
     public function disallowIndexing()
     {
         global $cf;
@@ -171,24 +118,16 @@ EOT;
     }
 
     /**
-     * Renders a calendar.
-     *
-     * @param string $name       A calendar name.
-     * @param int    $monthCount A month count.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array             The localization of the plugins.
-     * @global XH_CRSFProtection The CSRF protector.
+     * @param string $name
+     * @param int $monthCount
+     * @return string
      */
     public function renderCalendar($name, $monthCount)
     {
         global $plugin_tx, $_XH_csrfProtection;
 
         if (!preg_match('/^[a-z0-9-]+$/', $name)) {
-            return XH_message(
-                'fail', $plugin_tx['ocal']['error_occupancy_name']
-            );
+            return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
         }
         if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $name) {
             $_XH_csrfProtection->check();
@@ -215,11 +154,7 @@ EOT;
     }
 
     /**
-     * Saves the states.
-     *
-     * @param string $name A calendar name.
-     *
-     * @return void
+     * @param string $name
      */
     protected function saveStates($name)
     {
@@ -244,24 +179,16 @@ EOT;
     }
 
     /**
-     * Renders a week calendar.
-     *
-     * @param string $name      A calendar name.
-     * @param int    $weekCount A week count.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array             The localization of the plugins.
-     * @global XH_CRSFProtection The CSRF protector.
+     * @param string $name
+     * @param int  $weekCount
+     * @return string
      */
     public function renderWeekCalendar($name, $weekCount)
     {
         global $plugin_tx, $_XH_csrfProtection;
 
         if (!preg_match('/^[a-z0-9-]+$/', $name)) {
-            return XH_message(
-                'fail', $plugin_tx['ocal']['error_occupancy_name']
-            );
+            return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
         }
         if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $name) {
             $_XH_csrfProtection->check();
@@ -288,14 +215,7 @@ EOT;
     }
 
     /**
-     * Saves the states.
-     *
-     * @param string $name A calendar name.
-     *
-     * @return void
-     *
-     * @global array The configuration of the plugins.
-     * @global array The localization of the plugins.
+     * @param string $name
      */
     protected function saveHourlyStates($name)
     {
@@ -322,30 +242,25 @@ EOT;
     }
 
     /**
-     * Returns the requested view.
-     *
-     * @param Occupancy $occupancy An occupancy.
-     *
      * @return View
      */
-    protected function getView($occupancy)
+    protected function getView(Occupancy $occupancy)
     {
         $mode = isset($_GET['ocal_mode']) ? $_GET['ocal_mode'] : 'calendar';
         switch ($mode) {
-        case 'list':
-            if ($occupancy instanceof HourlyOccupancy) {
-                return new WeekCalendars($occupancy);
-            } else {
-                return new ListView($occupancy);
-            }
-        default:
-            if ($occupancy instanceof HourlyOccupancy) {
-                return new WeekCalendars($occupancy);
-            } else {
-                return new Calendars($occupancy);
-            }
+            case 'list':
+                if ($occupancy instanceof HourlyOccupancy) {
+                    return new WeekCalendars($occupancy);
+                } else {
+                    return new ListView($occupancy);
+                }
+                break;
+            default:
+                if ($occupancy instanceof HourlyOccupancy) {
+                    return new WeekCalendars($occupancy);
+                } else {
+                    return new Calendars($occupancy);
+                }
         }
     }
 }
-
-?>

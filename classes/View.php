@@ -1,82 +1,46 @@
 <?php
 
 /**
- * The abstract views.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
 
 use DateTime;
 
-/**
- * The abstract views.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 abstract class View
 {
     /**
-     * The occupancy.
-     *
      * @var Occupancy
      */
     protected $occupancy;
 
     /**
-     * The month.
-     *
      * @var int
      */
     protected $month;
 
     /**
-     * The week.
-     *
      * @var int
      */
     protected $week;
 
     /**
-     * The year.
-     *
      * @var int
      */
     protected $year;
 
     /**
-     * The ISO 8601 year.
-     *
      * @var int
      */
     protected $isoYear;
 
     /**
-     * The mode ('calendar' or 'list').
-     *
      * @var string
      */
     protected $mode;
 
-    /**
-     * Initializes a new instance.
-     *
-     * @param Occupancy $occupancy An occupancy.
-     *
-     * @return void
-     */
     public function __construct(Occupancy $occupancy)
     {
         $now = time();
@@ -95,15 +59,6 @@ abstract class View
         $this->occupancy = $occupancy;
     }
 
-    /**
-     * Emits the script elements.
-     *
-     * @return void
-     *
-     * @global array  The paths of system files and folders.
-     * @global string The (X)HTML to insert at the bottom of the body element.
-     * @global array  The localization of the plugins.
-     */
     protected function emitScriptElements()
     {
         global $pth, $bjs, $plugin_tx;
@@ -121,11 +76,7 @@ abstract class View
     }
 
     /**
-     * Renders a link to switch the view mode.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array  The localization of the plugins.
+     * @return string
      */
     protected function renderModeLink()
     {
@@ -141,11 +92,7 @@ abstract class View
     }
 
     /**
-     * Renders the Ajax loader bar.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The paths of system files and folders.
+     * @return string
      */
     protected function renderLoaderbar()
     {
@@ -158,9 +105,7 @@ abstract class View
     }
 
     /**
-     * Renders the status bar.
-     *
-     * @return string (X)HTML.
+     * @return string
      */
     protected function renderStatusbar()
     {
@@ -168,9 +113,7 @@ abstract class View
     }
 
     /**
-     * Renders the pagination.
-     *
-     * @return string (X)HTML.
+     * @return string
      */
     protected function renderPagination()
     {
@@ -184,18 +127,10 @@ abstract class View
     }
 
     /**
-     * Renders a pagination link.
-     *
-     * @param int    $month A month.
-     * @param int    $year  A year.
-     * @param string $label A label key.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
-     *
-     * @todo Restrict links to reasonable range, to avoid search engines
-     *       searching infinitely.
+     * @param int $month
+     * @param int $year
+     * @param string $label
+     * @return string
      */
     protected function renderPaginationLink($month, $year, $label)
     {
@@ -228,13 +163,8 @@ abstract class View
     }
 
     /**
-     * Returns the current URL with modified parameters.
-     *
-     * @param array $newParams An array of parameters to modify.
-     *
+     * @param array $newParams
      * @return string
-     *
-     * @global string The script name.
      */
     protected function modifyUrl(array $newParams)
     {
@@ -247,5 +177,3 @@ abstract class View
         return $sn . '?' . $query;
     }
 }
-
-?>

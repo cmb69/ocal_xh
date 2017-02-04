@@ -1,42 +1,21 @@
 <?php
 
 /**
- * The database.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
 
-/**
- * The database.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class Db
 {
     /**
-     * The lock file handle.
-     *
      * @var resource
      */
     protected $lockFile;
 
     /**
-     * Initializes a new instance.
-     *
-     * @param int $lockMode A locking mode (LOCK_SH or LOCK_EX).
+     * @param int $lockMode
      */
     public function __construct($lockMode)
     {
@@ -45,20 +24,14 @@ class Db
         flock($this->lockFile, (int) $lockMode);
     }
 
-    /**
-     * Finalizes an instance.
-     */
     public function __destruct()
     {
         flock($this->lockFile, LOCK_UN);
     }
 
     /**
-     * Finds and returns an occupancy object.
-     *
-     * @param string $name   An occupancy name.
-     * @param bool   $hourly Whether the occupancy is hourly.
-     *
+     * @param string $name
+     * @param bool $hourly
      * @return Occupancy
      */
     public function findOccupancy($name, $hourly = false)
@@ -81,13 +54,6 @@ class Db
         return $occupancy;
     }
 
-    /**
-     * Saves an occupancy.
-     *
-     * @param Occupancy $occupancy An occupancy.
-     *
-     * @return void
-     */
     public function saveOccupancy(Occupancy $occupancy)
     {
         $filename = $this->getFoldername() . $occupancy->getName() . '.dat';
@@ -95,11 +61,7 @@ class Db
     }
 
     /**
-     * Returns the data foldername.
-     *
      * @return string
-     *
-     * @global array The paths of system files and folders.
      */
     protected function getFoldername()
     {
@@ -113,5 +75,3 @@ class Db
         return $foldername;
     }
 }
-
-?>

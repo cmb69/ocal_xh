@@ -1,38 +1,14 @@
 <?php
 
 /**
- * The list views.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
 
-/**
- * The list views.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class ListView extends View
 {
-    /**
-     * Initializes a new instance.
-     *
-     * @param Occupancy $occupancy An occupancy.
-     *
-     * @return void
-     */
     public function __construct(Occupancy $occupancy)
     {
         parent::__construct($occupancy);
@@ -40,11 +16,8 @@ class ListView extends View
     }
 
     /**
-     * Renders the list view.
-     *
-     * @param int $monthCount A number of months.
-     *
-     * @return string (X)HTML.
+     * @param int $monthCount
+     * @return string
      */
     public function render($monthCount)
     {
@@ -64,5 +37,3 @@ class ListView extends View
         return $html;
     }
 }
-
-?>

@@ -1,35 +1,16 @@
 <?php
 
 /**
- * The presentation layer.
- *
- * PHP version 5
- *
- * @category  CMSimple_XH
- * @package   Ocal
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
  * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
+ * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  */
 
 namespace Ocal;
 
-/**
- * The month lists.
- *
- * @category CMSimple_XH
- * @package  Ocal
- * @author   Christoph M. Becker <cmbecker69@gmx.de>
- * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
- */
 class MonthList extends MonthView
 {
     /**
-     * Renders the month list.
-     *
-     * @return string (X)HTML.
+     * @return string
      */
     public function render()
     {
@@ -48,11 +29,7 @@ class MonthList extends MonthView
     }
 
     /**
-     * Renders the heading.
-     *
-     * @return string (X)HTML.
-     *
-     * @global array The localization of the plugins.
+     * @return string
      */
     protected function renderHeading()
     {
@@ -64,8 +41,6 @@ class MonthList extends MonthView
     }
 
     /**
-     * Returns a map from formatted day ranges to states.
-     *
      * @return array
      */
     protected function getList()
@@ -89,13 +64,9 @@ class MonthList extends MonthView
     }
 
     /**
-     * Returns a formatted day range.
-     *
-     * @param array $range An array of successive days.
-     *
      * @return string
      */
-    protected function formatRange($range)
+    protected function formatRange(array $range)
     {
         $string = $range[0] . '.';
         if (count($range) > 1) {
@@ -104,5 +75,3 @@ class MonthList extends MonthView
         return $string;
     }
 }
-
-?>
