@@ -13,9 +13,12 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
 require_once './vendor/autoload.php';
 require_once '../../cmsimple/classes/CSRFProtection.php';
 
+use PHPUnit_Framework_TestCase;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStream;
@@ -79,7 +82,7 @@ class CalendarViewTest extends PHPUnit_Framework_TestCase
      */
     public function testRendersCalendar()
     {
-        $this->subject = new Ocal_Controller();
+        $this->subject = new Controller();
         @$this->assertTag(
             array(
                 'tag' => 'table',

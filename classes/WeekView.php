@@ -13,6 +13,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
 /**
  * The abstract week views.
  *
@@ -22,31 +24,31 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-abstract class Ocal_WeekView
+abstract class WeekView
 {
     /**
      * The week.
      *
-     * @var Ocal_Week
+     * @var Week
      */
     protected $week;
 
     /**
      * The occupancy.
      *
-     * @var Ocal_Occupancy $occupancy.
+     * @var Occupancy $occupancy.
      */
     protected $occupancy;
 
     /**
      * Initializes a new instance.
      *
-     * @param Ocal_Week      $week      A week.
-     * @param Ocal_Occupancy $occupancy An occupancy.
+     * @param Week      $week      A week.
+     * @param Occupancy $occupancy An occupancy.
      *
      * @return void
      */
-    public function __construct(Ocal_Week $week, Ocal_Occupancy $occupancy)
+    public function __construct(Week $week, Occupancy $occupancy)
     {
         $this->week = $week;
         $this->occupancy = $occupancy;

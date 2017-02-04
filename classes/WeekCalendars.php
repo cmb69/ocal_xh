@@ -13,6 +13,10 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
+use DateTime;
+
 /**
  * The week calendars.
  *
@@ -22,7 +26,7 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_WeekCalendars extends Ocal_Calendars
+class WeekCalendars extends Calendars
 {
     /**
      * Renders the week calendars.
@@ -45,10 +49,10 @@ class Ocal_WeekCalendars extends Ocal_Calendars
                 . $this->renderToolbar();
         }
         $html .= $this->renderLoaderbar() . $this->renderStatusbar();
-        $week = new Ocal_Week($this->week, $this->year);
+        $week = new Week($this->week, $this->year);
         $i = $weekCount;
         while ($i) {
-            $calendar = new Ocal_WeekCalendar($week, $this->occupancy);
+            $calendar = new WeekCalendar($week, $this->occupancy);
             $html .= $calendar->render();
             $i--;
             $week = $week->getNextWeek();
@@ -92,7 +96,7 @@ class Ocal_WeekCalendars extends Ocal_Calendars
 
         $params = array('ocal_mode' => $this->mode == 'list' ? 'list' : 'calendar');
         if ($offset) {
-            $week = new Ocal_Week($this->week, $this->year);
+            $week = new Week($this->week, $this->year);
             $week = $week->getNextWeek($offset);
             $params['ocal_year'] = $week->getYear();
             $params['ocal_week'] = $week->getWeek();

@@ -13,6 +13,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
 /**
  * The month lists.
  *
@@ -22,7 +24,7 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_MonthList extends Ocal_MonthView
+class MonthList extends MonthView
 {
     /**
      * Renders the month list.

@@ -30,6 +30,9 @@ EOT
     );
 }
 
+class_alias('Ocal\Occupancy', 'Ocal_Occupancy');
+class_alias('Ocal\HourlyOccupancy', 'Ocal_HourlyOccupancy');
+
 /**
  * The plugin version.
  */
@@ -43,7 +46,7 @@ define('OCAL_VERSION', '@OCAL_VERSION@');
  *
  * @return string (X)HTML.
  *
- * @global Ocal_Controller The plugin controller.
+ * @global Ocal\Controller The plugin controller.
  */
 function ocal($name, $monthCount = 1)
 {
@@ -60,7 +63,7 @@ function ocal($name, $monthCount = 1)
  *
  * @return string (X)HTML.
  *
- * @global Ocal_Controller The plugin controller.
+ * @global Ocal\Controller The plugin controller.
  */
 function Ocal_hourly($name, $weekCount = 1)
 {
@@ -72,9 +75,9 @@ function Ocal_hourly($name, $weekCount = 1)
 /**
  * The plugin controller.
  *
- * @var Ocal_Controller
+ * @var Ocal\Controller
  */
-$_Ocal_controller = new Ocal_Controller();
+$_Ocal_controller = new Ocal\Controller();
 $_Ocal_controller->dispatch();
 
 ?>

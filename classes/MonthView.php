@@ -13,6 +13,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
 /**
  * The abstract month views.
  *
@@ -22,31 +24,31 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-abstract class Ocal_MonthView
+abstract class MonthView
 {
     /**
      * The month.
      *
-     * @var Ocal_Month
+     * @var Month
      */
     protected $month;
 
     /**
      * The occupancy.
      *
-     * @var Ocal_Occupancy $occupancy.
+     * @var Occupancy $occupancy.
      */
     protected $occupancy;
 
     /**
      * Initializes a new instance.
      *
-     * @param Ocal_Month     $month     A month.
-     * @param Ocal_Occupancy $occupancy An occupancy.
+     * @param Month     $month     A month.
+     * @param Occupancy $occupancy An occupancy.
      *
      * @return void
      */
-    public function __construct(Ocal_Month $month, Ocal_Occupancy $occupancy)
+    public function __construct(Month $month, Occupancy $occupancy)
     {
         $this->month = $month;
         $this->occupancy = $occupancy;

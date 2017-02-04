@@ -13,6 +13,10 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
+use DateTime;
+
 /**
  * The week calendars.
  *
@@ -22,7 +26,7 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_WeekCalendar extends Ocal_WeekView
+class WeekCalendar extends WeekView
 {
     /**
      * Renders the week calendar.

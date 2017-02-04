@@ -13,6 +13,10 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
+use DateTime;
+
 /**
  * The abstract views.
  *
@@ -22,12 +26,12 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-abstract class Ocal_View
+abstract class View
 {
     /**
      * The occupancy.
      *
-     * @var Ocal_Occupancy
+     * @var Occupancy
      */
     protected $occupancy;
 
@@ -69,11 +73,11 @@ abstract class Ocal_View
     /**
      * Initializes a new instance.
      *
-     * @param Ocal_Occupancy $occupancy An occupancy.
+     * @param Occupancy $occupancy An occupancy.
      *
      * @return void
      */
-    public function __construct(Ocal_Occupancy $occupancy)
+    public function __construct(Occupancy $occupancy)
     {
         $now = time();
         $this->month = isset($_GET['ocal_month'])

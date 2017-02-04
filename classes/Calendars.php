@@ -13,6 +13,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
 /**
  * The calendars.
  *
@@ -22,16 +24,16 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_Calendars extends Ocal_View
+class Calendars extends View
 {
     /**
      * Initializes a new instance.
      *
-     * @param Ocal_Occupancy $occupancy An occupancy.
+     * @param Occupancy $occupancy An occupancy.
      *
      * @return void
      */
-    public function __construct(Ocal_Occupancy $occupancy)
+    public function __construct(Occupancy $occupancy)
     {
         parent::__construct($occupancy);
         $this->mode = 'calendar';
@@ -59,9 +61,9 @@ class Ocal_Calendars extends Ocal_View
                 . $this->renderToolbar();
         }
         $html .= $this->renderLoaderbar() . $this->renderStatusbar();
-        $month = new Ocal_Month($this->month, $this->year);
+        $month = new Month($this->month, $this->year);
         while ($monthCount) {
-            $calendar = new Ocal_MonthCalendar($month, $this->occupancy);
+            $calendar = new MonthCalendar($month, $this->occupancy);
             $html .= $calendar->render();
             $monthCount--;
             $month = $month->getNextMonth();

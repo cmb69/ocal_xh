@@ -13,9 +13,14 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
 require_once './vendor/autoload.php';
 require_once '../../cmsimple/functions.php';
 require_once '../../cmsimple/adminfuncs.php';
+
+use PHPUnit_Framework_TestCase;
+use PHPUnit_Extensions_MockFunction;
 
 /**
  * Testing the info view.
@@ -31,7 +36,7 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
     /**
      * The subject under test.
      *
-     * @var Ocal_Controller
+     * @var Controller
      */
     private $_subject;
 
@@ -59,7 +64,7 @@ class InfoViewTest extends PHPUnit_Framework_TestCase
         $plugin_tx = array(
             'ocal' => array('alt_logo' => 'Calendar')
         );
-        $this->_subject = new Ocal_Controller();
+        $this->_subject = new Controller();
         $rspmiMock = new PHPUnit_Extensions_MockFunction(
             'XH_registerStandardPluginMenuItems', $this->_subject
         );

@@ -13,8 +13,13 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
 require_once './vendor/autoload.php';
 require_once '../../cmsimple/adminfuncs.php';
+
+use PHPUnit_Framework_TestCase;
+use PHPUnit_Extensions_MockFunction;
 
 /**
  * Testing the general plugin administration.
@@ -30,7 +35,7 @@ class AdministrationTest extends PHPUnit_Framework_TestCase
     /**
      * The test subject.
      *
-     * @var Ocal_Controller
+     * @var Controller
      */
     private $_subject;
 
@@ -58,7 +63,7 @@ class AdministrationTest extends PHPUnit_Framework_TestCase
         $ocal = 'true';
         $admin = 'plugin_stylesheet';
         $action = 'plugin_text';
-        $this->_subject = new Ocal_Controller();
+        $this->_subject = new Controller();
         $this->_rspmiMock = new PHPUnit_Extensions_MockFunction(
             'XH_registerStandardPluginMenuItems', $this->_subject
         );

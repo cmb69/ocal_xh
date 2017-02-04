@@ -13,6 +13,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
 /**
  * The months.
  *
@@ -22,7 +24,7 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_Month
+class Month
 {
     /**
      * The month.
@@ -114,7 +116,7 @@ class Ocal_Month
     /**
      * Returns the next month.
      *
-     * @return Ocal_Month
+     * @return Month
      */
     public function getNextMonth()
     {
@@ -124,7 +126,7 @@ class Ocal_Month
             $month = 1;
             $year += 1;
         }
-        return new Ocal_Month($month, $year);
+        return new Month($month, $year);
     }
 }
 

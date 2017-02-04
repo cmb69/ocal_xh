@@ -13,6 +13,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
 /**
  * The controllers.
  *
@@ -22,7 +24,7 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_Controller
+class Controller
 {
     /**
      * Dispatches according to the request.
@@ -194,7 +196,7 @@ EOT;
             echo $this->saveStates($name);
             exit;
         }
-        $db = new Ocal_Db(LOCK_SH);
+        $db = new Db(LOCK_SH);
         $occupancy = $db->findOccupancy($name);
         $db = null;
         $view = $this->getView($occupancy);
@@ -228,7 +230,7 @@ EOT;
             header('HTTP/1.0 400 Bad Request');
             exit;
         }
-        $db = new Ocal_Db(LOCK_EX);
+        $db = new Db(LOCK_EX);
         $occupancy = $db->findOccupancy($name);
         foreach (get_object_vars($states) as $month => $states) {
             foreach ($states as $i => $state) {
@@ -267,7 +269,7 @@ EOT;
             echo $this->saveHourlyStates($name);
             exit;
         }
-        $db = new Ocal_Db(LOCK_SH);
+        $db = new Db(LOCK_SH);
         $occupancy = $db->findOccupancy($name, true);
         $db = null;
         $view = $this->getView($occupancy);
@@ -304,7 +306,7 @@ EOT;
             header('HTTP/1.0 400 Bad Request');
             exit;
         }
-        $db = new Ocal_Db(LOCK_EX);
+        $db = new Db(LOCK_EX);
         $occupancy = $db->findOccupancy($name, true);
         foreach (get_object_vars($states) as $week => $states) {
             foreach ($states as $i => $state) {
@@ -322,25 +324,25 @@ EOT;
     /**
      * Returns the requested view.
      *
-     * @param Ocal_Occupancy $occupancy An occupancy.
+     * @param Occupancy $occupancy An occupancy.
      *
-     * @return Ocal_View
+     * @return View
      */
     protected function getView($occupancy)
     {
         $mode = isset($_GET['ocal_mode']) ? $_GET['ocal_mode'] : 'calendar';
         switch ($mode) {
         case 'list':
-            if ($occupancy instanceof Ocal_HourlyOccupancy) {
-                return new Ocal_WeekCalendars($occupancy);
+            if ($occupancy instanceof HourlyOccupancy) {
+                return new WeekCalendars($occupancy);
             } else {
-                return new Ocal_ListView($occupancy);
+                return new ListView($occupancy);
             }
         default:
-            if ($occupancy instanceof Ocal_HourlyOccupancy) {
-                return new Ocal_WeekCalendars($occupancy);
+            if ($occupancy instanceof HourlyOccupancy) {
+                return new WeekCalendars($occupancy);
             } else {
-                return new Ocal_Calendars($occupancy);
+                return new Calendars($occupancy);
             }
         }
     }

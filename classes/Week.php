@@ -13,6 +13,10 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
+use DateTime;
+
 /**
  * The weeks.
  *
@@ -22,7 +26,7 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_Week
+class Week
 {
     /**
      * The week.
@@ -85,7 +89,7 @@ class Ocal_Week
      *
      * @param int $offset The week offset.
      *
-     * @return Ocal_Week
+     * @return Week
      */
     public function getNextWeek($offset = 1)
     {

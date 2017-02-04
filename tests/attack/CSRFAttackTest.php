@@ -19,6 +19,10 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
+use PHPUnit_Framework_TestCase;
+
 /**
  * A test case to actually check the CSRF protection.
  *

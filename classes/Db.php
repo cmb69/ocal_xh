@@ -13,6 +13,8 @@
  * @link      http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
 
+namespace Ocal;
+
 /**
  * The database.
  *
@@ -22,7 +24,7 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link     http://3-magi.net/?CMSimple_XH/Ocal_XH
  */
-class Ocal_Db
+class Db
 {
     /**
      * The lock file handle.
@@ -57,7 +59,7 @@ class Ocal_Db
      * @param string $name   An occupancy name.
      * @param bool   $hourly Whether the occupancy is hourly.
      *
-     * @return Ocal_Occupancy
+     * @return Occupancy
      */
     public function findOccupancy($name, $hourly = false)
     {
@@ -71,9 +73,9 @@ class Ocal_Db
             $occupancy->setName($name);
         } else {
             if ($hourly) {
-                $occupancy = new Ocal_HourlyOccupancy($name);
+                $occupancy = new HourlyOccupancy($name);
             } else {
-                $occupancy = new Ocal_Occupancy($name);
+                $occupancy = new Occupancy($name);
             }
         }
         return $occupancy;
@@ -82,11 +84,11 @@ class Ocal_Db
     /**
      * Saves an occupancy.
      *
-     * @param Ocal_Occupancy $occupancy An occupancy.
+     * @param Occupancy $occupancy An occupancy.
      *
      * @return void
      */
-    public function saveOccupancy(Ocal_Occupancy $occupancy)
+    public function saveOccupancy(Occupancy $occupancy)
     {
         $filename = $this->getFoldername() . $occupancy->getName() . '.dat';
         file_put_contents($filename, serialize($occupancy));

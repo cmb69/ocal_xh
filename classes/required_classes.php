@@ -22,7 +22,7 @@
  */
 function Ocal_autoload($class)
 {
-    $parts = explode('_', $class, 2);
+    $parts = explode('\\', $class, 2);
     if ($parts[0] == 'Ocal') {
         include_once dirname(__FILE__) . '/' . $parts[1] . '.php';
     }
