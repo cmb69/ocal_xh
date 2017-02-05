@@ -21,7 +21,7 @@ class WeekCalendar extends WeekView
         $pcf = $plugin_cf['ocal'];
         $html = '<table class="ocal_calendar" data-ocal_date="'
             . $this->week->getIso() . '">';
-        $html .= $this->renderHeading() . $this->renderDaynames();
+        $html .= '<thead>' . $this->renderHeading() . $this->renderDaynames() . '</thead><tbody>';
         for ($i = $pcf['hour_first']; $i <= $pcf['hour_last']; $i++) {
             $html .= '<tr>';
             for ($j = 1; $j <= 7; $j++) {
@@ -29,7 +29,7 @@ class WeekCalendar extends WeekView
             }
             $html .= '</tr>';
         }
-        $html .= '</table>';
+        $html .= '</tbody></table>';
         return $html;
     }
 

@@ -17,8 +17,10 @@ class MonthCalendar extends MonthView
         $day = $this->month->getDayOffset();
         $html = '<table class="ocal_calendar" data-ocal_date="'
             . $this->month->getIso() . '">'
+            . '<thead>'
             . $this->renderHeading()
-            . $this->renderDaynames();
+            . $this->renderDaynames()
+            . '</thead><tbody>';
         for ($row = 0; $row < 6; $row++) {
             $html .= $this->renderWeekStartingWith($day);
             $day += 7;
@@ -26,7 +28,7 @@ class MonthCalendar extends MonthView
                 break;
             }
         }
-        $html .= '</table>';
+        $html .= '</tbody></table>';
         return $html;
     }
 
