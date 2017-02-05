@@ -35,45 +35,7 @@ class WeekCalendars extends Calendars
             $i--;
             $week = $week->getNextWeek();
         }
-        $html .= $this->renderPagination2($weekCount) . '</div>';
+        $html .= $this->renderWeekPagination($weekCount) . '</div>';
         return $html;
-    }
-
-    /**
-     * @param int $weekCount
-     * @return string
-     */
-    protected function renderPagination2($weekCount)
-    {
-        return '<p class="ocal_pagination">'
-            . $this->renderPaginationLink2(-$weekCount, 'prev_interval') . ' '
-            . $this->renderPaginationLink2(false, 'today') . ' '
-            . $this->renderPaginationLink2($weekCount, 'next_interval')
-            . '</p>';
-    }
-
-    /**
-     * @param int $offset
-     * @param string $label
-     * @return string
-     */
-    protected function renderPaginationLink2($offset, $label)
-    {
-        global $plugin_tx;
-
-        $params = array('ocal_mode' => $this->mode == 'list' ? 'list' : 'calendar');
-        if ($offset) {
-            $week = new Week($this->week, $this->year);
-            $week = $week->getNextWeek($offset);
-            $params['ocal_year'] = $week->getYear();
-            $params['ocal_week'] = $week->getWeek();
-        } else {
-            $date = new DateTime();
-            $params['ocal_year'] = $date->format('o');
-            $params['ocal_week'] = $date->format('W');
-        }
-        $url = $this->modifyUrl($params);
-        return '<a href="' . XH_hsc($url) . '">'
-            . $plugin_tx['ocal']['label_'. $label] . '</a>';
     }
 }

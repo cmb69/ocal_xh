@@ -33,7 +33,7 @@ class ListView extends View
             $month = $month->getNextMonth();
         }
         $html .= '</dl>'
-            . $this->renderPagination() . '</div>';
+            . $this->renderMonthPagination() . '</div>';
         return $html;
     }
 }

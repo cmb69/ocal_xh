@@ -39,7 +39,7 @@ class Calendars extends View
             $monthCount--;
             $month = $month->getNextMonth();
         }
-        $html .= $this->renderPagination()
+        $html .= $this->renderMonthPagination()
             . '</div>';
         return $html;
     }

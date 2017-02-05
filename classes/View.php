@@ -115,14 +115,14 @@ abstract class View
     /**
      * @return string
      */
-    protected function renderPagination()
+    protected function renderMonthPagination()
     {
         return '<p class="ocal_pagination">'
-            . $this->renderPaginationLink(0, -1, 'prev_year') . ' '
-            . $this->renderPaginationLink(-1, 0, 'prev_month') . ' '
-            . $this->renderPaginationLink(false, false, 'today') . ' '
-            . $this->renderPaginationLink(1, 0, 'next_month') . ' '
-            . $this->renderPaginationLink(0, 1, 'next_year')
+            . $this->renderMonthPaginationLink(0, -1, 'prev_year') . ' '
+            . $this->renderMonthPaginationLink(-1, 0, 'prev_month') . ' '
+            . $this->renderMonthPaginationLink(false, false, 'today') . ' '
+            . $this->renderMonthPaginationLink(1, 0, 'next_month') . ' '
+            . $this->renderMonthPaginationLink(0, 1, 'next_year')
             . '</p>';
     }
 
@@ -132,7 +132,7 @@ abstract class View
      * @param string $label
      * @return string
      */
-    protected function renderPaginationLink($month, $year, $label)
+    protected function renderMonthPaginationLink($month, $year, $label)
     {
         global $plugin_tx;
 
@@ -158,6 +158,44 @@ abstract class View
                 'ocal_mode' => $mode
             )
         );
+        return '<a href="' . XH_hsc($url) . '">'
+            . $plugin_tx['ocal']['label_'. $label] . '</a>';
+    }
+
+    /**
+     * @param int $weekCount
+     * @return string
+     */
+    protected function renderWeekPagination($weekCount)
+    {
+        return '<p class="ocal_pagination">'
+            . $this->renderWeekPaginationLink(-$weekCount, 'prev_interval') . ' '
+            . $this->renderWeekPaginationLink(false, 'today') . ' '
+            . $this->renderWeekPaginationLink($weekCount, 'next_interval')
+            . '</p>';
+    }
+
+    /**
+     * @param int $offset
+     * @param string $label
+     * @return string
+     */
+    protected function renderWeekPaginationLink($offset, $label)
+    {
+        global $plugin_tx;
+
+        $params = array('ocal_mode' => $this->mode == 'list' ? 'list' : 'calendar');
+        if ($offset) {
+            $week = new Week($this->week, $this->year);
+            $week = $week->getNextWeek($offset);
+            $params['ocal_year'] = $week->getYear();
+            $params['ocal_week'] = $week->getWeek();
+        } else {
+            $date = new DateTime();
+            $params['ocal_year'] = $date->format('o');
+            $params['ocal_week'] = $date->format('W');
+        }
+        $url = $this->modifyUrl($params);
         return '<a href="' . XH_hsc($url) . '">'
             . $plugin_tx['ocal']['label_'. $label] . '</a>';
     }
