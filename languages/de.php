@@ -22,6 +22,7 @@ $plugin_tx['ocal']['error_occupancy_name']="Ein Belegungs-Name darf nur die Buch
 $plugin_tx['ocal']['alt_logo']="Kalender";
 
 $plugin_tx['ocal']['cf_hour_first']="Die erste Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";
+$plugin_tx['ocal']['cf_hour_interval']="Das ganzzahlige stündliche Intervall. Soll beispielsweise nur jede zweite Stunde angezeigt werden, geben Sie \"2\" ein.";
 $plugin_tx['ocal']['cf_hour_last']="Die letzte Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";
 
 ?>

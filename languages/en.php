@@ -22,6 +22,7 @@ $plugin_tx['ocal']['error_occupancy_name']="An occupancy name may only contain t
 $plugin_tx['ocal']['alt_logo']="Calendar";
 
 $plugin_tx['ocal']['cf_hour_first']="The first hour that shall be displayed in the hourly occupancy calendars.";
+$plugin_tx['ocal']['cf_hour_interval']="The integral hourly interval. For instance, if only every second hour should be shown, enter \"2\".";
 $plugin_tx['ocal']['cf_hour_last']="The last hour that shall be displayed in the hourly occupancy calendars.";
 
 ?>

@@ -231,7 +231,7 @@ EOT;
         foreach (get_object_vars($states) as $week => $states) {
             foreach ($states as $i => $state) {
                 $day = $i % 7 + 1;
-                $hour = $i / 7 + $plugin_cf['ocal']['hour_first'];
+                $hour = $plugin_cf['ocal']['hour_interval'] * (int) ($i / 7) + $plugin_cf['ocal']['hour_first'];
                 $date = sprintf('%s-%02d-%02d', $week, $day, $hour);
                 $occupancy->setState($date, $state);
             }
