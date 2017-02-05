@@ -7,10 +7,6 @@
 
 namespace Ocal;
 
-require_once './vendor/autoload.php';
-require_once '../../cmsimple/functions.php';
-require_once '../../cmsimple/adminfuncs.php';
-
 use PHPUnit_Framework_TestCase;
 use PHPUnit_Extensions_MockFunction;
 

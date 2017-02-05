@@ -44,7 +44,7 @@
     </target>
 
     <target name="unit-tests" description="runs all unit tests">
-        <phpunit bootstrap="classes/required_classes.php"
+        <phpunit bootstrap="tests/bootstrap.php"
                  haltonerror="true" haltonfailure="true">
             <formatter type="plain" usefile="false"/>
             <batchtest>
@@ -64,7 +64,7 @@
     </target>
 
     <target name="coverage" description="generates coverage report">
-        <exec command="phpunit --bootstrap=classes/required_classes.php --configuration coverage.xml" logoutput="true"/>
+        <exec command="phpunit --bootstrap=tests/bootstrap.php --configuration coverage.xml" logoutput="true"/>
     </target>
 
     <target name="uml" description="generates UML diagram">
