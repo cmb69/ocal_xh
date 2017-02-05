@@ -25,7 +25,7 @@ EOT
 class_alias('Ocal\Occupancy', 'Ocal_Occupancy');
 class_alias('Ocal\HourlyOccupancy', 'Ocal_HourlyOccupancy');
 
-define('OCAL_VERSION', '@OCAL_VERSION@');
+const OCAL_VERSION = '@OCAL_VERSION@';
 
 /**
  * @param string $name
