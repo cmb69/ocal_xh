@@ -21,7 +21,8 @@ class WeekCalendars extends Calendars
 
         $this->emitScriptElements();
         $html = '<div class="ocal_week_calendars" data-name="'
-            . $this->occupancy->getName() . '">';
+            . $this->occupancy->getName() . '">'
+            . $this->renderModeLink();
         if (XH_ADM) {
             $html .= $_XH_csrfProtection->tokenInput()
                 . $this->renderToolbar();

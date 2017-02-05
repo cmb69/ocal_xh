@@ -80,11 +80,11 @@
 .ocal_list dl dt {
     float: left;
     clear: left;
-    width: 5em;
+    width: 8em;
     text-align: right;
 }
 .ocal_list dl dd {
-    margin-left: 6em;
+    margin-left: 9em;
 }
 
 /*

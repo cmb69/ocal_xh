@@ -250,7 +250,7 @@ EOT;
         switch ($mode) {
             case 'list':
                 if ($occupancy instanceof HourlyOccupancy) {
-                    return new WeekCalendars($occupancy);
+                    return new WeekListView($occupancy);
                 } else {
                     return new ListView($occupancy);
                 }
