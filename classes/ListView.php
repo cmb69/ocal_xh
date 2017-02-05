@@ -22,7 +22,7 @@ class ListView extends View
     public function render($monthCount)
     {
         $this->emitScriptElements();
-        $html = '<div>' . $this->renderModeLink()
+        $html = '<div data-name="' . $this->occupancy->getName() . '">' . $this->renderModeLink()
             . $this->renderLoaderbar() . $this->renderStatusbar()
             . '<dl class="ocal_list">';
         $month = new Month($this->month, $this->year);

@@ -193,7 +193,7 @@ var OCAL = OCAL || {};
         });
     }
 
-    function onPaginationClick(event) {
+    function onModeOrPaginationClick(event) {
         var target, request, calendar, url;
 
         if (unsavedChanges) {
@@ -238,8 +238,9 @@ var OCAL = OCAL || {};
         var elements;
 
         unsavedChanges = false;
-        each(find(document, ".ocal_pagination a"), function (element) {
-            element.onclick = onPaginationClick;
+        elements = find(document, ".ocal_pagination a, .ocal_mode a");
+        each(elements, function (element) {
+            element.onclick = onModeOrPaginationClick;
         });
         if (OCAL.isAdmin) {
             elements = find(document, ".ocal_calendars, .ocal_week_calendars");
