@@ -2,6 +2,7 @@
 
 $plugin_tx['ocal']['date_months']="January,February,March,April,May,June,July,August,September,October,November,December";
 $plugin_tx['ocal']['date_days']="M,T,W,T,F,S,S";
+$plugin_tx['ocal']['date_format']="n/j/Y";
 $plugin_tx['ocal']['label_calendar_view']="Calendar view";
 $plugin_tx['ocal']['label_list_view']="List view";
 $plugin_tx['ocal']['label_prev_interval']="Previous&nbsp;interval";

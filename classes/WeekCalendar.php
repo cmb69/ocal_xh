@@ -38,11 +38,13 @@ class WeekCalendar extends WeekView
      */
     protected function renderHeading()
     {
+        global $plugin_tx;
+
         $date = new DateTime();
         $date->setISODate($this->week->getYear(), $this->week->getWeek(), 1);
-        $from = $date->format('j.n.Y');
+        $from = $date->format($plugin_tx['ocal']['date_format']);
         $date->setISODate($this->week->getYear(), $this->week->getWeek(), 7);
-        $to = $date->format('j.n.Y');
+        $to = $date->format($plugin_tx['ocal']['date_format']);
         return '<tr><th colspan="7">' . $from
             . '&ndash;' . $to . '</th></tr>';
     }
