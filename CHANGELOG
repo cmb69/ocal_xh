@@ -1,3 +1,6 @@
+Version 1.0beta4 -- released 2017-02-14
+see <https://github.com/cmb69/ocal_xh/milestone/2?closed=1>
+
 Version 1.0beta3 -- released 2015-07-05
 * fixed bug, where saving failed when the requested URL contained a fragment
   (reported by Holger)
