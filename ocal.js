@@ -219,9 +219,9 @@ var OCAL = OCAL || {};
         target = event.target || event.srcElement;
         calendar = target.parentNode.parentNode;
         request = new XMLHttpRequest();
-        url = target.href + "&ocal_name=" + calendar.getAttribute("data-name") +
-            "&ocal_ajax=1";
+        url = target.href + "&ocal_name=" + calendar.getAttribute("data-name");
         request.open("GET", url);
+        request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         request.onreadystatechange = function () {
             if (request.readyState === 4) {
                 if (request.status === 200) {

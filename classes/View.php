@@ -223,7 +223,6 @@ abstract class View
         global $sn;
 
         parse_str($_SERVER['QUERY_STRING'], $params);
-        unset($params['ocal_ajax']);
         $params = array_merge($params, $newParams);
         $query = str_replace('=&', '&', http_build_query($params));
         return $sn . '?' . $query;

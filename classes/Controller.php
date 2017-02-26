@@ -154,7 +154,7 @@ EOT;
         $db = null;
         $view = $this->getView($occupancy);
         $html = $view->render($monthCount);
-        if (isset($_GET['ocal_ajax'])) {
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             if ($_GET['ocal_name'] == $name) {
                 header('Content-Type: text/html; charset=UTF-8');
                 echo $html;
@@ -215,7 +215,7 @@ EOT;
         $db = null;
         $view = $this->getView($occupancy);
         $html = $view->render($weekCount);
-        if (isset($_GET['ocal_ajax'])) {
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             if ($_GET['ocal_name'] == $name) {
                 header('Content-Type: text/html; charset=UTF-8');
                 echo $html;
