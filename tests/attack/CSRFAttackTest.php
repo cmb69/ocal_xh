@@ -1,13 +1,29 @@
 <?php
 
 /**
+ * Copyright 2013-2014 The CMSimple_XH developers
+ * Copyright 2014-2017 Christoph M. Becker
+ *
+ * This file is part of Ocal_XH.
+ *
+ * Ocal_XH is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Ocal_XH is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Ocal_XH.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
  * The environment variable CMSIMPLEDIR has to be set to the installation folder
  * (e.g. / or /cmsimple_xh/). There has to be a page "Ocal" with the calls
- * <code>ocal('test')</code> and <code>ocal_hourly('hourly')</code> on it.
- *
- * @copyright 2013-2014 The CMSimple_XH developers <http://cmsimple-xh.org/?The_Team>
- * @copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
- * @license http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
+ *  `ocal('test')` and `ocal_hourly('hourly')` on it.
  */
 
 namespace Ocal;
