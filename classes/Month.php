@@ -63,7 +63,7 @@ class Month
      */
     public function getLastDay()
     {
-        return date('t', $this->timestamp);
+        return (int) date('t', $this->timestamp);
     }
 
     /**
