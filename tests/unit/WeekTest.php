@@ -79,4 +79,29 @@ class WeekTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame('2017-10', $this->subject->getNextWeek()->getIso());
     }
+
+    /**
+     * @dataProvider provideCompareData
+     * @param int $month
+     * @param int $year
+     * @param int $expected
+     */
+    public function testCompare($month, $year, $expected)
+    {
+        $this->assertSame($expected, $this->subject->compare(new Week($month, $year)));
+    }
+
+    /**
+     * @return array
+     */
+    public function provideCompareData()
+    {
+        return array(
+            [52, 2016,  1],
+            [ 1, 2017,  1],
+            [ 9, 2017,  0],
+            [52, 2017, -1],
+            [ 1, 2018, -1]
+        );
+    }
 }

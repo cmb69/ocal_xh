@@ -144,7 +144,7 @@ abstract class View
      * @param int $month
      * @param int $year
      * @param string $label
-     * @return string
+     * @return ?string
      */
     protected function renderMonthPaginationLink($month, $year, $label)
     {
@@ -165,6 +165,10 @@ abstract class View
                 $month = 1;
                 $year += 1;
             }
+            $wantedMonth = 12 * $year + $month;
+            if (!$this->isMonthPaginationValid($wantedMonth)) {
+                return;
+            }
         }
         $url = $this->modifyUrl(
             array(
@@ -174,6 +178,19 @@ abstract class View
         );
         return '<a href="' . XH_hsc($url) . '">'
             . $plugin_tx['ocal']['label_'. $label] . '</a>';
+    }
+
+    /**
+     * @param int $month
+     */
+    private function isMonthPaginationValid($month)
+    {
+        global $plugin_cf;
+
+        $date = new DateTime();
+        $currentMonth = 12 * $date->format('Y') + $date->format('n');
+        return $month >= $currentMonth - $plugin_cf['ocal']['pagination_past']
+            && $month <= $currentMonth + $plugin_cf['ocal']['pagination_future'];
     }
 
     /**
@@ -192,7 +209,7 @@ abstract class View
     /**
      * @param int $offset
      * @param string $label
-     * @return string
+     * @return ?string
      */
     protected function renderWeekPaginationLink($offset, $label)
     {
@@ -202,6 +219,9 @@ abstract class View
         if ($offset) {
             $week = new Week($this->week, $this->year);
             $week = $week->getNextWeek($offset);
+            if (!$this->isWeekPaginationValid($week)) {
+                return;
+            }
             $params['ocal_year'] = $week->getYear();
             $params['ocal_week'] = $week->getWeek();
         } else {
@@ -212,6 +232,16 @@ abstract class View
         $url = $this->modifyUrl($params);
         return '<a href="' . XH_hsc($url) . '">'
             . $plugin_tx['ocal']['label_'. $label] . '</a>';
+    }
+
+    private function isWeekPaginationValid(Week $week)
+    {
+        global $plugin_cf;
+
+        $date = new DateTime();
+        $currentWeek = new Week($date->format('W'), $date->format('o'));
+        return $week->compare($currentWeek->getNextWeek(-$plugin_cf['ocal']['pagination_past'])) >= 0
+            && $week->compare($currentWeek->getNextWeek($plugin_cf['ocal']['pagination_future'])) <= 0;
     }
 
     /**

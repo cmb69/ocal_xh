@@ -25,5 +25,7 @@ $plugin_tx['ocal']['alt_logo']="Calendar";
 $plugin_tx['ocal']['cf_hour_first']="The first hour that shall be displayed in the hourly occupancy calendars.";
 $plugin_tx['ocal']['cf_hour_interval']="The integral hourly interval. For instance, if only every second hour should be shown, enter \"2\".";
 $plugin_tx['ocal']['cf_hour_last']="The last hour that shall be displayed in the hourly occupancy calendars.";
+$plugin_tx['ocal']['cf_pagination_past']="The number of months or weeks in the past the pagination should support.";
+$plugin_tx['ocal']['cf_pagination_future']="The number of months or weeks in the future the pagination should support.";
 
 ?>

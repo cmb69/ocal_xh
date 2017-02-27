@@ -25,5 +25,7 @@ $plugin_tx['ocal']['alt_logo']="Kalender";
 $plugin_tx['ocal']['cf_hour_first']="Die erste Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";
 $plugin_tx['ocal']['cf_hour_interval']="Das ganzzahlige stündliche Intervall. Soll beispielsweise nur jede zweite Stunde angezeigt werden, geben Sie \"2\" ein.";
 $plugin_tx['ocal']['cf_hour_last']="Die letzte Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";
+$plugin_tx['ocal']['cf_pagination_past']="Die Anzahl der Monate bzw. Wochen in der Vergangenheit, die die Paginierung unterstützen soll.";
+$plugin_tx['ocal']['cf_pagination_future']="Die Anzahl der Monate bzw. Wochen in der Zukunft, die die Paginierung unterstützen soll.";
 
 ?>

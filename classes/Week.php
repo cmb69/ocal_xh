@@ -82,4 +82,18 @@ class Week
         $year = $date->format('o');
         return new self($week, $year);
     }
+
+    /**
+     * @return int
+     */
+    public function compare(Week $other)
+    {
+        if ($this->year < $other->year || $this->year === $other->year && $this->week < $other->week) {
+            return -1;
+        } elseif ($this->year > $other->year || $this->year === $other->year && $this->week > $other->week) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }
