@@ -44,7 +44,7 @@ class WeekListView extends ListView
             $week = $week->getNextWeek();
         }
         $html .= '</dl>'
-            . $this->renderWeekPagination() . '</div>';
+            . $this->renderWeekPagination($weekCount) . '</div>';
         return $html;
     }
 }
