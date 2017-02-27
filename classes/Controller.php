@@ -21,260 +21,240 @@
 
 namespace Ocal;
 
-class Controller
+use DateTime;
+
+abstract class Controller
 {
-    public function dispatch()
-    {
-        if (XH_ADM) {
-            if (function_exists('XH_registerStandardPluginMenuItems')) {
-                XH_registerStandardPluginMenuItems(false);
-            }
-            if ($this->isAdministrationRequested()) {
-                $this->handleAdministration();
-            }
-        } else {
-            if (isset($_GET['ocal_week']) || isset($_GET['ocal_month'])
-                || isset($_GET['ocal_year'])
-            ) {
-                XH_afterPluginLoading(array($this, 'disallowIndexing'));
-            }
-        }
-    }
+    /**
+     * @var Occupancy
+     */
+    protected $occupancy;
 
     /**
-     * @return bool
+     * @var int
      */
-    protected function isAdministrationRequested()
-    {
-        global $ocal;
-
-        return function_exists('XH_wantsPluginAdministration')
-            && XH_wantsPluginAdministration('ocal')
-            || isset($ocal) && $ocal == 'true';
-    }
-
-    private function handleAdministration()
-    {
-        global $admin, $action, $o;
-
-        $o .= print_plugin_admin('off');
-        switch ($admin) {
-            case '':
-                $o .= $this->renderInfo();
-                break;
-            default:
-                $o .= plugin_admin_common($action, $admin, 'ocal');
-        }
-    }
+    protected $month;
 
     /**
-     * @return string
+     * @var int
      */
-    private function renderInfo()
-    {
-        return '<h1>Ocal</h1>'
-            . $this->renderLogo()
-            . '<p>Version: ' . OCAL_VERSION . '</p>'
-            . $this->renderCopyright() . $this->renderLicense();
-    }
+    protected $week;
 
     /**
-     * @return string
+     * @var int
      */
-    private function renderLicense()
-    {
-        return <<<EOT
-<p class="ocal_license">This program is free software: you can redistribute
-it and/or modify it under the terms of the GNU General Public License as
-published by the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.</p>
-<p class="ocal_license">This program is distributed in the hope that it will
-be useful, but <em>without any warranty</em>; without even the implied warranty
-of <em>merchantability</em> or <em>fitness for a particular purpose</em>. See
-the GNU General Public License for more details.</p>
-<p class="ocal_license">You should have received a copy of the GNU General
-Public License along with this program. If not, see <a
-href="http://www.gnu.org/licenses/"
-target="_blank">http://www.gnu.org/licenses/</a>. </p>
-EOT;
-    }
+    protected $year;
 
     /**
-     * @return string
+     * @var int
      */
-    private function renderLogo()
-    {
-        global $pth, $plugin_tx;
+    protected $isoYear;
 
-        return tag(
-            'img src="' . $pth['folder']['plugins']. 'ocal/ocal.png"'
-            . ' class="ocal_logo" alt="' . $plugin_tx['ocal']['alt_logo'] . '"'
+    /**
+     * @var string
+     */
+    protected $mode;
+
+    public function __construct(Occupancy $occupancy)
+    {
+        $now = time();
+        $this->month = isset($_GET['ocal_month'])
+            ? max(1, min(12, (int) $_GET['ocal_month']))
+            : date('n', $now);
+        $this->week = isset($_GET['ocal_week'])
+            ? max(1, min(53, (int) $_GET['ocal_week']))
+            : date('W', $now);
+        $this->year = isset($_GET['ocal_year'])
+            ? (int) $_GET['ocal_year']
+            : date('Y', $now);
+        $this->isoYear = isset($_GET['ocal_year'])
+            ? (int) $_GET['ocal_year']
+            : date('o', $now);
+        $this->occupancy = $occupancy;
+    }
+
+    protected function emitScriptElements()
+    {
+        global $pth, $bjs, $plugin_tx;
+
+        $config = array(
+            'message_unsaved_changes'
+                => $plugin_tx['ocal']['message_unsaved_changes'],
+            'isAdmin' => XH_ADM
         );
+        $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
+            . 'var OCAL = ' . XH_encodeJson($config) . ';'
+            . '/* ]]> */</script>'
+            . '<script type="text/javascript" src="'
+            . $pth['folder']['plugins'] . 'ocal/ocal.js"></script>';
     }
 
     /**
      * @return string
      */
-    private function renderCopyright()
-    {
-        return <<<EOT
-<p>Copyright &copy; 2014-2017
-    <a href="http://3-magi.net/" target="_blank">Christoph M. Becker</a>
-</p>
-EOT;
-    }
-
-    public function disallowIndexing()
-    {
-        global $cf;
-
-        $cf['meta']['robots'] = 'noindex, nofollow';
-    }
-
-    /**
-     * @param string $name
-     * @param int $monthCount
-     * @return string
-     */
-    public function renderCalendar($name, $monthCount)
-    {
-        global $plugin_tx, $_XH_csrfProtection;
-
-        if (!preg_match('/^[a-z0-9-]+$/', $name)) {
-            return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
-        }
-        if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $name) {
-            $_XH_csrfProtection->check();
-            ob_end_clean(); // necessary, if called from template
-            echo $this->saveStates($name);
-            exit;
-        }
-        $db = new Db(LOCK_SH);
-        $occupancy = $db->findOccupancy($name);
-        $db = null;
-        $view = $this->getView($occupancy);
-        $html = $view->render($monthCount);
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            if ($_GET['ocal_name'] == $name) {
-                header('Content-Type: text/html; charset=UTF-8');
-                echo $html;
-                exit;
-            } else {
-                return;
-            }
-        } else {
-            return $html;
-        }
-    }
-
-    /**
-     * @param string $name
-     */
-    protected function saveStates($name)
+    protected function renderModeLink()
     {
         global $plugin_tx;
 
-        $states = XH_decodeJson($_POST['ocal_states']);
-        if (!is_object($states)) {
-            header('HTTP/1.0 400 Bad Request');
-            exit;
-        }
-        $db = new Db(LOCK_EX);
-        $occupancy = $db->findOccupancy($name);
-        foreach (get_object_vars($states) as $month => $states) {
-            foreach ($states as $i => $state) {
-                $date = sprintf('%s-%02d', $month, $i + 1);
-                $occupancy->setState($date, $state);
-            }
-        }
-        $db->saveOccupancy($occupancy);
-        $db = null;
-        return XH_message('success', $plugin_tx['ocal']['message_saved']);
+        $mode = $this->mode == 'calendar' ? 'list' : 'calendar';
+        $url = $this->modifyUrl(array('ocal_mode' => $mode));
+        $label = $this->mode == 'calendar'
+            ? $plugin_tx['ocal']['label_list_view']
+            : $plugin_tx['ocal']['label_calendar_view'];
+        return '<p class="ocal_mode"><a href="' . XH_hsc($url) . '">' . $label
+            . '</a></p>';
     }
 
     /**
-     * @param string $name
-     * @param int  $weekCount
      * @return string
      */
-    public function renderWeekCalendar($name, $weekCount)
+    protected function renderLoaderbar()
     {
-        global $plugin_tx, $_XH_csrfProtection;
+        global $pth;
 
-        if (!preg_match('/^[a-z0-9-]+$/', $name)) {
-            return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
-        }
-        if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $name) {
-            $_XH_csrfProtection->check();
-            ob_end_clean(); // necessary, if called from template
-            echo $this->saveHourlyStates($name);
-            exit;
-        }
-        $db = new Db(LOCK_SH);
-        $occupancy = $db->findOccupancy($name, true);
-        $db = null;
-        $view = $this->getView($occupancy);
-        $html = $view->render($weekCount);
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            if ($_GET['ocal_name'] == $name) {
-                header('Content-Type: text/html; charset=UTF-8');
-                echo $html;
-                exit;
-            } else {
+        $src = $pth['folder']['plugins'] . 'ocal/images/ajax-loader-bar.gif';
+        return '<div class="ocal_loaderbar">'
+            . tag('img src="' . $src . '" alt="loading"')
+            . '</div>';
+    }
+
+    /**
+     * @return string
+     */
+    protected function renderStatusbar()
+    {
+        return '<div class="ocal_statusbar"></div>';
+    }
+
+    /**
+     * @return string
+     */
+    protected function renderMonthPagination()
+    {
+        return '<p class="ocal_pagination">'
+            . $this->renderMonthPaginationLink(0, -1, 'prev_year') . ' '
+            . $this->renderMonthPaginationLink(-1, 0, 'prev_month') . ' '
+            . $this->renderMonthPaginationLink(false, false, 'today') . ' '
+            . $this->renderMonthPaginationLink(1, 0, 'next_month') . ' '
+            . $this->renderMonthPaginationLink(0, 1, 'next_year')
+            . '</p>';
+    }
+
+    /**
+     * @param int $month
+     * @param int $year
+     * @param string $label
+     * @return ?string
+     */
+    protected function renderMonthPaginationLink($month, $year, $label)
+    {
+        global $plugin_tx;
+
+        $mode = $this->mode == 'list' ? 'list' : 'calendar';
+        if ($month === false && $year === false) {
+            $date = new DateTime();
+            $year = $date->format('Y');
+            $month = $date->format('n');
+        } else {
+            $month = $this->month + $month;
+            $year = $this->year + $year;
+            if ($month < 1) {
+                $month = 12;
+                $year -= 1;
+            } elseif ($month > 12) {
+                $month = 1;
+                $year += 1;
+            }
+            $wantedMonth = 12 * $year + $month;
+            if (!$this->isMonthPaginationValid($wantedMonth)) {
                 return;
             }
-        } else {
-            return $html;
         }
+        $url = $this->modifyUrl(
+            array(
+                'ocal_year' => $year, 'ocal_month' => $month,
+                'ocal_mode' => $mode
+            )
+        );
+        return '<a href="' . XH_hsc($url) . '">'
+            . $plugin_tx['ocal']['label_'. $label] . '</a>';
     }
 
     /**
-     * @param string $name
+     * @param int $month
      */
-    protected function saveHourlyStates($name)
+    private function isMonthPaginationValid($month)
     {
-        global $plugin_cf, $plugin_tx;
+        global $plugin_cf;
 
-        $states = XH_decodeJson($_POST['ocal_states']);
-        if (!is_object($states)) {
-            header('HTTP/1.0 400 Bad Request');
-            exit;
-        }
-        $db = new Db(LOCK_EX);
-        $occupancy = $db->findOccupancy($name, true);
-        foreach (get_object_vars($states) as $week => $states) {
-            foreach ($states as $i => $state) {
-                $day = $i % 7 + 1;
-                $hour = $plugin_cf['ocal']['hour_interval'] * (int) ($i / 7) + $plugin_cf['ocal']['hour_first'];
-                $date = sprintf('%s-%02d-%02d', $week, $day, $hour);
-                $occupancy->setState($date, $state);
+        $date = new DateTime();
+        $currentMonth = 12 * $date->format('Y') + $date->format('n');
+        return $month >= $currentMonth - $plugin_cf['ocal']['pagination_past']
+            && $month <= $currentMonth + $plugin_cf['ocal']['pagination_future'];
+    }
+
+    /**
+     * @param int $weekCount
+     * @return string
+     */
+    protected function renderWeekPagination($weekCount)
+    {
+        return '<p class="ocal_pagination">'
+            . $this->renderWeekPaginationLink(-$weekCount, 'prev_interval') . ' '
+            . $this->renderWeekPaginationLink(false, 'today') . ' '
+            . $this->renderWeekPaginationLink($weekCount, 'next_interval')
+            . '</p>';
+    }
+
+    /**
+     * @param int $offset
+     * @param string $label
+     * @return ?string
+     */
+    protected function renderWeekPaginationLink($offset, $label)
+    {
+        global $plugin_tx;
+
+        $params = array('ocal_mode' => $this->mode == 'list' ? 'list' : 'calendar');
+        if ($offset) {
+            $week = new Week($this->week, $this->year);
+            $week = $week->getNextWeek($offset);
+            if (!$this->isWeekPaginationValid($week)) {
+                return;
             }
+            $params['ocal_year'] = $week->getYear();
+            $params['ocal_week'] = $week->getWeek();
+        } else {
+            $date = new DateTime();
+            $params['ocal_year'] = $date->format('o');
+            $params['ocal_week'] = $date->format('W');
         }
-        $db->saveOccupancy($occupancy);
-        $db = null;
-        return XH_message('success', $plugin_tx['ocal']['message_saved']);
+        $url = $this->modifyUrl($params);
+        return '<a href="' . XH_hsc($url) . '">'
+            . $plugin_tx['ocal']['label_'. $label] . '</a>';
+    }
+
+    private function isWeekPaginationValid(Week $week)
+    {
+        global $plugin_cf;
+
+        $date = new DateTime();
+        $currentWeek = new Week($date->format('W'), $date->format('o'));
+        return $week->compare($currentWeek->getNextWeek(-$plugin_cf['ocal']['pagination_past'])) >= 0
+            && $week->compare($currentWeek->getNextWeek($plugin_cf['ocal']['pagination_future'])) <= 0;
     }
 
     /**
-     * @return View
+     * @param array $newParams
+     * @return string
      */
-    protected function getView(Occupancy $occupancy)
+    protected function modifyUrl(array $newParams)
     {
-        $mode = isset($_GET['ocal_mode']) ? $_GET['ocal_mode'] : 'calendar';
-        switch ($mode) {
-            case 'list':
-                if ($occupancy instanceof HourlyOccupancy) {
-                    return new WeekListView($occupancy);
-                } else {
-                    return new ListView($occupancy);
-                }
-                break;
-            default:
-                if ($occupancy instanceof HourlyOccupancy) {
-                    return new WeekCalendars($occupancy);
-                } else {
-                    return new Calendars($occupancy);
-                }
-        }
+        global $sn;
+
+        parse_str($_SERVER['QUERY_STRING'], $params);
+        $params = array_merge($params, $newParams);
+        $query = str_replace('=&', '&', http_build_query($params));
+        return $sn . '?' . $query;
     }
 }

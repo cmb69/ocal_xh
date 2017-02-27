@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-class Calendars extends View
+class Calendars extends Controller
 {
     public function __construct(Occupancy $occupancy)
     {

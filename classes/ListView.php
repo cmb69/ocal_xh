@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-class ListView extends View
+class ListView extends Controller
 {
     public function __construct(Occupancy $occupancy)
     {
