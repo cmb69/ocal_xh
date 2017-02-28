@@ -48,9 +48,10 @@ const OCAL_VERSION = '@OCAL_VERSION@';
  */
 function ocal($name, $monthCount = 1)
 {
-    global $_Ocal_plugin;
-
-    return $_Ocal_plugin->renderCalendar($name, $monthCount);
+    $controller = new Ocal\DailyCalendarController($name, $monthCount);
+    ob_start();
+    $controller->defaultAction();
+    return ob_get_clean();
 }
 
 /**
@@ -60,10 +61,10 @@ function ocal($name, $monthCount = 1)
  */
 function Ocal_hourly($name, $weekCount = 1)
 {
-    global $_Ocal_plugin;
-
-    return $_Ocal_plugin->renderWeekCalendar($name, $weekCount);
+    $controller = new Ocal\HourlyCalendarController($name, $weekCount);
+    ob_start();
+    $controller->defaultAction();
+    return ob_get_clean();
 }
 
-$_Ocal_plugin = new Ocal\Plugin();
-$_Ocal_plugin->dispatch();
+(new Ocal\Plugin())->dispatch();
