@@ -94,28 +94,10 @@ abstract class Controller
      */
     protected function renderModeLink()
     {
-        global $plugin_tx;
-
-        $mode = $this->mode == 'calendar' ? 'list' : 'calendar';
-        $url = $this->modifyUrl(array('ocal_mode' => $mode));
-        $label = $this->mode == 'calendar'
-            ? $plugin_tx['ocal']['label_list_view']
-            : $plugin_tx['ocal']['label_calendar_view'];
-        return '<p class="ocal_mode"><a href="' . XH_hsc($url) . '">' . $label
-            . '</a></p>';
-    }
-
-    /**
-     * @return string
-     */
-    protected function renderLoaderbar()
-    {
-        global $pth;
-
-        $src = $pth['folder']['plugins'] . 'ocal/images/ajax-loader-bar.gif';
-        return '<div class="ocal_loaderbar">'
-            . tag('img src="' . $src . '" alt="loading"')
-            . '</div>';
+        $view = new View('mode-link');
+        $view->mode = $mode = $this->mode == 'calendar' ? 'list' : 'calendar';
+        $view->url = $this->modifyUrl(array('ocal_mode' => $mode));
+        return $view->render();
     }
 
     /**
@@ -123,7 +105,11 @@ abstract class Controller
      */
     protected function renderStatusbar()
     {
-        return '<div class="ocal_statusbar"></div>';
+        global $pth;
+
+        $view = new View('statusbar');
+        $view->image = "{$pth['folder']['plugins']}ocal/images/ajax-loader-bar.gif";
+        return $view->render();
     }
 
     /**

@@ -45,7 +45,7 @@ class Calendars extends Controller
             $html .= $_XH_csrfProtection->tokenInput()
                 . $this->renderToolbar();
         }
-        $html .= $this->renderLoaderbar() . $this->renderStatusbar();
+        $html .= $this->renderStatusbar();
         $month = new Month($this->month, $this->year);
         while ($monthCount) {
             $calendar = new MonthCalendar($month, $this->occupancy);
@@ -63,18 +63,8 @@ class Calendars extends Controller
      */
     protected function renderToolbar()
     {
-        global $plugin_tx;
-
-        $html = '<div class="ocal_toolbar">';
-        for ($i = 0; $i <= 3; $i++) {
-            $alt = $plugin_tx['ocal']['label_state_' . $i];
-            $title = $alt ? ' title="' . $alt . '"' : '';
-            $html .= '<span class="ocal_state" data-ocal_state="' . $i . '"'
-                . $title . '></span>';
-        }
-        $html .= '<button type="button" class="ocal_save" disabled="disabled">'
-            . $plugin_tx['ocal']['label_save'] . '</button>'
-            . '</div>';
-        return $html;
+        $view = new View('toolbar');
+        $view->states = range(0, 3);
+        return $view->render();
     }
 }

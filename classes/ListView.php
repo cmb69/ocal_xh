@@ -37,7 +37,7 @@ class ListView extends Controller
     {
         $this->emitScriptElements();
         $html = '<div data-name="' . $this->occupancy->getName() . '">' . $this->renderModeLink()
-            . $this->renderLoaderbar() . $this->renderStatusbar()
+            . $this->renderStatusbar()
             . '<dl class="ocal_list">';
         $month = new Month($this->month, $this->year);
         while ($monthCount) {

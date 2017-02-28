@@ -35,11 +35,6 @@ class MonthTest extends PHPUnit_Framework_TestCase
         $this->subject = new Month(2, 2017);
     }
 
-    public function testGetDayOffset()
-    {
-        $this->assertSame(-1, $this->subject->getDayOffset());
-    }
-
     public function testGetLastDay()
     {
         $this->assertSame(28, $this->subject->getLastDay());
@@ -69,5 +64,17 @@ class MonthTest extends PHPUnit_Framework_TestCase
     {
         $subject = new Month(12, 2017);
         $this->assertSame('2018-01', $subject->getNextMonth()->getIso());
+    }
+
+    public function testGetDaysOfWeeks()
+    {
+        $expected = array(
+            [null, null,    1,    2,    3,    4,    5],
+            [   6,    7,    8,    9,   10,   11,   12],
+            [  13,   14,   15,   16,   17,   18,   19],
+            [  20,   21,   22,   23,   24,   25,   26],
+            [  27,   28, null, null, null, null, null]
+        );
+        $this->assertSame($expected, $this->subject->getDaysOfWeeks());
     }
 }

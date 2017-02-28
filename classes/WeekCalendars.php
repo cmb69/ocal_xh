@@ -41,7 +41,7 @@ class WeekCalendars extends Calendars
             $html .= $_XH_csrfProtection->tokenInput()
                 . $this->renderToolbar();
         }
-        $html .= $this->renderLoaderbar() . $this->renderStatusbar();
+        $html .= $this->renderStatusbar();
         $week = new Week($this->week, $this->year);
         $i = $weekCount;
         while ($i) {

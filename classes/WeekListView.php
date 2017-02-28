@@ -33,7 +33,7 @@ class WeekListView extends ListView
     {
         $this->emitScriptElements();
         $html = '<div data-name="' . $this->occupancy->getName() . '">' . $this->renderModeLink()
-            . $this->renderLoaderbar() . $this->renderStatusbar()
+            . $this->renderStatusbar()
             . '<dl class="ocal_list">';
         $week = new Week($this->week, $this->year);
         $i = $weekCount;

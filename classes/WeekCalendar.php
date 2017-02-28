@@ -30,68 +30,22 @@ class WeekCalendar extends WeekView
      */
     public function render()
     {
-        global $plugin_cf;
+        global $plugin_cf, $plugin_tx;
 
         $pcf = $plugin_cf['ocal'];
-        $html = '<table class="ocal_calendar" data-ocal_date="'
-            . $this->week->getIso() . '">';
-        $html .= '<thead>' . $this->renderHeading() . $this->renderDaynames() . '</thead><tbody>';
-        for ($i = $pcf['hour_first']; $i <= $pcf['hour_last']; $i += $plugin_cf['ocal']['hour_interval']) {
-            $html .= '<tr>';
-            for ($j = 1; $j <= 7; $j++) {
-                $html .= $this->renderHour($j, $i);
-            }
-            $html .= '</tr>';
-        }
-        $html .= '</tbody></table>';
-        return $html;
-    }
-
-    /**
-     * @return string
-     */
-    protected function renderHeading()
-    {
-        global $plugin_tx;
-
+        $view = new View('hourly-calendar');
+        $view->date = $this->week->getIso();
         $date = new DateTime();
         $date->setISODate($this->week->getYear(), $this->week->getWeek(), 1);
-        $from = $date->format($plugin_tx['ocal']['date_format']);
+        $view->from = $date->format($plugin_tx['ocal']['date_format']);
         $date->setISODate($this->week->getYear(), $this->week->getWeek(), 7);
-        $to = $date->format($plugin_tx['ocal']['date_format']);
-        return '<tr><th colspan="7">' . $from
-            . '&ndash;' . $to . '</th></tr>';
-    }
-
-    /**
-     * @return string
-     */
-    protected function renderDaynames()
-    {
-        global $plugin_tx;
-
-        $daynames = explode(',', $plugin_tx['ocal']['date_days']);
-        $html = '<tr>';
-        foreach ($daynames as $dayname) {
-            $html .= '<th>' . $dayname . '</th>';
-        }
-        $html .= '</tr>';
-        return $html;
-    }
-
-    /**
-     * @param int $day
-     * @param int $hour
-     * @return string
-     */
-    protected function renderHour($day, $hour)
-    {
-        global $plugin_tx;
-
-        $state = $this->occupancy->getState($this->formatDate($day, $hour));
-        $alt = $plugin_tx['ocal']['label_state_' . $state];
-        $title = $alt ? ' title="' . $alt . '"' : '';
-        return '<td class="ocal_state" data-ocal_state="' . $state . '"'
-            . $title . '>' . $hour . '</td>';
+        $view->to = $date->format($plugin_tx['ocal']['date_format']);
+        $view->daynames = array_map('trim', explode(',', $plugin_tx['ocal']['date_days']));
+        $view->hours = range($pcf['hour_first'], $pcf['hour_last'], $pcf['hour_interval']);
+        $view->days = range(1, 7);
+        $view->state = function ($day, $hour) {
+            return $this->occupancy->getState($this->formatDate($day, $hour));
+        };
+        return $view->render();
     }
 }
