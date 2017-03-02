@@ -21,69 +21,157 @@
 
 namespace Ocal;
 
+use DateTime;
+
 class HourlyCalendarController extends CalendarController
 {
-    public function defaultAction()
-    {
-        global $_XH_csrfProtection;
+    /**
+     * @var int
+     */
+    private $week;
 
-        if (!$this->validateName()) {
-            return;
-        }
-        if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $this->name) {
-            $_XH_csrfProtection->check();
-            while (ob_get_level()) {
-                ob_end_clean();
-            }
-            echo $this->saveHourlyStates($this->name);
-            exit;
-        }
-        $db = new Db(LOCK_SH);
-        $occupancy = $db->findOccupancy($this->name, true);
-        $db = null;
-        $view = $this->getView($occupancy);
-        $html = $view->render($this->count);
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            if ($_GET['ocal_name'] == $this->name) {
-                header('Content-Type: text/html; charset=UTF-8');
-                while (ob_get_level()) {
-                    ob_end_clean();
-                }
-                echo $html;
-                exit;
-            } else {
-                return;
-            }
-        } else {
-            echo $html;
-            return;
-        }
+    /**
+     * @var int
+     */
+    private $isoYear;
+
+    /**
+     * @param string $name
+     * @param int $count
+     */
+    public function __construct($name, $count)
+    {
+        parent::__construct($name, $count);
+        $now = new DateTime();
+        $this->week = isset($_GET['ocal_week'])
+            ? max(1, min(53, (int) $_GET['ocal_week']))
+            : (int) $now->format('W');
+        $this->isoYear = isset($_GET['ocal_year'])
+            ? (int) $_GET['ocal_year']
+            : (int) $now->format('o');
     }
 
     /**
+     * @return Occupancy
+     */
+    protected function findOccupancy()
+    {
+        $db = new Db(LOCK_SH);
+        return $db->findOccupancy($this->name, true);
+    }
+
+    /**
+     * @return View
+     */
+    protected function getCalendarView(Occupancy $occupancy)
+    {
+        $this->emitScriptElements();
+        
+        $view = new View('hourly-calendars');
+        $view->occupancyName = $occupancy->getName();
+        $view->modeLinkView = $this->prepareModeLinkView();
+        $view->isEditable = XH_ADM;
+        $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
+        $view->toolbarView = $this->prepareToolbarView();
+        $view->statusbarView = $this->prepareStatusbarView();
+        $view->weekPagination = $this->preparePaginationView($this->count);
+        $view->weeks = Week::createRange($this->isoYear, $this->week, $this->count);
+        $view->weekCalendarView = function (Week $week) use ($occupancy) {
+            return $this->prepareWeekCalendarView($occupancy, $week);
+        };
+        return $view;
+    }
+
+    /**
+     * @return View
+     */
+    private function prepareWeekCalendarView(Occupancy $occupancy, Week $week)
+    {
+        $view = new View('hourly-calendar');
+        $view->date = $week->getIso();
+        $date = new DateTime();
+        $date->setISODate($week->getYear(), $week->getWeek(), 1);
+        $view->from = $date->format($this->lang['date_format']);
+        $date->setISODate($week->getYear(), $week->getWeek(), 7);
+        $view->to = $date->format($this->lang['date_format']);
+        $view->daynames = array_map('trim', explode(',', $this->lang['date_days']));
+        $view->hours = range($this->config['hour_first'], $this->config['hour_last'], $this->config['hour_interval']);
+        $view->days = range(1, 7);
+        $view->state = function ($day, $hour) use ($occupancy, $week) {
+            return $occupancy->getHourlyState($week->getYear(), $week->getWeek(), $day, $hour);
+        };
+        return $view;
+    }
+
+    /**
+     * @return View
+     */
+    protected function getListView(Occupancy $occupancy)
+    {
+        $this->emitScriptElements();
+        $view = new View('hourly-lists');
+        $view->occupancyName = $occupancy->getName();
+        $view->modeLink = $this->prepareModeLinkView();
+        $view->statusbar = $this->prepareStatusbarView();
+        $view->weekPagination = $this->preparePaginationView($this->count);
+        $view->weeks = Week::createRange($this->isoYear, $this->week, $this->count);
+        $view->weekList = function ($week) use ($occupancy) {
+            return $this->prepareWeekListView($occupancy, $week);
+        };
+        return $view;
+    }
+
+    /**
+     * @return View
+     */
+    private function prepareWeekListView(Occupancy $occupancy, Week $week)
+    {
+        $view = new View('hourly-list');
+        $view->dates = $week->getDatesOfWeek();
+        $view->listOfDay = function ($weekday) use ($occupancy, $week) {
+            return (new ListService)->getHourlyList($occupancy, $week, $weekday);
+        };
+        $view->dayLabel = function ($date) {
+            return $date->format($this->lang['date_format']);
+        };
+        return $view;
+    }
+
+    /**
+     * @param int $weekCount
+     * @return View
+     */
+    private function preparePaginationView($weekCount)
+    {
+        $view = new View('pagination');
+        $view->items = (new HourlyPagination($this->isoYear, $this->week, new DateTime()))->getItems($weekCount);
+        $view->url = function ($year, $week) {
+            return $this->modifyUrl(['ocal_year' => $year, 'ocal_week' => $week, 'ocal_action' => $this->mode]);
+        };
+        return $view;
+    }
+    /**
      * @param ?string $name
      */
-    private function saveHourlyStates($name)
+    protected function saveStates()
     {
-        global $plugin_cf, $plugin_tx;
-
         $states = XH_decodeJson($_POST['ocal_states']);
         if (!is_object($states)) {
             header('HTTP/1.0 400 Bad Request');
             exit;
         }
         $db = new Db(LOCK_EX);
-        $occupancy = $db->findOccupancy($name, true);
+        $occupancy = $db->findOccupancy($this->name, true);
         foreach (get_object_vars($states) as $week => $states) {
             foreach ($states as $i => $state) {
                 $day = $i % 7 + 1;
-                $hour = $plugin_cf['ocal']['hour_interval'] * (int) ($i / 7) + $plugin_cf['ocal']['hour_first'];
+                $hour = $this->config['hour_interval'] * (int) ($i / 7) + $this->config['hour_first'];
                 $date = sprintf('%s-%02d-%02d', $week, $day, $hour);
                 $occupancy->setState($date, $state);
             }
         }
         $db->saveOccupancy($occupancy);
         $db = null;
-        return XH_message('success', $plugin_tx['ocal']['message_saved']);
+        return XH_message('success', $this->lang['message_saved']);
     }
 }

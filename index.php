@@ -48,9 +48,23 @@ const OCAL_VERSION = '@OCAL_VERSION@';
  */
 function ocal($name, $monthCount = 1)
 {
+    global $plugin_tx;
+
+    if (!preg_match('/^[a-z0-9-]+$/', $name)) {
+        return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
+    }
     $controller = new Ocal\DailyCalendarController($name, $monthCount);
+    $action = filter_input(
+        INPUT_GET,
+        'ocal_action',
+        FILTER_VALIDATE_REGEXP,
+        ['options' => ['regexp' => '/^[a-z]+$/', 'default' => 'default']]
+    );
+    if (!method_exists($controller, "{$action}Action")) {
+        $action = 'default';
+    }
     ob_start();
-    $controller->defaultAction();
+    $controller->{"{$action}Action"}();
     return ob_get_clean();
 }
 
@@ -61,9 +75,23 @@ function ocal($name, $monthCount = 1)
  */
 function Ocal_hourly($name, $weekCount = 1)
 {
+    global $plugin_tx;
+
+    if (!preg_match('/^[a-z0-9-]+$/', $name)) {
+        return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
+    }
     $controller = new Ocal\HourlyCalendarController($name, $weekCount);
+    $action = filter_input(
+        INPUT_GET,
+        'ocal_action',
+        FILTER_VALIDATE_REGEXP,
+        ['options' => ['regexp' => '/^[a-z]+$/', 'default' => 'default']]
+    );
+    if (!method_exists($controller, "{$action}Action")) {
+        $action = 'default';
+    }
     ob_start();
-    $controller->defaultAction();
+    $controller->{"{$action}Action"}();
     return ob_get_clean();
 }
 

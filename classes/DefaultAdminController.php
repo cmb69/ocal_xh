@@ -30,6 +30,6 @@ class DefaultAdminController
         $view = new View('info');
         $view->logo = "{$pth['folder']['plugins']}ocal/ocal.png";
         $view->version = OCAL_VERSION;
-        echo $view->render();
+        $view->render();
     }
 }

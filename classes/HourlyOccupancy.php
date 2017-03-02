@@ -23,4 +23,16 @@ namespace Ocal;
 
 class HourlyOccupancy extends Occupancy
 {
+    /**
+     * @param int $year
+     * @param int $week
+     * @param int $day
+     * @param int $hour
+     * @return int
+     */
+    public function getHourlyState($year, $week, $day, $hour)
+    {
+        $date = sprintf('%04d-%02d-%02d-%02d', $year, $week, $day, $hour);
+        return $this->getState($date);
+    }
 }

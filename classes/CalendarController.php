@@ -34,50 +34,175 @@ abstract class CalendarController
     protected $count;
 
     /**
+     * @var object
+     */
+    protected $csrfProtector;
+
+    /**
+     * @var string[]
+     */
+    protected $config;
+
+    /**
+     * @var string[]
+     */
+    protected $lang;
+
+    /**
+     * @var string
+     */
+    protected $mode;
+
+    /**
+     * @var string
+     */
+    private $scriptName;
+
+    /**
+     * @var string
+     */
+    private $pluginFolder;
+
+    /**
      * @param string $name
      * @param int $count
      */
     public function __construct($name, $count)
     {
+        global $sn, $pth, $_XH_csrfProtection, $plugin_cf, $plugin_tx;
+
         $this->name = (string) $name;
         $this->count = (int) $count;
+        $this->scriptName = $sn;
+        $this->pluginFolder = $pth['folder']['plugins'];
+        $this->csrfProtector = $_XH_csrfProtection;
+        $this->config = $plugin_cf['ocal'];
+        $this->lang = $plugin_tx['ocal'];
+    }
+
+    public function defaultAction()
+    {
+        $this->mode = 'calendar';
+        $occupancy = $this->findOccupancy();
+        $view = $this->getCalendarView($occupancy);
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+            if ($_GET['ocal_name'] == $this->name) {
+                header('Content-Type: text/html; charset=UTF-8');
+                $this->purgeOutputBuffers();
+                $view->render();
+                exit;
+            }
+        } else {
+            $view->render();
+        }
+    }
+
+    public function listAction()
+    {
+        $this->mode = 'list';
+        $occupancy = $this->findOccupancy();
+        $view = $this->getListView($occupancy);
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+            if ($_GET['ocal_name'] == $this->name) {
+                header('Content-Type: text/html; charset=UTF-8');
+                $this->purgeOutputBuffers();
+                $view->render();
+                exit;
+            }
+        } else {
+            $view->render();
+        }
     }
 
     /**
-     * @return bool
+     * @return Occupancy
      */
-    protected function validateName()
-    {
-        global $plugin_tx;
+    abstract protected function findOccupancy();
 
-        if (preg_match('/^[a-z0-9-]+$/', $this->name)) {
-            return true;
-        } else {
-            echo XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
-            return false;
+    /**
+     * @return View
+     */
+    abstract protected function getCalendarView(Occupancy $occupancy);
+
+    /**
+     * @return View
+     */
+    abstract protected function getListView(Occupancy $occupancy);
+
+    public function saveAction()
+    {
+        $this->mode = 'calendar';
+        if (XH_ADM && isset($_GET['ocal_name']) && $_GET['ocal_name'] == $this->name) {
+            $this->csrfProtector->check();
+            $this->purgeOutputBuffers();
+            echo $this->saveStates();
+            exit;
         }
+    }
+
+    private function purgeOutputBuffers()
+    {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+    }
+
+    abstract protected function saveStates();
+
+    protected function emitScriptElements()
+    {
+        global $bjs;
+
+        $config = array(
+            'message_unsaved_changes' => $this->lang['message_unsaved_changes'],
+            'isAdmin' => XH_ADM
+        );
+        $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
+            . 'var OCAL = ' . XH_encodeJson($config) . ';'
+            . '/* ]]> */</script>'
+            . '<script type="text/javascript" src="'
+            . $this->pluginFolder . 'ocal/ocal.js"></script>';
     }
 
     /**
      * @return View
      */
-    protected function getView(Occupancy $occupancy)
+    protected function prepareModeLinkView()
     {
-        $mode = isset($_GET['ocal_mode']) ? $_GET['ocal_mode'] : 'calendar';
-        switch ($mode) {
-            case 'list':
-                if ($occupancy instanceof HourlyOccupancy) {
-                    return new WeekListView($occupancy);
-                } else {
-                    return new ListView($occupancy);
-                }
-                break;
-            default:
-                if ($occupancy instanceof HourlyOccupancy) {
-                    return new WeekCalendars($occupancy);
-                } else {
-                    return new Calendars($occupancy);
-                }
-        }
+        $view = new View('mode-link');
+        $view->mode = $mode = $this->mode == 'calendar' ? 'list' : 'calendar';
+        $view->url = $this->modifyUrl(array('ocal_action' => $mode));
+        return $view;
+    }
+
+    /**
+     * @return View
+     */
+    protected function prepareStatusbarView()
+    {
+        $view = new View('statusbar');
+        $view->image = "{$this->pluginFolder}ocal/images/ajax-loader-bar.gif";
+        return $view;
+    }
+
+    /**
+     * @return View
+     */
+    protected function prepareToolbarView()
+    {
+        $view = new View('toolbar');
+        $view->states = range(0, 3);
+        return $view;
+    }
+
+    /**
+     * @return string
+     */
+    protected function modifyUrl(array $newParams)
+    {
+        parse_str($_SERVER['QUERY_STRING'], $params);
+        $params = array_merge($params, $newParams);
+        $query = str_replace('=&', '&', http_build_query($params));
+        return "{$this->scriptName}?$query";
     }
 }

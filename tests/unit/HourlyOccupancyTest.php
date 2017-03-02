@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2014-2017 Christoph M. Becker
+ * Copyright 2017 Christoph M. Becker
  *
  * This file is part of Ocal_XH.
  *
@@ -21,31 +21,23 @@
 
 namespace Ocal;
 
-abstract class WeekView
+use PHPUnit_Framework_TestCase;
+
+class HourlyOccupancyTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Week
+     * @var HourlyOccupancy
      */
-    protected $week;
+    private $subject;
 
-    /**
-     * @var Occupancy
-     */
-    protected $occupancy;
-
-    public function __construct(Week $week, Occupancy $occupancy)
+    public function setUp()
     {
-        $this->week = $week;
-        $this->occupancy = $occupancy;
+        $this->subject = new HourlyOccupancy('bar');
     }
 
-    /**
-     * @param int $day
-     * @param int $hour
-     * @return string
-     */
-    protected function formatDate($day, $hour)
+    public function testSetAndGetState()
     {
-        return sprintf('%04d-%02d-%02d-%02d', $this->week->getYear(), $this->week->getWeek(), $day, $hour);
+        $this->subject->setState('2017-09-01-12', 3);
+        $this->assertSame(3, $this->subject->getHourlyState(2017, 9, 1, 12));
     }
 }

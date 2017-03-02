@@ -48,19 +48,19 @@ class OccupancyTest extends PHPUnit_Framework_TestCase
 
     public function testUnsetStateIsZero()
     {
-        $this->assertSame(0, $this->subject->getState('2017-02-26'));
+        $this->assertSame(0, $this->subject->getDailyState(2017, 2, 26));
     }
 
     public function testSetAndGetState()
     {
         $this->subject->setState('2017-02-27', 3);
-        $this->assertSame(3, $this->subject->getState('2017-02-27'));
+        $this->assertSame(3, $this->subject->getDailyState(2017, 2, 27));
     }
 
     public function testSetStateToZeroUnsetsIt()
     {
         $this->subject->setState('2017-02-28', 0);
-        $this->assertSame(0, $this->subject->getState('2017-02-28'));
+        $this->assertSame(0, $this->subject->getDailyState(2017, 2, 28));
     }
 
     public function testSerialization()

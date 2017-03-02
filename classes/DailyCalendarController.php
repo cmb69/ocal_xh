@@ -21,52 +21,142 @@
 
 namespace Ocal;
 
+use DateTime;
+
 class DailyCalendarController extends CalendarController
 {
-    public function defaultAction()
-    {
-        global $plugin_tx, $_XH_csrfProtection;
+    /**
+     * @var int
+     */
+    private $month;
 
-        if (!$this->validateName()) {
-            return;
-        }
-        if (XH_ADM && isset($_GET['ocal_save']) && $_GET['ocal_name'] == $this->name) {
-            $_XH_csrfProtection->check();
-            while (ob_get_level()) {
-                ob_end_clean();
-            }
-            echo $this->saveStates();
-            exit;
-        }
+    /**
+     * @var int
+     */
+    private $year;
+
+    /**
+     * @param string $name
+     * @param int $count
+     */
+    public function __construct($name, $count)
+    {
+        parent::__construct($name, $count);
+        $now = new DateTime();
+        $this->month = isset($_GET['ocal_month'])
+            ? max(1, min(12, (int) $_GET['ocal_month']))
+            : (int) $now->format('n');
+        $this->year = isset($_GET['ocal_year'])
+            ? (int) $_GET['ocal_year']
+            : (int) $now->format('Y');
+    }
+
+    /**
+     * @return Occupancy
+     */
+    protected function findOccupancy()
+    {
         $db = new Db(LOCK_SH);
-        $occupancy = $db->findOccupancy($this->name);
-        $db = null;
-        $view = $this->getView($occupancy);
-        $html = $view->render($this->count);
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            if ($_GET['ocal_name'] == $this->name) {
-                header('Content-Type: text/html; charset=UTF-8');
-                while (ob_get_level()) {
-                    ob_end_clean();
-                }
-                echo $html;
-                exit;
-            } else {
-                return;
-            }
-        } else {
-            echo $html;
-            return;
-        }
+        return $db->findOccupancy($this->name);
+    }
+
+    /**
+     * @return View
+     */
+    protected function getCalendarView(Occupancy $occupancy)
+    {
+        $this->emitScriptElements();
+
+        $view = new View('daily-calendars');
+        $view->occupancyName = $occupancy->getName();
+        $view->modeLinkView = $this->prepareModeLinkView();
+        $view->isEditable = XH_ADM;
+        $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
+        $view->toolbarView = $this->prepareToolbarView();
+        $view->statusbarView = $this->prepareStatusbarView();
+        $view->monthPagination = $this->preparePaginationView();
+        $view->months = Month::createRange($this->year, $this->month, $this->count);
+        $view->monthCalendarView = function (Month $month) use ($occupancy) {
+            return $this->prepareMonthCalendarView($occupancy, $month);
+        };
+        return $view;
+    }
+
+    /**
+     * @return View
+     */
+    private function prepareMonthCalendarView(Occupancy $occupancy, Month $month)
+    {
+        $view = new View('daily-calendar');
+        $view->isoDate = $month->getIso();
+        $view->year = $month->getYear();
+        $monthnames = array_map('trim', explode(',', $this->lang['date_months']));
+        $view->monthname = $monthnames[$month->getMonth() - 1];
+        $view->daynames = array_map('trim', explode(',', $this->lang['date_days']));
+        $view->weeks = $month->getDaysOfWeeks();
+        $view->state = function ($day) use ($occupancy, $month) {
+            return $occupancy->getDailyState($month->getYear(), $month->getMonth(), $day);
+        };
+        $view->todayClass = function ($day) use ($month) {
+            $date = sprintf('%04d-%02d-%02d', $month->getYear(), $month->getMonth(), $day);
+            return $date === date('Y-m-d') ? ' ocal_today' : '';
+        };
+        $view->titleKey = function ($day) use ($occupancy, $month) {
+            $state = $occupancy->getDailyState($month->getYear(), $month->getMonth(), $day);
+            return "label_state_$state";
+        };
+        return $view;
+    }
+
+    /**
+     * @return View
+     */
+    protected function getListView(Occupancy $occupancy)
+    {
+        $this->emitScriptElements();
+        $view = new View('daily-lists');
+        $view->occupancyName = $occupancy->getName();
+        $view->modeLinkView = $this->prepareModeLinkView();
+        $view->statusbarView = $this->prepareStatusbarView();
+        $view->months = Month::createRange($this->year, $this->month, $this->count);
+        $view->monthList = function ($month) use ($occupancy) {
+            return $this->prepareMonthListView($occupancy, $month);
+        };
+        $view->monthPagination = $this->preparePaginationView();
+        return $view;
+    }
+
+    /**
+     * @return View
+     */
+    private function prepareMonthListView(Occupancy $occupancy, Month $month)
+    {
+        $view = new View('daily-list');
+        $monthnames = explode(',', $this->lang['date_months']);
+        $view->heading = $monthnames[$month->getMonth() - 1]
+            . ' ' . $month->getYear();
+        $view->monthList = (new ListService)->getDailyList($occupancy, $month);
+        return $view;
+    }
+
+    /**
+     * @return View
+     */
+    private function preparePaginationView()
+    {
+        $view = new View('pagination');
+        $view->items = (new DailyPagination($this->year, $this->month, new DateTime()))->getItems();
+        $view->url = function ($year, $month) {
+            return $this->modifyUrl(['ocal_year' => $year, 'ocal_month' => $month, 'ocal_action' => $this->mode]);
+        };
+        return $view;
     }
 
     /**
      * @return ?string
      */
-    private function saveStates()
+    protected function saveStates()
     {
-        global $plugin_tx;
-
         $states = XH_decodeJson($_POST['ocal_states']);
         if (!is_object($states)) {
             header('HTTP/1.0 400 Bad Request');
@@ -82,6 +172,6 @@ class DailyCalendarController extends CalendarController
         }
         $db->saveOccupancy($occupancy);
         $db = null;
-        return XH_message('success', $plugin_tx['ocal']['message_saved']);
+        return XH_message('success', $this->lang['message_saved']);
     }
 }

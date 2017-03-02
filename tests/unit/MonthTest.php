@@ -35,6 +35,16 @@ class MonthTest extends PHPUnit_Framework_TestCase
         $this->subject = new Month(2, 2017);
     }
 
+    public function testCreateRange()
+    {
+        $actual = Month::createRange(2017, 3, 4);
+        $this->assertContainsOnlyInstancesOf(Month::class, $actual);
+        $this->assertCount(4, $actual);
+        for ($i = 0; $i < 4; $i++) {
+            $this->assertSame($i + 3, $actual[$i]->getMonth());
+        }
+    }
+
     public function testGetLastDay()
     {
         $this->assertSame(28, $this->subject->getLastDay());

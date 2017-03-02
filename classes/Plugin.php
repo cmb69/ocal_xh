@@ -50,7 +50,7 @@ class Plugin
 
         return function_exists('XH_wantsPluginAdministration')
             && XH_wantsPluginAdministration('ocal')
-            || isset($ocal) && $ocal == 'true';
+            || isset($ocal) && $ocal === 'true';
     }
 
     private function handleAdministration()

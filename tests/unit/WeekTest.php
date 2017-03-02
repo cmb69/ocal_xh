@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use PHPUnit_Framework_TestCase;
+use DateTime;
 
 class WeekTest extends PHPUnit_Framework_TestCase
 {
@@ -33,6 +34,16 @@ class WeekTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->subject = new Week(9, 2017);
+    }
+
+    public function testCreateRange()
+    {
+        $actual = Week::createRange(2017, 9, 7);
+        $this->assertContainsOnlyInstancesOf(Week::class, $actual);
+        $this->assertCount(7, $actual);
+        for ($i = 0; $i < 7; $i++) {
+            $this->assertSame($i + 9, $actual[$i]->getWeek());
+        }
     }
 
     public function testGetWeek()
@@ -48,6 +59,15 @@ class WeekTest extends PHPUnit_Framework_TestCase
     public function testGetIso()
     {
         $this->assertSame('2017-09', $this->subject->getIso());
+    }
+
+    public function testGetDatesOfWeek()
+    {
+        $actual = $this->subject->getDatesOfWeek();
+        $this->assertContainsOnlyInstancesOf(DateTime::class, $actual);
+        $this->assertCount(7, $actual);
+        $this->assertSame('27', $actual[1]->format('j'));
+        $this->assertSame('5', $actual[7]->format('j'));
     }
 
     /**

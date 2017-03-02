@@ -61,10 +61,22 @@ class Occupancy implements Serializable
     }
 
     /**
+     * @param int $year
+     * @param int $month
+     * @param int $day
+     * @return int
+     */
+    public function getDailyState($year, $month, $day)
+    {
+        $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
+        return $this->getState($date);
+    }
+
+    /**
      * @param string $date
      * @return int
      */
-    public function getState($date)
+    protected function getState($date)
     {
         if (isset($this->states[$date])) {
             return $this->states[$date];

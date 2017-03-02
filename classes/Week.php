@@ -36,6 +36,24 @@ class Week
     protected $year;
 
     /**
+     * @param int $year
+     * @param int $startWeek
+     * @param int $count
+     * @return Week[]
+     */
+    public static function createRange($year, $startWeek, $count)
+    {
+        $weeks = [];
+        $week = new Week($startWeek, $year);
+        while ($count) {
+            $weeks[] = $week;
+            $week = $week->getNextWeek();
+            $count--;
+        }
+        return $weeks;
+    }
+
+    /**
      * @param int $week
      * @param int $year
      */
@@ -67,6 +85,20 @@ class Week
     public function getIso()
     {
         return sprintf('%04d-%02d', $this->year, $this->week);
+    }
+
+    /**
+     * @return Date[]
+     */
+    public function getDatesOfWeek()
+    {
+        $dates = [];
+        for ($i = 1; $i <= 7; $i++) {
+            $date = new DateTime();
+            $date->setISODate($this->year, $this->week, $i);
+            $dates[$i] = $date;
+        }
+        return $dates;
     }
 
     /**

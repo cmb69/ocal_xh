@@ -39,6 +39,24 @@ class Month
     protected $timestamp;
 
     /**
+     * @param int $year
+     * @param int $month
+     * @param int count
+     * @return Month[]
+     */
+    public static function createRange($year, $month, $count)
+    {
+        $months = [];
+        $month = new Month($month, $year);
+        while ($count) {
+            $months[] = $month;
+            $month = $month->getNextMonth();
+            $count--;
+        }
+        return $months;
+    }
+
+    /**
      * @param int $month
      * @param int $year
      */

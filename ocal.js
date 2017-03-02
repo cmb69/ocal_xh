@@ -173,7 +173,7 @@ var OCAL = OCAL || {};
             request.open(
                 "POST",
                 location.href.replace(/#.*$/, "") + "&ocal_name=" +
-                    occupancy + "&ocal_save=1"
+                    occupancy + "&ocal_action=save"
             );
             tokenInput = find(element, "input[name=xh_csrf_token]")[0];
             request.setRequestHeader("Content-Type",
