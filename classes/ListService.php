@@ -60,7 +60,7 @@ class ListService
             $currentState = $state;
         }
         $list[$this->formatDailyRange($currentRange)] = $currentState;
-        return $this->whatever($list);
+        return $this->mapFilteredList($list);
     }
 
     /**
@@ -96,7 +96,7 @@ class ListService
             $currentState = $state;
         }
         $list[$this->formatHourlyRange($currentRange)] = $currentState;
-        return $this->whatever($list);
+        return $this->mapFilteredList($list);
     }
 
     /**
@@ -114,13 +114,16 @@ class ListService
         return sprintf('%02d:00–%02d:59', $start, $end);
     }
 
-    private function whatever(array $list)
+    /**
+     * @return object[]
+     */
+    private function mapFilteredList(array $list)
     {
         $result = [];
         foreach ($list as $range => $state) {
             $label = $this->lang["label_state_$state"];
             if ($label) {
-                $result[$range] = $label;
+                $result[] = (object) compact('range', 'state', 'label');
             }
         }
         return $result;

@@ -61,10 +61,10 @@ class ListServiceTest extends PHPUnit_Framework_TestCase
         $occupancy->setState('2017-03-04', 2);
         $month = new Month(3, 2017);
         $expected = array(
-            '1.–2.' => 'reserved',
-            '4.' => 'booked'
+            (object) ['range' => '1.–2.', 'state' => 1 , 'label' => 'reserved'],
+            (object) ['range' =>    '4.', 'state' => 2, 'label' => 'booked']
         );
-        $this->assertSame($expected, (new ListService)->getDailyList($occupancy, $month));
+        $this->assertEquals($expected, (new ListService)->getDailyList($occupancy, $month));
     }
 
     public function testGetHourlyList()
@@ -78,9 +78,9 @@ class ListServiceTest extends PHPUnit_Framework_TestCase
         $occupancy->setState('2017-09-01-15', 2);
         $week = new Week(9, 2017);
         $expected = array(
-            '08:00–11:59' => 'reserved',
-            '14:00–15:59' => 'booked'
+            (object) ['range' => '08:00–11:59', 'state' => 1, 'label' => 'reserved'],
+            (object) ['range' => '14:00–15:59', 'state' => 2, 'label' => 'booked']
         );
-        $this->assertSame($expected, (new ListService)->getHourlyList($occupancy, $week, 1));
+        $this->assertEquals($expected, (new ListService)->getHourlyList($occupancy, $week, 1));
     }
 }
