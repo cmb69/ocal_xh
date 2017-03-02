@@ -1,10 +1,10 @@
 <div data-name="<?=$this->occupancyName?>">
-    <?=$this->modeLink?>
-    <?=$this->statusbar?>
+    <?php $this->modeLinkView->render()?>
+    <?php $this->statusbarView->render()?>
     <dl class="ocal_list">
 <?php foreach ($this->weeks as $week):?>
-        <?=$this->weekList($week)?>
+        <?php $this->weekListView($week)->render()?>
 <?php endforeach?>
     </dl>
-    <?=$this->weekPagination?>
+    <?php $this->weekPaginationView->render()?>
 </div>

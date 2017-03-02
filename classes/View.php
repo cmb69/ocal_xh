@@ -78,16 +78,6 @@ class View
     }
 
     /**
-     * @return string
-     */
-    public function __toString()
-    {
-        ob_start();
-        $this->render();
-        return ob_get_clean();
-    }
-
-    /**
      * @param string $key
      * @return string
      */
@@ -125,7 +115,7 @@ class View
     {
         global $pth;
 
-        echo PHP_EOL, "<!-- {$this->template} -->", PHP_EOL;
+        echo "<!-- {$this->template} -->", PHP_EOL;
         include "{$pth['folder']['plugins']}ocal/views/{$this->template}.php";
     }
 

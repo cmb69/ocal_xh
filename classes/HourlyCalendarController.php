@@ -74,7 +74,7 @@ class HourlyCalendarController extends CalendarController
         $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
         $view->toolbarView = $this->prepareToolbarView();
         $view->statusbarView = $this->prepareStatusbarView();
-        $view->weekPagination = $this->preparePaginationView($this->count);
+        $view->weekPaginationView = $this->preparePaginationView($this->count);
         $view->weeks = Week::createRange($this->isoYear, $this->week, $this->count);
         $view->weekCalendarView = function (Week $week) use ($occupancy) {
             return $this->prepareWeekCalendarView($occupancy, $week);
@@ -111,11 +111,11 @@ class HourlyCalendarController extends CalendarController
         $this->emitScriptElements();
         $view = new View('hourly-lists');
         $view->occupancyName = $occupancy->getName();
-        $view->modeLink = $this->prepareModeLinkView();
-        $view->statusbar = $this->prepareStatusbarView();
-        $view->weekPagination = $this->preparePaginationView($this->count);
+        $view->modeLinkView = $this->prepareModeLinkView();
+        $view->statusbarView = $this->prepareStatusbarView();
+        $view->weekPaginationView = $this->preparePaginationView($this->count);
         $view->weeks = Week::createRange($this->isoYear, $this->week, $this->count);
-        $view->weekList = function ($week) use ($occupancy) {
+        $view->weekListView = function ($week) use ($occupancy) {
             return $this->prepareWeekListView($occupancy, $week);
         };
         return $view;

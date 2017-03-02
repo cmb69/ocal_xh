@@ -1,12 +1,12 @@
 <div class="ocal_week_calendars" data-name="<?=$this->occupancyName?>">
-    <?=$this->modeLinkView?>
+    <?php $this->modeLinkView->render()?>
 <?php if ($this->isEditable):?>
     <?=$this->csrfTokenInput?>
-    <?=$this->toolbarView?>
+    <?php $this->toolbarView->render()?>
 <?php endif?>
-    <?=$this->statusbarView?>
+    <?php $this->statusbarView->render()?>
 <?php foreach ($this->weeks as $week):?>
-    <?=$this->weekCalendarView($week)?>
+    <?php $this->weekCalendarView($week)->render()?>
 <?php endforeach?>
-    <?=$this->weekPagination?>
+    <?php $this->weekPaginationView->render()?>
 </div>

@@ -1,12 +1,12 @@
 <div class="ocal_calendars" data-name="<?=$this->occupancyName?>">
-    <?=$this->modeLinkView?>
+    <?php $this->modeLinkView->render()?>
 <?php if ($this->isEditable):?>
     <?=$this->csrfTokenInput?>
-    <?=$this->toolbarView?>
+    <?php $this->toolbarView->render()?>
 <?php endif?>
-    <?=$this->statusbarView?>
+    <?php $this->statusbarView->render()?>
 <?php foreach ($this->months as $month):?>
-    <?=$this->monthCalendarView($month)?>
+    <?php $this->monthCalendarView($month)->render()?>
 <?php endforeach?>
-    <?=$this->monthPagination?>
+    <?php $this->monthPaginationView->render()?>
 </div>

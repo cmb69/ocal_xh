@@ -74,7 +74,7 @@ class DailyCalendarController extends CalendarController
         $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
         $view->toolbarView = $this->prepareToolbarView();
         $view->statusbarView = $this->prepareStatusbarView();
-        $view->monthPagination = $this->preparePaginationView();
+        $view->monthPaginationView = $this->preparePaginationView();
         $view->months = Month::createRange($this->year, $this->month, $this->count);
         $view->monthCalendarView = function (Month $month) use ($occupancy) {
             return $this->prepareMonthCalendarView($occupancy, $month);
@@ -119,10 +119,10 @@ class DailyCalendarController extends CalendarController
         $view->modeLinkView = $this->prepareModeLinkView();
         $view->statusbarView = $this->prepareStatusbarView();
         $view->months = Month::createRange($this->year, $this->month, $this->count);
-        $view->monthList = function ($month) use ($occupancy) {
+        $view->monthListView = function ($month) use ($occupancy) {
             return $this->prepareMonthListView($occupancy, $month);
         };
-        $view->monthPagination = $this->preparePaginationView();
+        $view->monthPaginationView = $this->preparePaginationView();
         return $view;
     }
 
