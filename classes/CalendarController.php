@@ -158,7 +158,7 @@ abstract class CalendarController
             'isAdmin' => XH_ADM
         );
         $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
-            . 'var OCAL = ' . XH_encodeJson($config) . ';'
+            . 'var OCAL = ' . json_encode($config) . ';'
             . '/* ]]> */</script>'
             . '<script type="text/javascript" src="'
             . $this->pluginFolder . 'ocal/ocal.js"></script>';

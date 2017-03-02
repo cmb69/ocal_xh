@@ -157,14 +157,14 @@ class DailyCalendarController extends CalendarController
      */
     protected function saveStates()
     {
-        $states = XH_decodeJson($_POST['ocal_states']);
-        if (!is_object($states)) {
+        $states = json_decode($_POST['ocal_states'], true);
+        if (!is_array($states)) {
             header('HTTP/1.0 400 Bad Request');
             exit;
         }
         $db = new Db(LOCK_EX);
         $occupancy = $db->findOccupancy($this->name);
-        foreach (get_object_vars($states) as $month => $states) {
+        foreach ($states as $month => $states) {
             foreach ($states as $i => $state) {
                 $date = sprintf('%s-%02d', $month, $i + 1);
                 $occupancy->setState($date, $state);

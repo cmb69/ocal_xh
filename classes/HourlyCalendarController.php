@@ -155,14 +155,14 @@ class HourlyCalendarController extends CalendarController
      */
     protected function saveStates()
     {
-        $states = XH_decodeJson($_POST['ocal_states']);
-        if (!is_object($states)) {
+        $states = json_decode($_POST['ocal_states'], true);
+        if (!is_array($states)) {
             header('HTTP/1.0 400 Bad Request');
             exit;
         }
         $db = new Db(LOCK_EX);
         $occupancy = $db->findOccupancy($this->name, true);
-        foreach (get_object_vars($states) as $week => $states) {
+        foreach ($states as $week => $states) {
             foreach ($states as $i => $state) {
                 $day = $i % 7 + 1;
                 $hour = $this->config['hour_interval'] * (int) ($i / 7) + $this->config['hour_first'];
