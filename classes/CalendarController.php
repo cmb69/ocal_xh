@@ -24,6 +24,11 @@ namespace Ocal;
 abstract class CalendarController
 {
     /**
+     * @var bool
+     */
+    protected static $isJavaScriptEmitted = false;
+
+    /**
      * @var string
      */
     protected $name;
@@ -153,6 +158,9 @@ abstract class CalendarController
     {
         global $bjs;
 
+        if (self::$isJavaScriptEmitted) {
+            return;
+        }
         $config = array(
             'message_unsaved_changes' => $this->lang['message_unsaved_changes'],
             'isAdmin' => XH_ADM
@@ -162,6 +170,7 @@ abstract class CalendarController
             . '/* ]]> */</script>'
             . '<script type="text/javascript" src="'
             . $this->pluginFolder . 'ocal/ocal.js"></script>';
+        self::$isJavaScriptEmitted = true;
     }
 
     /**
