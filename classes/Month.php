@@ -119,7 +119,15 @@ class Month
     public function getDaysOfWeeks()
     {
         $mondays = range($this->getDayOffset(), $this->getLastDay(), 7);
-        return array_map(array($this, 'getWeekDays'), $mondays);
+        $getWeekDays = function ($monday) {
+            $lastDay = $this->getLastDay();
+            $result = array();
+            for ($day = $monday; $day < $monday + 7; $day++) {
+                $result[] = $day >= 1 && $day <= $lastDay ? $day : null;
+            }
+            return $result;
+        };
+        return array_map($getWeekDays, $mondays);
     }
 
     /**
@@ -129,19 +137,5 @@ class Month
     {
         $weekday = date('w', $this->timestamp);
         return $weekday ? 2 - $weekday : 2 - 7;
-    }
-
-    /**
-     * @param int $monday
-     * @return ?int[]
-     */
-    private function getWeekDays($monday)
-    {
-        $lastDay = $this->getLastDay();
-        $result = array();
-        for ($day = $monday; $day < $monday + 7; $day++) {
-            $result[] = $day >= 1 && $day <= $lastDay ? $day : null;
-        }
-        return $result;
     }
 }
