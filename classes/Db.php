@@ -50,28 +50,44 @@ class Db
      */
     public function findOccupancy($name, $hourly = false)
     {
-        $filename = $this->getFoldername() . $name . '.dat';
+        $filename = $this->getFoldername() . $name . '.json';
         if (is_readable($filename)) {
             $contents = file_get_contents($filename);
         } else {
-            $contents = false;
+            $contents = $this->migrateContents($name, $hourly);
         }
-        if ($contents && ($occupancy = unserialize($contents))) {
-            $occupancy->setName($name);
-        } else {
-            if ($hourly) {
-                $occupancy = new HourlyOccupancy($name);
-            } else {
-                $occupancy = new Occupancy($name);
-            }
+        if ($contents && ($occupancy = Occupancy::createFromJson($name, $contents))) {
+            return $occupancy;
         }
-        return $occupancy;
+        if ($hourly) {
+            return new HourlyOccupancy($name);
+        }
+        return new Occupancy($name);
+    }
+
+    /**
+     * @param string $name
+     * @param bool $hourly
+     * @return ?string
+     */
+    private function migrateContents($name, $hourly)
+    {
+        $filename = $this->getFoldername() . $name . '.dat';
+        if (!is_readable($filename)) {
+            return null;
+        }
+        $contents = file_get_contents($filename);
+        if (!($contents && preg_match('/{(.+)}$/s', $contents, $matches))) {
+            return null;
+        }
+        $states = unserialize($matches[1]);
+        return json_encode(['type' => $hourly ? 'hourly' : 'daily', 'states' => $states]);
     }
 
     public function saveOccupancy(Occupancy $occupancy)
     {
-        $filename = $this->getFoldername() . $occupancy->getName() . '.dat';
-        file_put_contents($filename, serialize($occupancy));
+        $filename = $this->getFoldername() . $occupancy->getName() . '.json';
+        file_put_contents($filename, $occupancy->toJson());
     }
 
     /**

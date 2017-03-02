@@ -23,7 +23,7 @@ namespace Ocal;
 
 use Serializable;
 
-class Occupancy implements Serializable
+class Occupancy
 {
     /**
      * @var string
@@ -34,6 +34,28 @@ class Occupancy implements Serializable
      * @var array<date,state>
      */
     protected $states;
+
+    /**
+     * @param string $name
+     * @param string $json
+     * @return ?Occupancy
+     */
+    public static function createFromJson($name, $json)
+    {
+        $array = json_decode($json, true);
+        switch ($array['type']) {
+            case 'daily':
+                $result = new Occupancy($name);
+                break;
+            case 'hourly':
+                $result = new HourlyOccupancy($name);
+                break;
+            default:
+                return null;
+        }
+        $result->states = $array['states'];
+        return $result;
+    }
 
     /**
      * @param string $name
@@ -101,16 +123,8 @@ class Occupancy implements Serializable
     /**
      * @return string
      */
-    public function serialize()
+    public function toJson()
     {
-        return serialize($this->states);
-    }
-
-    /**
-     * @param string $data
-     */
-    public function unserialize($data)
-    {
-        $this->states = unserialize($data);
+        return json_encode(['type' => 'daily', 'states' => $this->states], JSON_PRETTY_PRINT);
     }
 }

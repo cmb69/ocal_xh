@@ -69,4 +69,30 @@ class DbTest extends PHPUnit_Framework_TestCase
         $occupancy2 = $this->subject->findOccupancy('foo');
         $this->assertEquals($occupancy1, $occupancy2);
     }
+
+    public function testSaveAndFindHourlyOccupancy()
+    {
+        $occupancy1 = new HourlyOccupancy('bar');
+        $this->subject->saveOccupancy($occupancy1);
+        $occupancy2 = $this->subject->findOccupancy('bar');
+        $this->assertEquals($occupancy1, $occupancy2);
+    }
+
+    public function testMigrateContents()
+    {
+        file_put_contents(
+            vfsStream::url('test/content/ocal/foo.dat'),
+            '{a:1:{s:10:"2017-02-03";s:1:"1";}}'
+        );
+        $this->assertInstanceOf(Occupancy::class, $this->subject->findOccupancy('foo'));
+    }
+
+    public function testMigrateBrokenContents()
+    {
+        file_put_contents(
+            vfsStream::url('test/content/ocal/foo.dat'),
+            ''
+        );
+        $this->assertEquals(new Occupancy('foo'), $this->subject->findOccupancy('foo'));
+    }
 }

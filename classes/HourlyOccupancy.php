@@ -35,4 +35,12 @@ class HourlyOccupancy extends Occupancy
         $date = sprintf('%04d-%02d-%02d-%02d', $year, $week, $day, $hour);
         return $this->getState($date);
     }
+
+    /**
+     * @return string
+     */
+    public function toJson()
+    {
+        return json_encode(['type' => 'hourly', 'states' => $this->states], JSON_PRETTY_PRINT);
+    }
 }

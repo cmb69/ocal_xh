@@ -35,6 +35,11 @@ class OccupancyTest extends PHPUnit_Framework_TestCase
         $this->subject = new Occupancy('foo');
     }
 
+    public function testCreateFromJsonWithInvalidType()
+    {
+        $this->assertNull(Occupancy::createFromJson('foo', '{"type": "invalid", "states": {}}'));
+    }
+
     public function testGetName()
     {
         $this->assertSame('foo', $this->subject->getName());
