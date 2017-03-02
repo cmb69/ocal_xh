@@ -20,6 +20,15 @@ $plugin_tx['ocal']['label_state_3']="booked";
 $plugin_tx['ocal']['message_saved']="Successfully saved.";
 $plugin_tx['ocal']['message_unsaved_changes']="There are unsaved changes that will be lost when leaving the page!";
 $plugin_tx['ocal']['error_occupancy_name']="An occupancy name may only contain the letters a-z, the digits 0-9 and minus signs!";
+$plugin_tx['ocal']['syscheck_extension']="extension '%s' is loaded";
+$plugin_tx['ocal']['syscheck_fail']="failure";
+$plugin_tx['ocal']['syscheck_message']="Checking that %1\$s … %2\$s";
+$plugin_tx['ocal']['syscheck_phpversion']="PHP version ≥ %s";
+$plugin_tx['ocal']['syscheck_success']="okay";
+$plugin_tx['ocal']['syscheck_title']="System check";
+$plugin_tx['ocal']['syscheck_warning']="warning";
+$plugin_tx['ocal']['syscheck_writable']="'%s' is writable";
+$plugin_tx['ocal']['syscheck_xhversion']="CMSimple_XH version ≥ %s";
 $plugin_tx['ocal']['alt_logo']="Calendar";
 
 $plugin_tx['ocal']['cf_hour_first']="The first hour that shall be displayed in the hourly occupancy calendars.";

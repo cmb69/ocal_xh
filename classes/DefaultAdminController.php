@@ -23,13 +23,33 @@ namespace Ocal;
 
 class DefaultAdminController
 {
+    /**
+     * @var string
+     */
+    private $pluginFolder;
+
+    /**
+     * @var array
+     */
+    private $lang;
+
+    public function __construct()
+    {
+        global $pth, $plugin_tx;
+
+        $this->pluginFolder = "{$pth['folder']['plugins']}ocal";
+        $this->lang = $plugin_tx['ocal'];
+    }
+
     public function defaultAction()
     {
-        global $pth;
-
         $view = new View('info');
-        $view->logo = "{$pth['folder']['plugins']}ocal/ocal.png";
+        $view->logo = "$this->pluginFolder/ocal.png";
         $view->version = OCAL_VERSION;
+        $view->checks = (new SystemCheckService)->getChecks();
+        $view->stateLabel = function ($state) {
+            return $this->lang["syscheck_$state"];
+        };
         $view->render();
     }
 }

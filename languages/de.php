@@ -20,6 +20,15 @@ $plugin_tx['ocal']['label_state_3']="gebucht";
 $plugin_tx['ocal']['message_saved']="Erfolgreich gespeichert.";
 $plugin_tx['ocal']['message_unsaved_changes']="Es gibt ungesicherte Änderungen, die beim Verlassen der Seite verloren gehen!";
 $plugin_tx['ocal']['error_occupancy_name']="Ein Belegungs-Name darf nur die Buchstaben a-z, die Ziffern 0-9 and Minus-Zeichen enthalten!";
+$plugin_tx['ocal']['syscheck_extension']="die Erweiterung '%s' geladen ist";
+$plugin_tx['ocal']['syscheck_fail']="Fehler";
+$plugin_tx['ocal']['syscheck_message']="Prüfe, dass %1\$s … %2\$s";
+$plugin_tx['ocal']['syscheck_phpversion']="die PHP-Version ≥ %s";
+$plugin_tx['ocal']['syscheck_success']="OK";
+$plugin_tx['ocal']['syscheck_title']="System-Prüfung";
+$plugin_tx['ocal']['syscheck_warning']="Warnung";
+$plugin_tx['ocal']['syscheck_writable']="'%s' schreibbar ist";
+$plugin_tx['ocal']['syscheck_xhversion']="die CMSimple_XH-Version ≥ %s";
 $plugin_tx['ocal']['alt_logo']="Kalender";
 
 $plugin_tx['ocal']['cf_hour_first']="Die erste Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";

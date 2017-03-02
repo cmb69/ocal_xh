@@ -115,3 +115,7 @@
 .ocal_license {
     text-align: justify;
 }
+.ocal_syscheck {
+    list-style: none;
+    padding-left: 0;
+}
