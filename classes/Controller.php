@@ -21,35 +21,7 @@
 
 namespace Ocal;
 
-class DefaultAdminController implements Controller
+interface Controller
 {
-    /**
-     * @var string
-     */
-    private $pluginFolder;
-
-    /**
-     * @var array
-     */
-    private $lang;
-
-    public function __construct()
-    {
-        global $pth, $plugin_tx;
-
-        $this->pluginFolder = "{$pth['folder']['plugins']}ocal";
-        $this->lang = $plugin_tx['ocal'];
-    }
-
-    public function defaultAction()
-    {
-        $view = new View('info');
-        $view->logo = "$this->pluginFolder/ocal.png";
-        $view->version = OCAL_VERSION;
-        $view->checks = (new SystemCheckService)->getChecks();
-        $view->stateLabel = function ($state) {
-            return $this->lang["syscheck_$state"];
-        };
-        $view->render();
-    }
+    public function defaultAction();
 }

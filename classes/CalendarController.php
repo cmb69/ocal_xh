@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-abstract class CalendarController
+abstract class CalendarController implements Controller
 {
     /**
      * @var bool
