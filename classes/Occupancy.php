@@ -130,7 +130,7 @@ class Occupancy
      */
     public function setState($date, $state)
     {
-        if ($state >= 0 && $state <= $this->maxState) {
+        if ($state > 0 && $state <= $this->maxState) {
             $this->states[$date] = $state;
         } else {
             unset($this->states[$date]);
