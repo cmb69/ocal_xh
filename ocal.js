@@ -83,9 +83,6 @@ var OCAL = OCAL || {};
                 state = +target.getAttribute("data-ocal_state");
                 if (state !== currentState) {
                     target.setAttribute("data-ocal_state", currentState);
-                    each(saveButtons, function (button) {
-                        button.disabled = false;
-                    });
                     each(find(element, ".ocal_statusbar"), function (bar) {
                         bar.innerHTML = "";
                     });
@@ -125,9 +122,6 @@ var OCAL = OCAL || {};
                     bar.style.display = "none";
                 });
                 if (request.status === 200) {
-                    each(saveButtons, function (button) {
-                        button.disabled = true;
-                    });
                     off(window, "beforeunload", warning);
                     unsavedChanges = false;
                     each(find(element, ".ocal_statusbar"), function (bar) {
@@ -201,6 +195,7 @@ var OCAL = OCAL || {};
         saveButtons = find(element, ".ocal_save");
         each(saveButtons, function (button) {
             button.onclick = onSave;
+            button.disabled = false;
         });
     }
 
