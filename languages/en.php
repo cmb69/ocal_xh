@@ -31,6 +31,7 @@ $plugin_tx['ocal']['syscheck_writable']="'%s' is writable";
 $plugin_tx['ocal']['syscheck_xhversion']="CMSimple_XH version ≥ %s";
 $plugin_tx['ocal']['alt_logo']="Calendar";
 
+$plugin_tx['ocal']['cf_state_max']="The maximum state that is supported. See the manual section about \"States\" for details.";
 $plugin_tx['ocal']['cf_hour_first']="The first hour that shall be displayed in the hourly occupancy calendars.";
 $plugin_tx['ocal']['cf_hour_interval']="The integral hourly interval. For instance, if only every second hour should be shown, enter \"2\".";
 $plugin_tx['ocal']['cf_hour_last']="The last hour that shall be displayed in the hourly occupancy calendars.";

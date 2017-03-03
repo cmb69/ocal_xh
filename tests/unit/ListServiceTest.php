@@ -36,6 +36,7 @@ class ListServiceTest extends PHPUnit_Framework_TestCase
         global $plugin_cf;
 
         $plugin_cf['ocal'] = array(
+            'state_max' => '3',
             'hour_first' => '8',
             'hour_last' => '16',
             'hour_interval' => '2'

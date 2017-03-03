@@ -31,6 +31,7 @@ $plugin_tx['ocal']['syscheck_writable']="'%s' schreibbar ist";
 $plugin_tx['ocal']['syscheck_xhversion']="die CMSimple_XH-Version ≥ %s";
 $plugin_tx['ocal']['alt_logo']="Kalender";
 
+$plugin_tx['ocal']['cf_state_max']="Der höchste Zustand, der unterstüzt wird. Details sind im Abschnitt \"Zustände\" des Handbuchs zu finden.";
 $plugin_tx['ocal']['cf_hour_first']="Die erste Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";
 $plugin_tx['ocal']['cf_hour_interval']="Das ganzzahlige stündliche Intervall. Soll beispielsweise nur jede zweite Stunde angezeigt werden, geben Sie \"2\" ein.";
 $plugin_tx['ocal']['cf_hour_last']="Die letzte Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";

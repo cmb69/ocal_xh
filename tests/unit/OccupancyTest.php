@@ -32,6 +32,9 @@ class OccupancyTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        global $plugin_cf;
+
+        $plugin_cf['ocal']['state_max'] = '3';
         $this->subject = new Occupancy('foo');
     }
 

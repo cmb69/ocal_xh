@@ -33,6 +33,7 @@ werden.</p>
 <li><a href="#usage">Verwendung</a>
 <ul>
 <li><a href="#usage-admin">Administration</a></li>
+<li><a href="#usage-states">Zustände</a></li>
 </ul>
 </li>
 <!--<li><a href="#limitations">Beschränkungen</a></li>-->
@@ -123,17 +124,56 @@ Werkzeugleiste, wo Sie einen der verfügbaren Zustände durch Anklicken auswähl
 können. Dann können Sie einzelne Tage in den angezeigten Kalendern anklicken, um
 diesen den gewählten Zustand zuzuweisen. Wenn Sie damit fertig sind, müssen Sie
 Ihre Änderungen speichern.</p>
-<p>Es sind vier Zustände verfügbar, die wie folgt vorbelegt sind:</p>
+<p>Standardmäßig sind vier Zustände verfügbar, die wie folgt vorbelegt sind:</p>
 <ul>
 <li>0 (weiß): nicht anwendbar</li>
 <li>1 (grün): verfügbar</li>
 <li>2 (gelb): reserviert oder teilweise verfügbar</li>
 <li>3 (rot): (komplett) ausgebucht</li>
 </ul>
-<p>Bei Bedarf können Sie die Farben im Stylesheet und die Beschriftungen in den
-Spracheinstellungen ändern.</p>
+<p>
+    Es ist möglich Anzahl und Bedeutung der Zustände <a
+    href="#usage-states">anzupassen.</a>
+</p>
 <p>Beachten Sie, dass die Administration JavaScript und einen einigermaßen
 zeitgemäßen Browser erfordert (z.B. wird IE < 8 nicht unterstüzt).</p>
+<div class="toplink"><a href="#">zum Seitenanfang</a></div>
+
+<h3 id="usage-states">Zustände</h3>
+<p>
+    Es kann eine beliebige Anzahl von Zuständen verwendet werden, wobei jeder
+    eine eigene Bedeutung hat. Der höchste Zustand, der verfügbar sein soll,
+    muss in der Konfiguration (State → Max) eingestellt werden. Es ist zu
+    beachten, dass zusätzlich zu dieser Zustandsanzahl noch der 0 Zustand
+    existiert, der der Vorgabezustand ist, der nicht in den Listenansichten
+    angezeigt wird.
+</p>
+<p>
+    Die Zustandsbeschriftungen können in den Spracheinstellungen des Plugins
+    angepasst werden. Wurde State → Max erhöht, müssen die verwendeten
+    Sprachdatein in <code>plugins/ocal/languages/ manuell</code> bearbeitet
+    werden, wo weitere Zustandsbeschriftungen etwa wie folgt hinzugefügt werden
+    müssen:
+</p>
+<pre>
+    $plugin_tx['ocal']['label_state_4']="weiterer Zustand";
+</pre>
+<p>
+    Die Zustandsfarben können im Stylesheet des Plugins angepasst werden, wo
+    Regeln für weitere Zustände wie folgt ergänzt werden können:
+</p>
+<pre>
+    *[data-ocal_state="4"] {
+        background: blue;
+        color: white;
+    }
+</pre>
+<p>
+    Zusammenfassung: der höchste Zustand wird in der Konfiguration festgelegt,
+    Zustandsbeschriftungen werden in der Sprachdatei hinzugefügt (oder
+    entfernt), und Zustandsfarbregeln werden im Stylesheet hinzugefügt (oder
+    entfernt).
+</p>
 <div class="toplink"><a href="#">zum Seitenanfang</a></div>
 
 <!--<h2><a name="limitations">Beschränkungen</a></h2>-->

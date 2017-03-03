@@ -121,8 +121,8 @@ class ListService
     {
         $result = [];
         foreach ($list as $range => $state) {
-            $label = $this->lang["label_state_$state"];
-            if ($label) {
+            if ($state) {
+                $label = $this->lang["label_state_$state"];
                 $result[] = (object) compact('range', 'state', 'label');
             }
         }

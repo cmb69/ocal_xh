@@ -47,19 +47,19 @@
 .ocal_state {
     border: 1px solid #888;
 }
-[data-ocal_state="0"] {
+*[data-ocal_state="0"] {
     background: white;
     color: black;
 }
-[data-ocal_state="1"] {
+*[data-ocal_state="1"] {
     background: green;
     color: white;
 }
-[data-ocal_state="2"] {
+*[data-ocal_state="2"] {
     background: yellow;
     color: black;
 }
-[data-ocal_state="3"] {
+*[data-ocal_state="3"] {
     background: red;
     color: white;
 }

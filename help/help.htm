@@ -31,6 +31,7 @@ href="http://frankziesing.de/cmsimple/en/?Welcome:Calendar">Calendar</a>.</p>
 <li><a href="#usage">Usage</a>
 <ul>
 <li><a href="#usage-admin">Administration</a></li>
+<li><a href="#usage-states">States</a></li>
 </ul>
 </li>
 <!--<li><a href="#limitations">Limitations</a></li>-->
@@ -112,17 +113,53 @@ are displayed. When you're logged in as administrator, you'll see a toolbar
 where you can pick one of the available states by clicking it. Then you can
 click individual dates in the displayed calendars to assign them this state.
 When you're finished, you have to save your modifications.</p>
-<p>Four states are available, which have the following default meanings:</p>
+<p>By default, four states are available which have the following meaning:</p>
 <ul>
 <li>0 (white): non applicable</li>
 <li>1 (green): available</li>
 <li>2 (yellow): reserved or partly available</li>
 <li>3 (red): (fully) booked out</li>
 </ul>
-<p>If required, you can change the colors in the stylesheet and the labels in
-the language settings.</p>
+<p>
+    Note that the number and meaning of the states <a href="#usage-states">is
+    customizable</a>.
+</p>
 <p>Note that the administration requires JavaScript and a somewhat contemporary
 browser (e.g. IE < 8 is not supported).</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h3 id="usage-states">States</h3>
+<p>
+    It is possible to have an arbitrary amount of states, each with its own
+    meaning. The maximum state that is available has to be set in the
+    configuration (State → Max). Note that in addition to that many states,
+    there is also state 0, which is the default state that is not shown in the
+    list views.
+</p>
+<p>
+    You can customize the state labels in the language settings of the plugin.
+    If you have increased State → Max, you have to manually edit the respective
+    language files in <code>plugins/ocal/languages/</code>, and have to add
+    further state labels, like so:
+</p>
+<pre>
+    $plugin_tx['ocal']['label_state_4']="extra state";
+</pre>
+<p>
+    You can customize the state colors in the plugin's stylesheet, and add rules
+    for additional states like so:
+</p>
+<pre>
+    *[data-ocal_state="4"] {
+        background: blue;
+        color: white;
+    }
+</pre>
+<p>
+    To summarize: set the maximum state in the configuration, add (or remove)
+    the state labels in the language file and add (or remove) state color rules
+    in the stylesheet.
+</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <!--<h2 id="limitations">Limitations</h2>

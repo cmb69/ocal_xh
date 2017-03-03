@@ -200,7 +200,7 @@ abstract class CalendarController
     protected function prepareToolbarView()
     {
         $view = new View('toolbar');
-        $view->states = range(0, 3);
+        $view->states = range(0, $this->config['state_max']);
         return $view;
     }
 

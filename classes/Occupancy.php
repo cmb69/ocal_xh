@@ -21,8 +21,6 @@
 
 namespace Ocal;
 
-use Serializable;
-
 class Occupancy
 {
     /**
@@ -36,6 +34,11 @@ class Occupancy
     protected $states;
 
     /**
+     * @var int
+     */
+    private $maxState;
+
+    /**
      * @param string $name
      * @param string $json
      * @return ?Occupancy
@@ -43,18 +46,30 @@ class Occupancy
     public static function createFromJson($name, $json)
     {
         $array = json_decode($json, true);
-        switch ($array['type']) {
+        if (!($result = self::instantiateType($array['type'], $name))) {
+            return null;
+        }
+        foreach ($array['states'] as $date => $state) {
+            $result->setState($date, $state);
+        }
+        return $result;
+    }
+
+    /**
+     * @param string $type
+     * @param string $name
+     * @return Occupancy
+     */
+    private static function instantiateType($type, $name)
+    {
+        switch ($type) {
             case 'daily':
-                $result = new Occupancy($name);
-                break;
+                return new Occupancy($name);
             case 'hourly':
-                $result = new HourlyOccupancy($name);
-                break;
+                return new HourlyOccupancy($name);
             default:
                 return null;
         }
-        $result->states = $array['states'];
-        return $result;
     }
 
     /**
@@ -62,8 +77,11 @@ class Occupancy
      */
     public function __construct($name)
     {
+        global $plugin_cf;
+
         $this->name = (string) $name;
         $this->states = array();
+        $this->maxState = (int) $plugin_cf['ocal']['state_max'];
     }
 
     /**
@@ -100,11 +118,10 @@ class Occupancy
      */
     protected function getState($date)
     {
-        if (isset($this->states[$date])) {
-            return $this->states[$date];
-        } else {
+        if (!isset($this->states[$date])) {
             return 0;
         }
+        return $this->states[$date];
     }
 
     /**
@@ -113,7 +130,7 @@ class Occupancy
      */
     public function setState($date, $state)
     {
-        if ($state) {
+        if ($state >= 0 && $state <= $this->maxState) {
             $this->states[$date] = $state;
         } else {
             unset($this->states[$date]);
