@@ -57,7 +57,7 @@ class ListServiceTest extends PHPUnit_Framework_TestCase
 
     public function testGetDailyList()
     {
-        $occupancy = new Occupancy('daily');
+        $occupancy = new DailyOccupancy('daily');
         $occupancy->setState('2017-03-01', 1);
         $occupancy->setState('2017-03-02', 1);
         $occupancy->setState('2017-03-04', 2);

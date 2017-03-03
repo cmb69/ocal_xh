@@ -23,7 +23,7 @@ namespace Ocal;
 
 use PHPUnit_Framework_TestCase;
 
-class OccupancyTest extends PHPUnit_Framework_TestCase
+class DailyOccupancyTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var Occupancy
@@ -35,7 +35,7 @@ class OccupancyTest extends PHPUnit_Framework_TestCase
         global $plugin_cf;
 
         $plugin_cf['ocal']['state_max'] = '3';
-        $this->subject = new Occupancy('foo');
+        $this->subject = new DailyOccupancy('foo');
     }
 
     public function testCreateFromJsonWithInvalidType()

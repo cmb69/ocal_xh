@@ -53,7 +53,7 @@ class DbTest extends PHPUnit_Framework_TestCase
     public function testFindNewDailyOccupancy()
     {
         $occupancy = $this->subject->findOccupancy('daily');
-        $this->assertInstanceOf(Occupancy::class, $occupancy);
+        $this->assertInstanceOf(DailyOccupancy::class, $occupancy);
     }
 
     public function testFindNewHourlyOccupancy()
@@ -64,7 +64,7 @@ class DbTest extends PHPUnit_Framework_TestCase
 
     public function testSaveAndFindOccupancy()
     {
-        $occupancy1 = new Occupancy('foo');
+        $occupancy1 = new DailyOccupancy('foo');
         $this->subject->saveOccupancy($occupancy1);
         $occupancy2 = $this->subject->findOccupancy('foo');
         $this->assertEquals($occupancy1, $occupancy2);
@@ -84,7 +84,7 @@ class DbTest extends PHPUnit_Framework_TestCase
             vfsStream::url('test/content/ocal/foo.dat'),
             '{a:1:{s:10:"2017-02-03";s:1:"1";}}'
         );
-        $this->assertInstanceOf(Occupancy::class, $this->subject->findOccupancy('foo'));
+        $this->assertInstanceOf(DailyOccupancy::class, $this->subject->findOccupancy('foo'));
     }
 
     public function testMigrateBrokenContents()
@@ -93,6 +93,6 @@ class DbTest extends PHPUnit_Framework_TestCase
             vfsStream::url('test/content/ocal/foo.dat'),
             ''
         );
-        $this->assertEquals(new Occupancy('foo'), $this->subject->findOccupancy('foo'));
+        $this->assertEquals(new DailyOccupancy('foo'), $this->subject->findOccupancy('foo'));
     }
 }

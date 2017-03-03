@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-class Occupancy
+abstract class Occupancy
 {
     /**
      * @var string
@@ -41,7 +41,7 @@ class Occupancy
     /**
      * @param string $name
      * @param string $json
-     * @return ?Occupancy
+     * @return ?self
      */
     public static function createFromJson($name, $json)
     {
@@ -58,13 +58,13 @@ class Occupancy
     /**
      * @param string $type
      * @param string $name
-     * @return Occupancy
+     * @return self
      */
     private static function instantiateType($type, $name)
     {
         switch ($type) {
             case 'daily':
-                return new Occupancy($name);
+                return new DailyOccupancy($name);
             case 'hourly':
                 return new HourlyOccupancy($name);
             default:
@@ -101,18 +101,6 @@ class Occupancy
     }
 
     /**
-     * @param int $year
-     * @param int $month
-     * @param int $day
-     * @return int
-     */
-    public function getDailyState($year, $month, $day)
-    {
-        $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
-        return $this->getState($date);
-    }
-
-    /**
      * @param string $date
      * @return int
      */
@@ -140,8 +128,5 @@ class Occupancy
     /**
      * @return string
      */
-    public function toJson()
-    {
-        return json_encode(['type' => 'daily', 'states' => $this->states], JSON_PRETTY_PRINT);
-    }
+    abstract public function toJson();
 }

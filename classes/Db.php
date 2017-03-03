@@ -62,7 +62,7 @@ class Db
         if ($hourly) {
             return new HourlyOccupancy($name);
         }
-        return new Occupancy($name);
+        return new DailyOccupancy($name);
     }
 
     /**
