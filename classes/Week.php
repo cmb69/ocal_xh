@@ -88,7 +88,7 @@ class Week
     }
 
     /**
-     * @return Date[]
+     * @return DateTime[]
      */
     public function getDatesOfWeek()
     {
@@ -96,6 +96,7 @@ class Week
         for ($i = 1; $i <= 7; $i++) {
             $date = new DateTime();
             $date->setISODate($this->year, $this->week, $i);
+            $date->setTime(0, 0, 0);
             $dates[$i] = $date;
         }
         return $dates;

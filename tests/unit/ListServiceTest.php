@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use PHPUnit_Framework_TestCase;
+use DateTime;
 
 class ListServiceTest extends PHPUnit_Framework_TestCase
 {
@@ -79,9 +80,14 @@ class ListServiceTest extends PHPUnit_Framework_TestCase
         $occupancy->setState('2017-09-01-15', 2);
         $week = new Week(9, 2017);
         $expected = array(
-            (object) ['range' => '08:00–11:59', 'state' => 1, 'label' => 'reserved'],
-            (object) ['range' => '14:00–15:59', 'state' => 2, 'label' => 'booked']
+            (object) array(
+                'date' => new DateTime('2017-02-27'),
+                'list' => array(
+                    (object) ['range' => '08:00–11:59', 'state' => 1, 'label' => 'reserved'],
+                    (object) ['range' => '14:00–15:59', 'state' => 2, 'label' => 'booked']
+                )
+            )
         );
-        $this->assertEquals($expected, (new ListService)->getHourlyList($occupancy, $week, 1));
+        $this->assertEquals($expected, (new ListService)->getHourlyList($occupancy, $week));
     }
 }

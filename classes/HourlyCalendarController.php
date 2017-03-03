@@ -127,10 +127,12 @@ class HourlyCalendarController extends CalendarController
     private function prepareWeekListView(Occupancy $occupancy, Week $week)
     {
         $view = new View('hourly-list');
-        $view->dates = $week->getDatesOfWeek();
-        $view->listOfDay = function ($weekday) use ($occupancy, $week) {
-            return (new ListService)->getHourlyList($occupancy, $week, $weekday);
-        };
+        $date = new DateTime();
+        $date->setISODate($week->getYear(), $week->getWeek(), 1);
+        $view->from = $date->format($this->lang['date_format']);
+        $date->setISODate($week->getYear(), $week->getWeek(), 7);
+        $view->to = $date->format($this->lang['date_format']);
+        $view->weekList = (new ListService)->getHourlyList($occupancy, $week);
         $view->dayLabel = function ($date) {
             return $date->format($this->lang['date_format']);
         };

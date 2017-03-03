@@ -42,7 +42,7 @@ class ListService
     }
 
     /**
-     * @return array
+     * @return object[]
      */
     public function getDailyList(Occupancy $occupancy, Month $month)
     {
@@ -76,10 +76,25 @@ class ListService
     }
 
     /**
-     * @param int $weekday
-     * @return array
+     * @return object[]
      */
-    public function getHourlyList(Occupancy $occupancy, Week $week, $weekday)
+    public function getHourlyList(Occupancy $occupancy, Week $week)
+    {
+        $result = [];
+        foreach ($week->getDatesOfWeek() as $weekday => $date) {
+            $list = $this->getHourlyListForDay($occupancy, $week, $weekday);
+            if (!empty($list)) {
+                $result[] = (object) ['date' => $date, 'list' => $list];
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param int $weekday
+     * @return object[]
+     */
+    private function getHourlyListForDay(Occupancy $occupancy, Week $week, $weekday)
     {
         $list = array();
         $currentRange = array();
