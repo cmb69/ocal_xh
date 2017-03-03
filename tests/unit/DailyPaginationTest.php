@@ -57,15 +57,14 @@ class DailyPaginationTest extends PHPUnit_Framework_TestCase
                 (object) ['year' => 2018, 'monthOrWeek' => 3, 'label' => 'label_next_year']
             ]],
             [2017, 1, new DateTime('2016-11-01'), [
-                (object) ['year' => 2016, 'monthOrWeek' => 12, 'label' => 'label_prev_month'],
                 (object) ['year' => 2016, 'monthOrWeek' => 11, 'label' => 'label_today'],
+                (object) ['year' => 2016, 'monthOrWeek' => 12, 'label' => 'label_prev_month'],
                 (object) ['year' => 2017, 'monthOrWeek' => 2, 'label' => 'label_next_month'],
                 (object) ['year' => 2018, 'monthOrWeek' => 1, 'label' => 'label_next_year']
             ]],
             [2016, 12, new DateTime('2015-12-01'), [
-                (object) ['year' => 2015, 'monthOrWeek' => 12, 'label' => 'label_prev_year'],
-                (object) ['year' => 2016, 'monthOrWeek' => 11, 'label' => 'label_prev_month'],
                 (object) ['year' => 2015, 'monthOrWeek' => 12, 'label' => 'label_today'],
+                (object) ['year' => 2016, 'monthOrWeek' => 11, 'label' => 'label_prev_month'],
                 (object) ['year' => 2017, 'monthOrWeek' => 1, 'label' => 'label_next_month']
             ]],
         );

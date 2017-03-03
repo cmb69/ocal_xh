@@ -24,7 +24,7 @@ namespace Ocal;
 use stdClass;
 use DateTime;
 
-class DailyPagination
+class DailyPagination extends Pagination
 {
     /**
      * @var int
@@ -37,27 +37,14 @@ class DailyPagination
     private $month;
 
     /**
-     * @var array
-     */
-    private $config;
-
-    /**
-     * @var DateTime
-     */
-    private $now;
-
-    /**
      * @param int $year
      * @param int $month
      */
     public function __construct($year, $month, DateTime $now)
     {
-        global $plugin_cf;
-
+        parent::__construct($now);
         $this->year = (int) $year;
         $this->month = (int) $month;
-        $this->config = $plugin_cf['ocal'];
-        $this->now = $now;
     }
 
     /**
@@ -65,20 +52,20 @@ class DailyPagination
      */
     public function getItems()
     {
-        return array_values(array_filter([
+        return $this->filterAndSortItems(
+            $this->getItem(false, false, 'today'),
             $this->getItem(0, -1, 'prev_year'),
             $this->getItem(-1, 0, 'prev_month'),
-            $this->getItem(false, false, 'today'),
             $this->getItem(1, 0, 'next_month'),
             $this->getItem(0, 1, 'next_year')
-        ]));
+        );
     }
 
     /**
      * @param int $month
      * @param int $year
      * @param string $label
-     * @return ?stdClass
+     * @return ?object
      */
     private function getItem($month, $year, $label)
     {

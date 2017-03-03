@@ -56,8 +56,8 @@ class HourlyPaginationTest extends PHPUnit_Framework_TestCase
                 (object) ['year' => 2017, 'monthOrWeek' => 10, 'label' => 'label_next_interval']
             ]],
             [2017, 9, new DateTime('2017-01-01'), 2, [
-                (object) ['year' => 2017, 'monthOrWeek' => 7, 'label' => 'label_prev_interval'],
                 (object) ['year' => 2016, 'monthOrWeek' => 52, 'label' => 'label_today'],
+                (object) ['year' => 2017, 'monthOrWeek' => 7, 'label' => 'label_prev_interval'],
                 (object) ['year' => 2017, 'monthOrWeek' => 11, 'label' => 'label_next_interval']
             ]],
         );

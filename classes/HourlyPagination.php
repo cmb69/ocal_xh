@@ -24,7 +24,7 @@ namespace Ocal;
 use stdClass;
 use DateTime;
 
-class HourlyPagination
+class HourlyPagination extends Pagination
 {
     /**
      * @var int
@@ -37,23 +37,14 @@ class HourlyPagination
     private $week;
 
     /**
-     * @var array
+     * @param int $year
+     * @param int $month
      */
-    private $config;
-
-    /**
-     * @var DateTime
-     */
-    private $now;
-
     public function __construct($year, $week, DateTime $now)
     {
-        global $plugin_cf;
-
+        parent::__construct($now);
         $this->year = (int) $year;
         $this->week = (int) $week;
-        $this->config = $plugin_cf['ocal'];
-        $this->now = $now;
     }
 
     /**
@@ -62,11 +53,11 @@ class HourlyPagination
      */
     public function getItems($weekCount)
     {
-        return array_values(array_filter([
-            $this->getItem(-$weekCount, 'prev_interval'),
+        return $this->filterAndSortItems(
             $this->getItem(false, 'today'),
+            $this->getItem(-$weekCount, 'prev_interval'),
             $this->getItem($weekCount, 'next_interval')
-        ]));
+        );
     }
 
     /**
