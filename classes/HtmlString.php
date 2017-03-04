@@ -23,13 +23,22 @@ namespace Ocal;
 
 class HtmlString
 {
+    /**
+     * @var string
+     */
     private $value;
 
+    /**
+     * @param string $string
+     */
     public function __construct($string)
     {
-        $this->value = $string;
+        $this->value = (string) $string;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->value;

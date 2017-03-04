@@ -50,7 +50,10 @@ class SystemCheckServiceTest extends PHPUnit_Framework_TestCase
             'syscheck_extension' => 'extension',
             'syscheck_phpversion' => 'phpversion',
             'syscheck_writable' => 'writable',
-            'syscheck_xhversion' => 'xhversion'
+            'syscheck_xhversion' => 'xhversion',
+            'syscheck_success' => 'success',
+            'syscheck_warning' => 'warning',
+            'syscheck_fail' => 'fail'
         );
     }
 

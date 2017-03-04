@@ -1,8 +1,8 @@
-<div data-name="<?=$this->occupancyName?>">
-    <?php $this->modeLinkView->render()?>
-    <?php $this->statusbarView->render()?>
-<?php foreach ($this->weeks as $week):?>
-        <?php $this->weekListView($week)->render()?>
+<div data-name="<?=$this->occupancyName()?>">
+    <?=$this->modeLink()?>
+    <?=$this->statusbar()?>
+<?php foreach ($this->weekLists as $weekList):?>
+    <?=$this->escape($weekList)?>
 <?php endforeach?>
-    <?php $this->weekPaginationView->render()?>
+    <?=$this->weekPagination()?>
 </div>

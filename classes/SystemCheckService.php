@@ -72,7 +72,8 @@ class SystemCheckService
     {
         $state = version_compare(PHP_VERSION, $version, 'ge') ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_phpversion'], $version);
-        return (object) compact('state', 'label');
+        $stateLabel = $this->lang["syscheck_$state"];
+        return (object) compact('state', 'label', 'stateLabel');
     }
 
     /**
@@ -83,7 +84,8 @@ class SystemCheckService
     {
         $state = extension_loaded($extension) ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_extension'], $extension);
-        return (object) compact('state', 'label');
+        $stateLabel = $this->lang["syscheck_$state"];
+        return (object) compact('state', 'label', 'stateLabel');
     }
 
     /**
@@ -94,7 +96,8 @@ class SystemCheckService
     {
         $state = version_compare(CMSIMPLE_XH_VERSION, "CMSimple_XH $version", 'ge') ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_xhversion'], $version);
-        return (object) compact('state', 'label');
+        $stateLabel = $this->lang["syscheck_$state"];
+        return (object) compact('state', 'label', 'stateLabel');
     }
 
     /**
@@ -105,6 +108,7 @@ class SystemCheckService
     {
         $state = is_writable($folder) ? 'success' : 'warning';
         $label = sprintf($this->lang['syscheck_writable'], $folder);
-        return (object) compact('state', 'label');
+        $stateLabel = $this->lang["syscheck_$state"];
+        return (object) compact('state', 'label', 'stateLabel');
     }
 }

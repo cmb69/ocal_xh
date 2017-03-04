@@ -56,7 +56,7 @@ class View
      */
     public function __get($name)
     {
-        return $this->escape($this->data[$name]);
+        return $this->data[$name];
     }
 
     /**
@@ -74,9 +74,19 @@ class View
      */
     public function __call($name, array $args)
     {
-        return $this->escape(call_user_func_array($this->data[$name], $args));
+        return $this->escape($this->data[$name]);
     }
 
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        ob_start();
+        $this->render();
+        return ob_get_clean();
+    }
+    
     /**
      * @param string $key
      * @return string
@@ -87,7 +97,7 @@ class View
 
         $args = func_get_args();
         array_shift($args);
-        return vsprintf($plugin_tx['ocal'][$key], $args);
+        return $this->escape(vsprintf($plugin_tx['ocal'][$key], $args));
     }
 
     /**
@@ -105,7 +115,7 @@ class View
         }
         $args = func_get_args();
         array_shift($args);
-        return vsprintf($plugin_tx['ocal'][$key], $args);
+        return $this->escape(vsprintf($plugin_tx['ocal'][$key], $args));
     }
 
     /**
@@ -125,10 +135,10 @@ class View
      */
     protected function escape($value)
     {
-        if (is_scalar($value)) {
-            return XH_hsc($value);
-        } else {
+        if ($value instanceof HtmlString || $value instanceof View) {
             return $value;
+        } else {
+            return XH_hsc($value);
         }
     }
 }

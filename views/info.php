@@ -1,7 +1,7 @@
 <h1>Ocal</h1>
-<img src="<?=$this->logo?>" class="ocal_logo" alt="<?=$this->text('alt_logo')?>">
+<img src="<?=$this->logo()?>" class="ocal_logo" alt="<?=$this->text('alt_logo')?>">
 <p>
-    Version: <?=$this->version?>
+    Version: <?=$this->version()?>
 </p>
 <p>
     Copyright &copy; 2014-2017 <a href="http://3-magi.net/"
@@ -27,6 +27,6 @@
 <h2><?=$this->text('syscheck_title')?></h2>
 <ul class="ocal_syscheck">
 <?php foreach ($this->checks as $check):?>
-    <li class="xh_<?=$this->escape($check->state)?>"><?=$this->text('syscheck_message', $check->label, $this->stateLabel($check->state))?></li>
+    <li class="xh_<?=$this->escape($check->state)?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></li>
 <?php endforeach?>
 </ul>

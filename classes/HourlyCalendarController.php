@@ -69,17 +69,26 @@ class HourlyCalendarController extends CalendarController
         
         $view = new View('hourly-calendars');
         $view->occupancyName = $occupancy->getName();
-        $view->modeLinkView = $this->prepareModeLinkView();
+        $view->modeLink = $this->prepareModeLinkView();
         $view->isEditable = XH_ADM;
         $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
-        $view->toolbarView = $this->prepareToolbarView();
-        $view->statusbarView = $this->prepareStatusbarView();
-        $view->weekPaginationView = $this->preparePaginationView($this->count);
-        $view->weeks = Week::createRange($this->isoYear, $this->week, $this->count);
-        $view->weekCalendarView = function (Week $week) use ($occupancy) {
-            return $this->prepareWeekCalendarView($occupancy, $week);
-        };
+        $view->toolbar = $this->prepareToolbarView();
+        $view->statusbar = $this->prepareStatusbarView();
+        $view->weekPagination = $this->preparePaginationView($this->count);
+        $view->weekCalendars = $this->getWeekCalendars($occupancy);
         return $view;
+    }
+
+    /**
+     * @return View[]
+     */
+    private function getWeekCalendars(Occupancy $occupancy)
+    {
+        $weekCalendars = [];
+        foreach (Week::createRange($this->isoYear, $this->week, $this->count) as $week) {
+            $weekCalendars[] = $this->prepareWeekCalendarView($occupancy, $week);
+        }
+        return $weekCalendars;
     }
 
     /**
@@ -95,12 +104,28 @@ class HourlyCalendarController extends CalendarController
         $date->setISODate($week->getYear(), $week->getWeek(), 7);
         $view->to = $date->format($this->lang['date_format']);
         $view->daynames = array_map('trim', explode(',', $this->lang['date_days']));
-        $view->hours = range($this->config['hour_first'], $this->config['hour_last'], $this->config['hour_interval']);
-        $view->days = range(1, 7);
-        $view->state = function ($day, $hour) use ($occupancy, $week) {
-            return $occupancy->getHourlyState($week->getYear(), $week->getWeek(), $day, $hour);
-        };
+        $view->hours = $this->getDaysOfHours($occupancy, $week);
         return $view;
+    }
+
+    /**
+     * @return object[][]
+     */
+    private function getDaysOfHours(Occupancy $occupancy, Week $week)
+    {
+        $daysOfHours = [];
+        $hours = range($this->config['hour_first'], $this->config['hour_last'], $this->config['hour_interval']);
+        foreach ($hours as $hour) {
+            $days = [];
+            foreach (range(1, 7) as $day) {
+                $days[]  = (object) array(
+                    'hour' => $hour,
+                    'state' => $occupancy->getHourlyState($week->getYear(), $week->getWeek(), $day, $hour)
+                );
+            }
+            $daysOfHours[] = $days;
+        }
+        return $daysOfHours;
     }
 
     /**
@@ -111,14 +136,23 @@ class HourlyCalendarController extends CalendarController
         $this->emitScriptElements();
         $view = new View('hourly-lists');
         $view->occupancyName = $occupancy->getName();
-        $view->modeLinkView = $this->prepareModeLinkView();
-        $view->statusbarView = $this->prepareStatusbarView();
-        $view->weekPaginationView = $this->preparePaginationView($this->count);
-        $view->weeks = Week::createRange($this->isoYear, $this->week, $this->count);
-        $view->weekListView = function ($week) use ($occupancy) {
-            return $this->prepareWeekListView($occupancy, $week);
-        };
+        $view->modeLink = $this->prepareModeLinkView();
+        $view->statusbar = $this->prepareStatusbarView();
+        $view->weekPagination = $this->preparePaginationView($this->count);
+        $view->weekLists = $this->getWeekLists($occupancy);
         return $view;
+    }
+
+    /**
+     * @return View[]
+     */
+    private function getWeekLists(Occupancy $occupancy)
+    {
+        $weekLists = [];
+        foreach (Week::createRange($this->isoYear, $this->week, $this->count) as $week) {
+            $weekLists[] = $this->prepareWeekListView($occupancy, $week);
+        }
+        return $weekLists;
     }
 
     /**
@@ -132,11 +166,21 @@ class HourlyCalendarController extends CalendarController
         $view->from = $date->format($this->lang['date_format']);
         $date->setISODate($week->getYear(), $week->getWeek(), 7);
         $view->to = $date->format($this->lang['date_format']);
-        $view->weekList = (new ListService)->getHourlyList($occupancy, $week);
-        $view->dayLabel = function ($date) {
-            return $date->format($this->lang['date_format']);
-        };
+        $view->weekList = $this->getWeekList($occupancy, $week);
         return $view;
+    }
+
+    /**
+     * @return object[]
+     */
+    private function getWeekList(Occupancy $occupancy, Week $week)
+    {
+        $weekList = [];
+        foreach ((new ListService)->getHourlyList($occupancy, $week) as $day) {
+            $day->label = $day->date->format($this->lang['date_format']);
+            $weekList[] = $day;
+        }
+        return $weekList;
     }
 
     /**
@@ -146,12 +190,27 @@ class HourlyCalendarController extends CalendarController
     private function preparePaginationView($weekCount)
     {
         $view = new View('pagination');
-        $view->items = (new HourlyPagination($this->isoYear, $this->week, new DateTime()))->getItems($weekCount);
-        $view->url = function ($year, $week) {
-            return $this->modifyUrl(['ocal_year' => $year, 'ocal_week' => $week, 'ocal_action' => $this->mode]);
-        };
+        $view->items = $this->getPaginationItems($weekCount);
         return $view;
     }
+
+    /**
+     * @param int $weekCount
+     * @return object[]
+     */
+    private function getPaginationItems($weekCount)
+    {
+        $items = (new HourlyPagination($this->isoYear, $this->week, new DateTime()))->getItems($weekCount);
+        foreach ($items as $item) {
+            $item->url = $this->modifyUrl(array(
+                'ocal_year' => $item->year,
+                'ocal_week' => $item->monthOrWeek,
+                'ocal_action' => $this->mode
+            ));
+        }
+        return $items;
+    }
+
     /**
      * @param ?string $name
      */

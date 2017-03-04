@@ -1,7 +1,10 @@
 <dl class="ocal_list">
-<?php if (!empty($this->weekList)):?>
+<?php if (empty($this->weekList)):?>
+    <dt><?=$this->from()?>–<?=$this->to()?></dt>
+    <dd class="ocal_noentry"><?=$this->text('message_no_entry')?></dd>
+<?php else:?>
 <?php   foreach ($this->weekList as $day):?>
-    <dt><?=$this->dayLabel($day->date)?></dt>
+    <dt><?=$this->escape($day->label)?></dt>
     <dd>
         <dl>
 <?php       foreach ($day->list as $item):?>
@@ -11,8 +14,5 @@
         </dl>
     </dd>
 <?php   endforeach?>
-<?php else:?>
-    <dt><?=$this->from?>–<?=$this->to?></dt>
-    <dd class="ocal_noentry"><?=$this->text('message_no_entry')?></dd>
 <?php endif?>
 </dl>

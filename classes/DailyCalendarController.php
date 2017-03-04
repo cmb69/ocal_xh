@@ -69,17 +69,26 @@ class DailyCalendarController extends CalendarController
 
         $view = new View('daily-calendars');
         $view->occupancyName = $occupancy->getName();
-        $view->modeLinkView = $this->prepareModeLinkView();
+        $view->modeLink = $this->prepareModeLinkView();
         $view->isEditable = XH_ADM;
         $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
-        $view->toolbarView = $this->prepareToolbarView();
-        $view->statusbarView = $this->prepareStatusbarView();
-        $view->monthPaginationView = $this->preparePaginationView();
-        $view->months = Month::createRange($this->year, $this->month, $this->count);
-        $view->monthCalendarView = function (Month $month) use ($occupancy) {
-            return $this->prepareMonthCalendarView($occupancy, $month);
-        };
+        $view->toolbar = $this->prepareToolbarView();
+        $view->statusbar = $this->prepareStatusbarView();
+        $view->monthPagination = $this->preparePaginationView();
+        $view->monthCalendars = $this->getMonthCalendars($occupancy);
         return $view;
+    }
+
+    /**
+     * @return View[]
+     */
+    private function getMonthCalendars(Occupancy $occupancy)
+    {
+        $monthCalendars = [];
+        foreach (Month::createRange($this->year, $this->month, $this->count) as $month) {
+            $monthCalendars[] = $this->prepareMonthCalendarView($occupancy, $month);
+        }
+        return $monthCalendars;
     }
 
     /**
@@ -90,22 +99,55 @@ class DailyCalendarController extends CalendarController
         $view = new View('daily-calendar');
         $view->isoDate = $month->getIso();
         $view->year = $month->getYear();
-        $monthnames = array_map('trim', explode(',', $this->lang['date_months']));
-        $view->monthname = $monthnames[$month->getMonth() - 1];
+        $view->monthname = $this->getMonthName($month->getMonth());
         $view->daynames = array_map('trim', explode(',', $this->lang['date_days']));
-        $view->weeks = $month->getDaysOfWeeks();
-        $view->state = function ($day) use ($occupancy, $month) {
-            return $occupancy->getDailyState($month->getYear(), $month->getMonth(), $day);
-        };
-        $view->todayClass = function ($day) use ($month) {
-            $date = sprintf('%04d-%02d-%02d', $month->getYear(), $month->getMonth(), $day);
-            return $date === date('Y-m-d') ? ' ocal_today' : '';
-        };
-        $view->titleKey = function ($day) use ($occupancy, $month) {
-            $state = $occupancy->getDailyState($month->getYear(), $month->getMonth(), $day);
-            return "label_state_$state";
-        };
+        $view->weeks = $this->getWeeks($occupancy, $month);
         return $view;
+    }
+
+    /**
+     * @param int $month
+     * @return string
+     */
+    private function getMonthName($month)
+    {
+        $monthnames = array_map('trim', explode(',', $this->lang['date_months']));
+        return $monthnames[$month - 1];
+    }
+
+    /**
+     * @return object[][]
+     */
+    private function getWeeks(Occupancy $occupancy, Month $month)
+    {
+        $weeks = [];
+        foreach ($month->getDaysOfWeeks() as $week) {
+            $weeks[] = $this->getWeekDays($occupancy, $month, $week);
+        }
+        return $weeks;
+    }
+
+    /**
+     * @return object[]
+     */
+    private function getWeekDays(Occupancy $occupancy, Month $month, array $week)
+    {
+        $days = [];
+        foreach ($week as $day) {
+            if (isset($day)) {
+                $state = $occupancy->getDailyState($month->getYear(), $month->getMonth(), $day);
+                $date = sprintf('%04d-%02d-%02d', $month->getYear(), $month->getMonth(), $day);
+                $days[] = (object) array(
+                    'day' => $day,
+                    'state' => $state,
+                    'todayClass' => $date === date('Y-m-d') ? ' ocal_today' : '',
+                    'titleKey' => "label_state_$state"
+                );
+            } else {
+                $days[] = null;
+            }
+        }
+        return $days;
     }
 
     /**
@@ -116,14 +158,23 @@ class DailyCalendarController extends CalendarController
         $this->emitScriptElements();
         $view = new View('daily-lists');
         $view->occupancyName = $occupancy->getName();
-        $view->modeLinkView = $this->prepareModeLinkView();
-        $view->statusbarView = $this->prepareStatusbarView();
-        $view->months = Month::createRange($this->year, $this->month, $this->count);
-        $view->monthListView = function ($month) use ($occupancy) {
-            return $this->prepareMonthListView($occupancy, $month);
-        };
-        $view->monthPaginationView = $this->preparePaginationView();
+        $view->modeLink = $this->prepareModeLinkView();
+        $view->statusbar = $this->prepareStatusbarView();
+        $view->monthLists = $this->getMonthLists($occupancy);
+        $view->monthPagination = $this->preparePaginationView();
         return $view;
+    }
+
+    /**
+     * @return View[]
+     */
+    private function getMonthLists(Occupancy $occupancy)
+    {
+        $monthLists = [];
+        foreach (Month::createRange($this->year, $this->month, $this->count) as $month) {
+            $monthLists[] = $this->prepareMonthListView($occupancy, $month);
+        }
+        return $monthLists;
     }
 
     /**
@@ -145,11 +196,24 @@ class DailyCalendarController extends CalendarController
     private function preparePaginationView()
     {
         $view = new View('pagination');
-        $view->items = (new DailyPagination($this->year, $this->month, new DateTime()))->getItems();
-        $view->url = function ($year, $month) {
-            return $this->modifyUrl(['ocal_year' => $year, 'ocal_month' => $month, 'ocal_action' => $this->mode]);
-        };
+        $view->items = $this->getPaginationItems();
         return $view;
+    }
+
+    /**
+     * @object[]
+     */
+    private function getPaginationItems()
+    {
+        $paginationItems = (new DailyPagination($this->year, $this->month, new DateTime()))->getItems();
+        foreach ($paginationItems as $item) {
+            $item->url = $this->modifyUrl(array(
+                'ocal_year' => $item->year,
+                'ocal_month' => $item->monthOrWeek,
+                'ocal_action' => $this->mode
+            ));
+        }
+        return $paginationItems;
     }
 
     /**

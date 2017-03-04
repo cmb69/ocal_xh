@@ -47,9 +47,6 @@ class DefaultAdminController implements Controller
         $view->logo = "$this->pluginFolder/ocal.png";
         $view->version = OCAL_VERSION;
         $view->checks = (new SystemCheckService)->getChecks();
-        $view->stateLabel = function ($state) {
-            return $this->lang["syscheck_$state"];
-        };
         $view->render();
     }
 }
