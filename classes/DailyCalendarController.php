@@ -71,7 +71,9 @@ class DailyCalendarController extends CalendarController
         $view->occupancyName = $occupancy->getName();
         $view->modeLink = $this->prepareModeLinkView();
         $view->isEditable = XH_ADM;
-        $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
+        if ($view->isEditable) {
+            $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
+        }
         $view->toolbar = $this->prepareToolbarView();
         $view->statusbar = $this->prepareStatusbarView();
         $view->monthPagination = $this->preparePaginationView();
