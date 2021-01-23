@@ -22,7 +22,7 @@
 class_alias('Ocal\Occupancy', 'Ocal_Occupancy');
 class_alias('Ocal\HourlyOccupancy', 'Ocal_HourlyOccupancy');
 
-const OCAL_VERSION = '@OCAL_VERSION@';
+const OCAL_VERSION = '1.0beta4';
 
 /**
  * @param string $name
