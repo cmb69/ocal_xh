@@ -41,13 +41,10 @@ class View
         $this->template = $template;
     }
 
-    /**
-     * @param string $name
-     * @param mixed $value
-     */
-    public function __set($name, $value)
+    /** @return void */
+    public function setData(array $data)
     {
-        $this->data[$name] = $value;
+        $this->data = $data;
     }
 
     /**

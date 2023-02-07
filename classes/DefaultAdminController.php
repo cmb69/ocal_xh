@@ -44,9 +44,11 @@ class DefaultAdminController implements Controller
     public function defaultAction()
     {
         $view = new View('info');
-        $view->logo = "$this->pluginFolder/ocal.png";
-        $view->version = OCAL_VERSION;
-        $view->checks = (new SystemCheckService)->getChecks();
+        $view->setData([
+            'logo' => "$this->pluginFolder/ocal.png",
+            'version' => OCAL_VERSION,
+            'checks' => (new SystemCheckService)->getChecks(),
+        ]);
         $view->render();
     }
 }

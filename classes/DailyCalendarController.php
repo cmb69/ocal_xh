@@ -68,16 +68,19 @@ class DailyCalendarController extends CalendarController
         $this->emitScriptElements();
 
         $view = new View('daily-calendars');
-        $view->occupancyName = $occupancy->getName();
-        $view->modeLink = $this->prepareModeLinkView();
-        $view->isEditable = defined('XH_ADM') && XH_ADM;
-        if ($view->isEditable) {
-            $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
+        $data = [
+            'occupancyName' => $occupancy->getName(),
+            'modeLink' => $this->prepareModeLinkView(),
+            'isEditable' => defined('XH_ADM') && XH_ADM,
+            'toolbar' => $this->prepareToolbarView(),
+            'statusbar' => $this->prepareStatusbarView(),
+            'monthPagination' => $this->preparePaginationView(),
+            'monthCalendars' => $this->getMonthCalendars($occupancy),
+        ];
+        if (defined('XH_ADM') && XH_ADM) {
+            $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
         }
-        $view->toolbar = $this->prepareToolbarView();
-        $view->statusbar = $this->prepareStatusbarView();
-        $view->monthPagination = $this->preparePaginationView();
-        $view->monthCalendars = $this->getMonthCalendars($occupancy);
+        $view->setData($data);
         return $view;
     }
 
@@ -99,11 +102,13 @@ class DailyCalendarController extends CalendarController
     private function prepareMonthCalendarView(Occupancy $occupancy, Month $month)
     {
         $view = new View('daily-calendar');
-        $view->isoDate = $month->getIso();
-        $view->year = $month->getYear();
-        $view->monthname = $this->getMonthName($month->getMonth());
-        $view->daynames = array_map('trim', explode(',', $this->lang['date_days']));
-        $view->weeks = $this->getWeeks($occupancy, $month);
+        $view->setData([
+            'isoDate' => $month->getIso(),
+            'year' => $month->getYear(),
+            'monthname' => $this->getMonthName($month->getMonth()),
+            'daynames' => array_map('trim', explode(',', $this->lang['date_days'])),
+            'weeks' => $this->getWeeks($occupancy, $month),
+        ]);
         return $view;
     }
 
@@ -159,11 +164,13 @@ class DailyCalendarController extends CalendarController
     {
         $this->emitScriptElements();
         $view = new View('daily-lists');
-        $view->occupancyName = $occupancy->getName();
-        $view->modeLink = $this->prepareModeLinkView();
-        $view->statusbar = $this->prepareStatusbarView();
-        $view->monthLists = $this->getMonthLists($occupancy);
-        $view->monthPagination = $this->preparePaginationView();
+        $view->setData([
+            'occupancyName' => $occupancy->getName(),
+            'modeLink' => $this->prepareModeLinkView(),
+            'statusbar' => $this->prepareStatusbarView(),
+            'monthLists' => $this->getMonthLists($occupancy),
+            'monthPagination' => $this->preparePaginationView(),
+        ]);
         return $view;
     }
 
@@ -186,9 +193,11 @@ class DailyCalendarController extends CalendarController
     {
         $view = new View('daily-list');
         $monthnames = explode(',', $this->lang['date_months']);
-        $view->heading = $monthnames[$month->getMonth() - 1]
-            . ' ' . $month->getYear();
-        $view->monthList = (new ListService)->getDailyList($occupancy, $month);
+        $view->setData([
+            'heading' => $monthnames[$month->getMonth() - 1]
+                . ' ' . $month->getYear(),
+            'monthList' => (new ListService)->getDailyList($occupancy, $month),
+        ]);
         return $view;
     }
 
@@ -198,7 +207,9 @@ class DailyCalendarController extends CalendarController
     private function preparePaginationView()
     {
         $view = new View('pagination');
-        $view->items = $this->getPaginationItems();
+        $view->setData([
+            'items' => $this->getPaginationItems(),
+        ]);
         return $view;
     }
 

@@ -179,8 +179,10 @@ abstract class CalendarController implements Controller
     protected function prepareModeLinkView()
     {
         $view = new View('mode-link');
-        $view->mode = $mode = $this->mode == 'calendar' ? 'list' : 'calendar';
-        $view->url = $this->modifyUrl(array('ocal_action' => $mode));
+        $view->setData([
+            'mode' => $mode = $this->mode == 'calendar' ? 'list' : 'calendar',
+            'url' => $this->modifyUrl(array('ocal_action' => $mode)),
+        ]);
         return $view;
     }
 
@@ -190,7 +192,9 @@ abstract class CalendarController implements Controller
     protected function prepareStatusbarView()
     {
         $view = new View('statusbar');
-        $view->image = "{$this->pluginFolder}ocal/images/ajax-loader-bar.gif";
+        $view->setData([
+            'image' => "{$this->pluginFolder}ocal/images/ajax-loader-bar.gif",
+        ]);
         return $view;
     }
 
@@ -200,7 +204,9 @@ abstract class CalendarController implements Controller
     protected function prepareToolbarView()
     {
         $view = new View('toolbar');
-        $view->states = range(0, $this->config['state_max']);
+        $view->setData([
+            'states' => range(0, $this->config['state_max']),
+        ]);
         return $view;
     }
 

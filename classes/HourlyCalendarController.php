@@ -68,16 +68,19 @@ class HourlyCalendarController extends CalendarController
         $this->emitScriptElements();
         
         $view = new View('hourly-calendars');
-        $view->occupancyName = $occupancy->getName();
-        $view->modeLink = $this->prepareModeLinkView();
-        $view->isEditable = defined('XH_ADM') && XH_ADM;
-        if ($view->isEditable) {
-            $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
+        $data = [
+            'occupancyName' => $occupancy->getName(),
+            'modeLink' => $this->prepareModeLinkView(),
+            'isEditable' => defined('XH_ADM') && XH_ADM,
+            'toolbar' => $this->prepareToolbarView(),
+            'statusbar' => $this->prepareStatusbarView(),
+            'weekPagination' => $this->preparePaginationView($this->count),
+            'weekCalendars' => $this->getWeekCalendars($occupancy),
+        ];
+        if (defined('XH_ADM') && XH_ADM) {
+            $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
         }
-        $view->toolbar = $this->prepareToolbarView();
-        $view->statusbar = $this->prepareStatusbarView();
-        $view->weekPagination = $this->preparePaginationView($this->count);
-        $view->weekCalendars = $this->getWeekCalendars($occupancy);
+        $view->setData($data);
         return $view;
     }
 
@@ -98,15 +101,18 @@ class HourlyCalendarController extends CalendarController
      */
     private function prepareWeekCalendarView(Occupancy $occupancy, Week $week)
     {
+        $from = new DateTime();
+        $from->setISODate($week->getYear(), $week->getWeek(), 1);
+        $to = new DateTime();
+        $to->setISODate($week->getYear(), $week->getWeek(), 7);
         $view = new View('hourly-calendar');
-        $view->date = $week->getIso();
-        $date = new DateTime();
-        $date->setISODate($week->getYear(), $week->getWeek(), 1);
-        $view->from = $date->format($this->lang['date_format']);
-        $date->setISODate($week->getYear(), $week->getWeek(), 7);
-        $view->to = $date->format($this->lang['date_format']);
-        $view->daynames = array_map('trim', explode(',', $this->lang['date_days']));
-        $view->hours = $this->getDaysOfHours($occupancy, $week);
+        $view->setData([
+            'date' => $week->getIso(),
+            'from' => $from->format($this->lang['date_format']),
+            'to' => $to->format($this->lang['date_format']),
+            'daynames' => array_map('trim', explode(',', $this->lang['date_days'])),
+            'hours' => $this->getDaysOfHours($occupancy, $week),
+        ]);
         return $view;
     }
 
@@ -137,11 +143,13 @@ class HourlyCalendarController extends CalendarController
     {
         $this->emitScriptElements();
         $view = new View('hourly-lists');
-        $view->occupancyName = $occupancy->getName();
-        $view->modeLink = $this->prepareModeLinkView();
-        $view->statusbar = $this->prepareStatusbarView();
-        $view->weekPagination = $this->preparePaginationView($this->count);
-        $view->weekLists = $this->getWeekLists($occupancy);
+        $view->setData([
+            'occupancyName' => $occupancy->getName(),
+            'modeLink' => $this->prepareModeLinkView(),
+            'statusbar' => $this->prepareStatusbarView(),
+            'weekPagination' => $this->preparePaginationView($this->count),
+            'weekLists' => $this->getWeekLists($occupancy),
+        ]);
         return $view;
     }
 
@@ -162,13 +170,16 @@ class HourlyCalendarController extends CalendarController
      */
     private function prepareWeekListView(Occupancy $occupancy, Week $week)
     {
+        $from = new DateTime();
+        $from->setISODate($week->getYear(), $week->getWeek(), 1);
+        $to = new DateTime();
+        $to->setISODate($week->getYear(), $week->getWeek(), 7);
         $view = new View('hourly-list');
-        $date = new DateTime();
-        $date->setISODate($week->getYear(), $week->getWeek(), 1);
-        $view->from = $date->format($this->lang['date_format']);
-        $date->setISODate($week->getYear(), $week->getWeek(), 7);
-        $view->to = $date->format($this->lang['date_format']);
-        $view->weekList = $this->getWeekList($occupancy, $week);
+        $view->setData([
+            'from' => $from->format($this->lang['date_format']),
+            'to' => $to->format($this->lang['date_format']),
+            'weekList' => $this->getWeekList($occupancy, $week),
+        ]);
         return $view;
     }
 
@@ -192,7 +203,9 @@ class HourlyCalendarController extends CalendarController
     private function preparePaginationView($weekCount)
     {
         $view = new View('pagination');
-        $view->items = $this->getPaginationItems($weekCount);
+        $view->setData([
+            'items' => $this->getPaginationItems($weekCount),
+        ]);
         return $view;
     }
 
