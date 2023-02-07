@@ -28,12 +28,20 @@ const OCAL_VERSION = '1.0beta4';
  */
 function ocal($name, $monthCount = 1)
 {
-    global $plugin_tx;
+    global $sn, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
     if (!preg_match('/^[a-z0-9-]+$/', $name)) {
         return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
     }
-    $controller = new Ocal\DailyCalendarController($name, $monthCount);
+    $controller = new Ocal\DailyCalendarController(
+        $sn,
+        "{$pth['folder']['plugins']}ocal/",
+        $_XH_csrfProtection,
+        $plugin_cf['ocal'],
+        $plugin_tx['ocal'],
+        $name,
+        $monthCount
+    );
     $action = filter_input(
         INPUT_GET,
         'ocal_action',
@@ -55,12 +63,20 @@ function ocal($name, $monthCount = 1)
  */
 function Ocal_hourly($name, $weekCount = 1)
 {
-    global $plugin_tx;
+    global $sn, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
     if (!preg_match('/^[a-z0-9-]+$/', $name)) {
         return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
     }
-    $controller = new Ocal\HourlyCalendarController($name, $weekCount);
+    $controller = new Ocal\HourlyCalendarController(
+        $sn,
+        "{$pth['folder']['plugins']}ocal/",
+        $_XH_csrfProtection,
+        $plugin_cf['ocal'],
+        $plugin_tx['ocal'],
+        $name,
+        $weekCount
+    );
     $action = filter_input(
         INPUT_GET,
         'ocal_action',

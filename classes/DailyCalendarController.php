@@ -23,6 +23,7 @@ namespace Ocal;
 
 use DateTime;
 use stdClass;
+use XH\CSRFProtection as CsrfProtector;
 
 class DailyCalendarController extends CalendarController
 {
@@ -37,12 +38,29 @@ class DailyCalendarController extends CalendarController
     private $year;
 
     /**
+     * @param array<string,string> $config
+     * @param array<string,string> $lang
      * @param string $name
      * @param int $count
      */
-    public function __construct($name, $count)
-    {
-        parent::__construct($name, $count);
+    public function __construct(
+        string $scriptName,
+        string $pluginFolder,
+        CsrfProtector $csrfProtector,
+        array $config,
+        array $lang,
+        $name,
+        $count
+    ) {
+        parent::__construct(
+            $scriptName,
+            $pluginFolder,
+            $csrfProtector,
+            $config,
+            $lang,
+            $name,
+            $count
+        );
         $now = new DateTime();
         $this->month = isset($_GET['ocal_month'])
             ? max(1, min(12, (int) $_GET['ocal_month']))
@@ -68,7 +86,7 @@ class DailyCalendarController extends CalendarController
     {
         $this->emitScriptElements();
 
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'daily-calendars');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-calendars');
         $data = [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->prepareModeLinkView(),
@@ -102,7 +120,7 @@ class DailyCalendarController extends CalendarController
      */
     private function prepareMonthCalendarView(Occupancy $occupancy, Month $month)
     {
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'daily-calendar');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-calendar');
         $view->setData([
             'isoDate' => $month->getIso(),
             'year' => $month->getYear(),
@@ -165,7 +183,7 @@ class DailyCalendarController extends CalendarController
     protected function getListView(Occupancy $occupancy)
     {
         $this->emitScriptElements();
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'daily-lists');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-lists');
         $view->setData([
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->prepareModeLinkView(),
@@ -193,7 +211,7 @@ class DailyCalendarController extends CalendarController
      */
     private function prepareMonthListView(Occupancy $occupancy, Month $month)
     {
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'daily-list');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-list');
         $monthnames = explode(',', $this->lang['date_months']);
         $view->setData([
             'heading' => $monthnames[$month->getMonth() - 1]
@@ -208,7 +226,7 @@ class DailyCalendarController extends CalendarController
      */
     private function preparePaginationView()
     {
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'pagination');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'pagination');
         $view->setData([
             'items' => $this->getPaginationItems(),
         ]);

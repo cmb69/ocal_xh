@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTime;
+use XH\CSRFProtection as CsrfProtector;
 
 class HourlyCalendarController extends CalendarController
 {
@@ -36,12 +37,29 @@ class HourlyCalendarController extends CalendarController
     private $isoYear;
 
     /**
+     * @param array<string,string> $config
+     * @param array<string,string> $lang
      * @param string $name
      * @param int $count
      */
-    public function __construct($name, $count)
-    {
-        parent::__construct($name, $count);
+    public function __construct(
+        string $scriptName,
+        string $pluginFolder,
+        CsrfProtector $csrfProtector,
+        array $config,
+        array $lang,
+        $name,
+        $count
+    ) {
+        parent::__construct(
+            $scriptName,
+            $pluginFolder,
+            $csrfProtector,
+            $config,
+            $lang,
+            $name,
+            $count
+        );
         $now = new DateTime();
         $this->week = isset($_GET['ocal_week'])
             ? max(1, min(53, (int) $_GET['ocal_week']))
@@ -67,7 +85,7 @@ class HourlyCalendarController extends CalendarController
     {
         $this->emitScriptElements();
         
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'hourly-calendars');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'hourly-calendars');
         $data = [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->prepareModeLinkView(),
@@ -105,7 +123,7 @@ class HourlyCalendarController extends CalendarController
         $from->setISODate($week->getYear(), $week->getWeek(), 1);
         $to = new DateTime();
         $to->setISODate($week->getYear(), $week->getWeek(), 7);
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'hourly-calendar');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'hourly-calendar');
         $view->setData([
             'date' => $week->getIso(),
             'from' => $from->format($this->lang['date_format']),
@@ -146,7 +164,7 @@ class HourlyCalendarController extends CalendarController
     protected function getListView(Occupancy $occupancy)
     {
         $this->emitScriptElements();
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'hourly-lists');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'hourly-lists');
         $view->setData([
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->prepareModeLinkView(),
@@ -178,7 +196,7 @@ class HourlyCalendarController extends CalendarController
         $from->setISODate($week->getYear(), $week->getWeek(), 1);
         $to = new DateTime();
         $to->setISODate($week->getYear(), $week->getWeek(), 7);
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'hourly-list');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'hourly-list');
         $view->setData([
             'from' => $from->format($this->lang['date_format']),
             'to' => $to->format($this->lang['date_format']),
@@ -206,7 +224,7 @@ class HourlyCalendarController extends CalendarController
      */
     private function preparePaginationView($weekCount)
     {
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'pagination');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'pagination');
         $view->setData([
             'items' => $this->getPaginationItems($weekCount),
         ]);

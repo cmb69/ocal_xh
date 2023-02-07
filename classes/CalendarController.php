@@ -21,6 +21,8 @@
 
 namespace Ocal;
 
+use XH\CSRFProtection as CsrfProtector;
+
 abstract class CalendarController
 {
     /**
@@ -39,7 +41,7 @@ abstract class CalendarController
     protected $count;
 
     /**
-     * @var object
+     * @var CsrfProtector
      */
     protected $csrfProtector;
 
@@ -69,20 +71,27 @@ abstract class CalendarController
     protected $pluginFolder;
 
     /**
+     * @param array<string,string> $config
+     * @param array<string,string> $lang
      * @param string $name
      * @param int $count
      */
-    public function __construct($name, $count)
-    {
-        global $sn, $pth, $_XH_csrfProtection, $plugin_cf, $plugin_tx;
-
+    public function __construct(
+        string $scriptName,
+        string $pluginFolder,
+        CsrfProtector $csrfProtector,
+        array $config,
+        array $lang,
+        $name,
+        $count
+    ) {
         $this->name = (string) $name;
         $this->count = (int) $count;
-        $this->scriptName = $sn;
-        $this->pluginFolder = $pth['folder']['plugins'];
-        $this->csrfProtector = $_XH_csrfProtection;
-        $this->config = $plugin_cf['ocal'];
-        $this->lang = $plugin_tx['ocal'];
+        $this->scriptName = $scriptName;
+        $this->pluginFolder = $pluginFolder;
+        $this->csrfProtector = $csrfProtector;
+        $this->config = $config;
+        $this->lang = $lang;
     }
 
     /** @return void|never */
@@ -175,7 +184,7 @@ abstract class CalendarController
             . 'var OCAL = ' . json_encode($config) . ';'
             . '/* ]]> */</script>'
             . '<script type="text/javascript" src="'
-            . $this->pluginFolder . 'ocal/ocal.js"></script>';
+            . $this->pluginFolder . 'ocal.js"></script>';
         self::$isJavaScriptEmitted = true;
     }
 
@@ -184,7 +193,7 @@ abstract class CalendarController
      */
     protected function prepareModeLinkView()
     {
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'mode-link');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'mode-link');
         $view->setData([
             'mode' => $mode = $this->mode == 'calendar' ? 'list' : 'calendar',
             'url' => $this->modifyUrl(array('ocal_action' => $mode)),
@@ -197,9 +206,9 @@ abstract class CalendarController
      */
     protected function prepareStatusbarView()
     {
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'statusbar');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'statusbar');
         $view->setData([
-            'image' => "{$this->pluginFolder}ocal/images/ajax-loader-bar.gif",
+            'image' => "{$this->pluginFolder}images/ajax-loader-bar.gif",
         ]);
         return $view;
     }
@@ -209,7 +218,7 @@ abstract class CalendarController
      */
     protected function prepareToolbarView()
     {
-        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'toolbar');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'toolbar');
         $view->setData([
             'states' => range(0, $this->config['state_max']),
         ]);
