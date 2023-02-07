@@ -1,5 +1,4 @@
-tests/coverage
-UML.png
-vendor
+/tests/coverage
+/vendor
 /composer.lock
 /.phpunit.cache
