@@ -2,15 +2,6 @@
 
 <project name="Ocal" default="help">
 
-    <fileset id="php-sources" dir=".">
-        <include name="classes/*.php"/>
-        <include name="index.php"/>
-    </fileset>
-
-    <fileset id="js-sources" dir=".">
-        <include name="ocal.js"/>
-    </fileset>
-
     <fileset id="unit-tests" dir="tests/unit">
         <include name="*Test.php"/>
     </fileset>
@@ -36,11 +27,9 @@
     </target>
 
     <target name="mess" description="detects code flaws">
-        <phpmd>
-            <fileset refid="php-sources"/>
-            <fileset refid="unit-tests"/>
-            <fileset refid="attack-tests"/>
-         </phpmd>
+        <exec executable="phpmd" passthru="true" checkreturn="true">
+            <arg line="classes,tests/attack,tests/unit,index.php ansi codesize,unusedcode --ignore-violations-on-exit"/>
+        </exec>
     </target>
 
     <target name="unit-tests" description="runs all unit tests">
