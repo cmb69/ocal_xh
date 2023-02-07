@@ -226,9 +226,6 @@ class HourlyCalendarController extends CalendarController
         return $items;
     }
 
-    /**
-     * @param ?string $name
-     */
     protected function saveStates()
     {
         $states = json_decode($_POST['ocal_states'], true);
@@ -241,7 +238,7 @@ class HourlyCalendarController extends CalendarController
         foreach ($states as $week => $states) {
             foreach ($states as $i => $state) {
                 $day = $i % 7 + 1;
-                $hour = $this->config['hour_interval'] * (int) ($i / 7) + $this->config['hour_first'];
+                $hour = (int) $this->config['hour_interval'] * (int) ($i / 7) + (int) $this->config['hour_first'];
                 $date = sprintf('%s-%02d-%02d', $week, $day, $hour);
                 $occupancy->setState($date, $state);
             }

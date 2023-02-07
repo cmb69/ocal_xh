@@ -84,7 +84,7 @@ class DailyPagination extends Pagination
             }
             $wantedMonth = 12 * $year + $month;
             if (!$this->isValid($wantedMonth)) {
-                return;
+                return null;
             }
         }
         $monthOrWeek = $month;

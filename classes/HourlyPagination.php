@@ -63,7 +63,7 @@ class HourlyPagination extends Pagination
     /**
      * @param int $offset
      * @param string $label
-     * @return ?stdClass[]
+     * @return ?stdClass
      */
     private function getItem($offset, $label)
     {
@@ -71,7 +71,7 @@ class HourlyPagination extends Pagination
             $week = new Week($this->week, $this->year);
             $week = $week->getNextWeek($offset);
             if (!$this->isWeekPaginationValid($week)) {
-                return;
+                return null;
             }
             $year = $week->getYear();
             $weekNum = $week->getWeek();

@@ -21,6 +21,8 @@
 
 namespace Ocal;
 
+use LogicException;
+
 class HourlyOccupancy extends Occupancy
 {
     /**
@@ -34,6 +36,17 @@ class HourlyOccupancy extends Occupancy
     {
         $date = sprintf('%04d-%02d-%02d-%02d', $year, $week, $day, $hour);
         return $this->getState($date);
+    }
+
+    /**
+     * @param int $year
+     * @param int $month
+     * @param int $day
+     * @return int
+     */
+    public function getDailyState($year, $month, $day)
+    {
+        throw new LogicException("not implemented in subclass");
     }
 
     /**

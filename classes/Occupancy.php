@@ -58,7 +58,7 @@ abstract class Occupancy
     /**
      * @param string $type
      * @param string $name
-     * @return self
+     * @return self|null
      */
     private static function instantiateType($type, $name)
     {
@@ -83,6 +83,23 @@ abstract class Occupancy
         $this->states = array();
         $this->maxState = (int) $plugin_cf['ocal']['state_max'];
     }
+
+    /**
+     * @param int $year
+     * @param int $month
+     * @param int $day
+     * @return int
+     */
+    abstract public function getDailyState($year, $month, $day);
+
+    /**
+     * @param int $year
+     * @param int $week
+     * @param int $day
+     * @param int $hour
+     * @return int
+     */
+    abstract public function getHourlyState($year, $week, $day, $hour);
 
     /**
      * @return string
