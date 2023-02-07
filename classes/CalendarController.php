@@ -115,11 +115,11 @@ abstract class CalendarController
             if ($_GET['ocal_name'] == $this->name) {
                 header('Content-Type: text/html; charset=UTF-8');
                 $this->purgeOutputBuffers();
-                $view->render();
+                echo $view->render();
                 exit;
             }
         } else {
-            $view->render();
+            echo $view->render();
         }
     }
 
@@ -133,11 +133,11 @@ abstract class CalendarController
             if ($_GET['ocal_name'] == $this->name) {
                 header('Content-Type: text/html; charset=UTF-8');
                 $this->purgeOutputBuffers();
-                $view->render();
+                echo $view->render();
                 exit;
             }
         } else {
-            $view->render();
+            echo $view->render();
         }
     }
 

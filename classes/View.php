@@ -92,9 +92,7 @@ class View
      */
     public function __toString()
     {
-        ob_start();
-        $this->render();
-        return ob_get_clean();
+        return $this->render();
     }
     
     /**
@@ -125,13 +123,12 @@ class View
         return $this->escape(vsprintf($this->lang[$key], $args));
     }
 
-    /**
-     * @return void
-     */
-    public function render()
+    public function render(): string
     {
+        ob_start();
         echo "<!-- {$this->template} -->", PHP_EOL;
         include "{$this->templateFolder}{$this->template}.php";
+        return (string) ob_get_clean();
     }
 
     /**

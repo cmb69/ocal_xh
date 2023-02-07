@@ -54,9 +54,7 @@ class DefaultAdminController
             'version' => OCAL_VERSION,
             'checks' => $this->getChecks(),
         ]);
-        ob_start();
-        $view->render();
-        return (string) ob_get_clean();
+        return $view->render();
     }
 
     /**
