@@ -26,10 +26,8 @@ class Plugin
     public function dispatch()
     {
         if (defined('XH_ADM') && XH_ADM) {
-            if (function_exists('XH_registerStandardPluginMenuItems')) {
-                XH_registerStandardPluginMenuItems(false);
-            }
-            if ($this->isAdministrationRequested()) {
+            XH_registerStandardPluginMenuItems(false);
+            if (XH_wantsPluginAdministration('ocal')) {
                 $this->handleAdministration();
             }
         } else {
@@ -41,21 +39,9 @@ class Plugin
         }
     }
 
-    /**
-     * @return bool
-     */
-    protected function isAdministrationRequested()
-    {
-        global $ocal;
-
-        return function_exists('XH_wantsPluginAdministration')
-            && XH_wantsPluginAdministration('ocal')
-            || isset($ocal) && $ocal === 'true';
-    }
-
     private function handleAdministration()
     {
-        global $admin, $action, $o;
+        global $admin, $o;
 
         $o .= print_plugin_admin('off');
         switch ($admin) {
@@ -63,7 +49,7 @@ class Plugin
                 $o .= $this->renderInfo();
                 break;
             default:
-                $o .= plugin_admin_common($action, $admin, 'ocal');
+                $o .= plugin_admin_common();
         }
     }
 
