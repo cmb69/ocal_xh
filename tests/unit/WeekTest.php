@@ -21,17 +21,17 @@
 
 namespace Ocal;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use DateTime;
 
-class WeekTest extends PHPUnit_Framework_TestCase
+class WeekTest extends TestCase
 {
     /**
      * @var Week
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->subject = new Week(9, 2017);
     }

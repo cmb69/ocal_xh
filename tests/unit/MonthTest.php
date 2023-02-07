@@ -21,16 +21,16 @@
 
 namespace Ocal;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class MonthTest extends PHPUnit_Framework_TestCase
+class MonthTest extends TestCase
 {
     /**
      * @var Month
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->subject = new Month(2, 2017);
     }

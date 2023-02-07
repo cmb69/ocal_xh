@@ -21,12 +21,12 @@
 
 namespace Ocal;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use DateTime;
 
-class ListServiceTest extends PHPUnit_Framework_TestCase
+class ListServiceTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpLang();
         $this->setUpConfig();

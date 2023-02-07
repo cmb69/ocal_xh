@@ -21,19 +21,19 @@
 
 namespace Ocal;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStream;
 
-class DbTest extends PHPUnit_Framework_TestCase
+class DbTest extends TestCase
 {
     /**
      * @var Db
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         global $pth, $plugin_cf;
 
@@ -48,7 +48,7 @@ class DbTest extends PHPUnit_Framework_TestCase
         $this->subject = new Db(LOCK_EX);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->subject);
     }

@@ -21,16 +21,16 @@
 
 namespace Ocal;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class HourlyOccupancyTest extends PHPUnit_Framework_TestCase
+class HourlyOccupancyTest extends TestCase
 {
     /**
      * @var HourlyOccupancy
      */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         global $plugin_cf;
 
