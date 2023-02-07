@@ -4,7 +4,6 @@
         "bartlett/umlwriter": "1.1.*",
         "squizlabs/php_codesniffer": "2.7.*",
         "phpmd/phpmd": "2.6.*",
-        "bartlett/php-compatinfo": "5.0.*",
         "phpunit/phpunit": "5.7.*",
         "tcz/phpunit-mockfunction": "1.0.*",
         "mikey179/vfsStream": "1.6.*",
