@@ -23,24 +23,38 @@ namespace Ocal;
 
 class Db
 {
+    /** @var string */
+    private $lockFilename;
+
     /**
      * @var resource
      */
     protected $lockFile;
 
-    /**
-     * @param int $lockMode
-     */
-    public function __construct($lockMode)
+    public function __construct()
     {
-        $lockFilename = $this->getFoldername() . '.lock';
-        $this->lockFile = fopen($lockFilename, 'a');
-        flock($this->lockFile, (int) $lockMode);
+        $this->lockFilename = $this->getFoldername() . '.lock';
+        // $this->lockFile = fopen($lockFilename, 'a');
+        // flock($this->lockFile, (int) $lockMode);
     }
 
     public function __destruct()
     {
+        // flock($this->lockFile, LOCK_UN);
+    }
+
+    /** @return void */
+    public function lock(bool $exclusive)
+    {
+        $this->lockFile = fopen($this->lockFilename, 'a');
+        flock($this->lockFile, $exclusive ? LOCK_EX : LOCK_SH);
+    }
+
+    /** @return void */
+    public function unlock()
+    {
         flock($this->lockFile, LOCK_UN);
+        fclose($this->lockFile);
     }
 
     /**

@@ -45,12 +45,13 @@ class DbTest extends TestCase
         $plugin_cf['ocal'] = [
             'state_max' => "3",
         ];
-        $this->subject = new Db(LOCK_EX);
+        $this->subject = new Db();
+        $this->subject->lock(true);
     }
 
     public function tearDown(): void
     {
-        unset($this->subject);
+        $this->subject->unlock();
     }
 
     public function testFindNewDailyOccupancy()
