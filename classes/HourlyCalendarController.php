@@ -50,6 +50,7 @@ class HourlyCalendarController extends CalendarController
         array $lang,
         DateTime $now,
         ListService $listService,
+        Db $db,
         $name,
         $count
     ) {
@@ -61,6 +62,7 @@ class HourlyCalendarController extends CalendarController
             $lang,
             $now,
             $listService,
+            $db,
             $name,
             $count
         );
@@ -77,10 +79,9 @@ class HourlyCalendarController extends CalendarController
      */
     protected function findOccupancy()
     {
-        $db = new Db();
-        $db->lock(false);
-        $result = $db->findOccupancy($this->name, true);
-        $db->unlock();
+        $this->db->lock(false);
+        $result = $this->db->findOccupancy($this->name, true);
+        $this->db->unlock();
         return $result;
     }
 
@@ -262,9 +263,8 @@ class HourlyCalendarController extends CalendarController
             header('HTTP/1.0 400 Bad Request');
             exit;
         }
-        $db = new Db();
-        $db->lock(true);
-        $occupancy = $db->findOccupancy($this->name, true);
+        $this->db->lock(true);
+        $occupancy = $this->db->findOccupancy($this->name, true);
         foreach ($states as $week => $states) {
             foreach ($states as $i => $state) {
                 $day = $i % 7 + 1;
@@ -273,8 +273,8 @@ class HourlyCalendarController extends CalendarController
                 $occupancy->setState($date, $state);
             }
         }
-        $db->saveOccupancy($occupancy);
-        $db->unlock();
+        $this->db->saveOccupancy($occupancy);
+        $this->db->unlock();
         return XH_message('success', $this->lang['message_saved']);
     }
 }

@@ -77,6 +77,9 @@ abstract class CalendarController
     /** @var ListService */
     protected $listService;
 
+    /** @var Db */
+    protected $db;
+
     /**
      * @param array<string,string> $config
      * @param array<string,string> $lang
@@ -91,6 +94,7 @@ abstract class CalendarController
         array $lang,
         DateTime $now,
         ListService $listService,
+        Db $db,
         $name,
         $count
     ) {
@@ -103,6 +107,7 @@ abstract class CalendarController
         $this->lang = $lang;
         $this->now = $now;
         $this->listService = $listService;
+        $this->db = $db;
     }
 
     public function defaultAction(): Response

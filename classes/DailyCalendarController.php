@@ -51,6 +51,7 @@ class DailyCalendarController extends CalendarController
         array $lang,
         DateTime $now,
         ListService $listService,
+        Db $db,
         $name,
         $count
     ) {
@@ -62,6 +63,7 @@ class DailyCalendarController extends CalendarController
             $lang,
             $now,
             $listService,
+            $db,
             $name,
             $count
         );
@@ -78,10 +80,9 @@ class DailyCalendarController extends CalendarController
      */
     protected function findOccupancy()
     {
-        $db = new Db();
-        $db->lock(false);
-        $result = $db->findOccupancy($this->name);
-        $db->unlock();
+        $this->db->lock(false);
+        $result = $this->db->findOccupancy($this->name);
+        $this->db->unlock();
         return $result;
     }
 
@@ -263,17 +264,16 @@ class DailyCalendarController extends CalendarController
             header('HTTP/1.0 400 Bad Request');
             exit;
         }
-        $db = new Db();
-        $db->lock(true);
-        $occupancy = $db->findOccupancy($this->name);
+        $this->db->lock(true);
+        $occupancy = $this->db->findOccupancy($this->name);
         foreach ($states as $month => $states) {
             foreach ($states as $i => $state) {
                 $date = sprintf('%s-%02d', $month, $i + 1);
                 $occupancy->setState($date, $state);
             }
         }
-        $db->saveOccupancy($occupancy);
-        $db->unlock();
+        $this->db->saveOccupancy($occupancy);
+        $this->db->unlock();
         return XH_message('success', $this->lang['message_saved']);
     }
 }
