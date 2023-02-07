@@ -96,4 +96,10 @@ function Ocal_hourly($name, $weekCount = 1)
     return $controller->{"{$action}Action"}()->trigger();
 }
 
-(new Ocal\Plugin())->dispatch();
+if (isset($_GET['ocal_week']) || isset($_GET['ocal_month']) || isset($_GET['ocal_year'])) {
+    XH_afterPluginLoading(function () {
+        global $cf;
+
+        $cf['meta']['robots'] = 'noindex, nofollow';
+    });
+}
