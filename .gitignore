@@ -1,3 +1,4 @@
 tests/coverage
 UML.png
 vendor
+/composer.lock
