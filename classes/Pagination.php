@@ -45,7 +45,6 @@ abstract class Pagination
 
     /**
      * @param object $today
-     * @param ...object
      * @return object[]
      */
     protected function filterAndSortItems($today)

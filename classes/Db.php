@@ -77,7 +77,10 @@ class Db
             return null;
         }
         $contents = file_get_contents($filename);
-        if (!($contents && preg_match('/{(.+)}$/s', $contents, $matches))) {
+        if (!$contents) {
+            return null;
+        }
+        if (!preg_match('/{(.+)}$/s', $contents, $matches)) {
             return null;
         }
         $states = unserialize($matches[1]);

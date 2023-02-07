@@ -38,7 +38,7 @@ class HourlyPagination extends Pagination
 
     /**
      * @param int $year
-     * @param int $month
+     * @param int $week
      */
     public function __construct($year, $week, DateTime $now)
     {

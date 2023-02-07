@@ -41,7 +41,7 @@ class Month
     /**
      * @param int $year
      * @param int $month
-     * @param int count
+     * @param int $count
      * @return Month[]
      */
     public static function createRange($year, $month, $count)
