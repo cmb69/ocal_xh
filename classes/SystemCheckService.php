@@ -38,13 +38,17 @@ class SystemCheckService
      */
     private $lang;
 
-    public function __construct()
+    /** @var SystemChecker */
+    private $systemChecker;
+
+    public function __construct(SystemChecker $systemChecker)
     {
         global $pth, $plugin_tx;
 
         $this->pluginFolder = "{$pth['folder']['plugins']}ocal";
         $this->contentFolder = "{$pth['folder']['base']}content/ocal/";
         $this->lang = $plugin_tx['ocal'];
+        $this->systemChecker = $systemChecker;
     }
 
     /**
@@ -70,7 +74,7 @@ class SystemCheckService
      */
     private function checkPhpVersion($version)
     {
-        $state = version_compare(PHP_VERSION, $version, 'ge') ? 'success' : 'fail';
+        $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_phpversion'], $version);
         $stateLabel = $this->lang["syscheck_$state"];
         return (object) compact('state', 'label', 'stateLabel');
@@ -82,7 +86,7 @@ class SystemCheckService
      */
     private function checkExtension($extension)
     {
-        $state = extension_loaded($extension) ? 'success' : 'fail';
+        $state = $this->systemChecker->checkExtension($extension) ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_extension'], $extension);
         $stateLabel = $this->lang["syscheck_$state"];
         return (object) compact('state', 'label', 'stateLabel');
@@ -94,7 +98,7 @@ class SystemCheckService
      */
     private function checkXhVersion($version)
     {
-        $state = version_compare(CMSIMPLE_XH_VERSION, "CMSimple_XH $version", 'ge') ? 'success' : 'fail';
+        $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version") ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_xhversion'], $version);
         $stateLabel = $this->lang["syscheck_$state"];
         return (object) compact('state', 'label', 'stateLabel');
@@ -106,7 +110,7 @@ class SystemCheckService
      */
     private function checkWritability($folder)
     {
-        $state = is_writable($folder) ? 'success' : 'warning';
+        $state = $this->systemChecker->checkWritability($folder) ? 'success' : 'warning';
         $label = sprintf($this->lang['syscheck_writable'], $folder);
         $stateLabel = $this->lang["syscheck_$state"];
         return (object) compact('state', 'label', 'stateLabel');

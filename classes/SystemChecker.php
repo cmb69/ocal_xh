@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2014-2017 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Ocal_XH.
  *
@@ -21,31 +21,20 @@
 
 namespace Ocal;
 
-class DefaultAdminController
+class SystemChecker
 {
-    /**
-     * @var string
-     */
-    private $pluginFolder;
-
-    /** @var SystemChecker */
-    private $systemChecker;
-
-    public function __construct(string $pluginFolder, SystemChecker $systemChecker)
+    public function checkVersion(string $actual, string $minimum): bool
     {
-        $this->pluginFolder = $pluginFolder;
-        $this->systemChecker = $systemChecker;
+        return version_compare($actual, $minimum) >= 0;
     }
 
-    /** @return void */
-    public function defaultAction()
+    public function checkExtension(string $extension): bool
     {
-        $view = new View('info');
-        $view->setData([
-            'logo' => "{$this->pluginFolder}ocal.png",
-            'version' => OCAL_VERSION,
-            'checks' => (new SystemCheckService($this->systemChecker))->getChecks(),
-        ]);
-        $view->render();
+        return extension_loaded($extension);
+    }
+
+    public function checkWritability(string $path): bool
+    {
+        return is_writable($path);
     }
 }

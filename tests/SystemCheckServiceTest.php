@@ -39,7 +39,7 @@ class SystemCheckServiceTest extends TestCase
         define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.7.5');
         $this->setUpLanguage();
         $this->setUpVfs();
-        $this->subject = new SystemCheckService;
+        $this->subject = new SystemCheckService(new SystemChecker());
     }
 
     private function setUpLanguage()
