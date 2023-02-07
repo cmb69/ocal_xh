@@ -1,4 +1,4 @@
-/tests/coverage
+/coverage
 /vendor
 /composer.lock
 /.phpunit.cache
