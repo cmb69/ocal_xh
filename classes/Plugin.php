@@ -48,27 +48,11 @@ class Plugin
         $o .= print_plugin_admin('off');
         switch ($admin) {
             case '':
-                $o .= $this->renderInfo();
+                $o .= Dic::makeDefaultAdminController()->defaultAction();
                 break;
             default:
                 $o .= plugin_admin_common();
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function renderInfo()
-    {
-        global $pth, $plugin_tx;
-
-        $controller = new DefaultAdminController(
-            "{$pth['folder']['plugins']}ocal/",
-            "{$pth['folder']['base']}content/ocal/",
-            $plugin_tx['ocal'],
-            new SystemChecker()
-        );
-        return $controller->defaultAction();
     }
 
     /** @return void */
