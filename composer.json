@@ -1,7 +1,6 @@
 {
     "require-dev": {
         "phing/phing": "2.16.*",
-        "bartlett/umlwriter": "1.1.*",
         "squizlabs/php_codesniffer": "2.7.*",
         "phpmd/phpmd": "2.6.*",
         "phpunit/phpunit": "5.7.*",
