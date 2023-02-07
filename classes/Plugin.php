@@ -60,9 +60,14 @@ class Plugin
      */
     private function renderInfo()
     {
-        global $pth;
+        global $pth, $plugin_tx;
 
-        $controller = new DefaultAdminController("{$pth['folder']['plugins']}ocal/", new SystemChecker());
+        $controller = new DefaultAdminController(
+            "{$pth['folder']['plugins']}ocal/",
+            "{$pth['folder']['base']}content/ocal/",
+            $plugin_tx['ocal'],
+            new SystemChecker()
+        );
         return $controller->defaultAction();
     }
 

@@ -28,22 +28,37 @@ class DefaultAdminController
      */
     private $pluginFolder;
 
+    /** @var string */
+    private $contentFolder;
+
+    /** @var array<string,string> $lang */
+    private $lang;
+
     /** @var SystemChecker */
     private $systemChecker;
 
-    public function __construct(string $pluginFolder, SystemChecker $systemChecker)
+    /** @param array<string,string> $lang */
+    public function __construct(string $pluginFolder, string $contentFolder, array $lang, SystemChecker $systemChecker)
     {
         $this->pluginFolder = $pluginFolder;
+        $this->contentFolder = $contentFolder;
+        $this->lang = $lang;
         $this->systemChecker = $systemChecker;
     }
 
     public function defaultAction(): string
     {
         $view = new View('info');
+        $systemCheckService = new SystemCheckService(
+            $this->pluginFolder,
+            $this->contentFolder,
+            $this->lang,
+            $this->systemChecker
+        );
         $view->setData([
             'logo' => "{$this->pluginFolder}ocal.png",
             'version' => OCAL_VERSION,
-            'checks' => (new SystemCheckService($this->systemChecker))->getChecks(),
+            'checks' => $systemCheckService->getChecks(),
         ]);
         ob_start();
         $view->render();

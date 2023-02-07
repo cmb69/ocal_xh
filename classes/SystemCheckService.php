@@ -41,13 +41,16 @@ class SystemCheckService
     /** @var SystemChecker */
     private $systemChecker;
 
-    public function __construct(SystemChecker $systemChecker)
+    /**
+     * @param array<string,string> $lang
+     */
+    public function __construct(string $pluginFolder, string $contentFolder, array $lang, SystemChecker $systemChecker)
     {
-        global $pth, $plugin_tx;
+        global $pth;
 
-        $this->pluginFolder = "{$pth['folder']['plugins']}ocal";
-        $this->contentFolder = "{$pth['folder']['base']}content/ocal/";
-        $this->lang = $plugin_tx['ocal'];
+        $this->pluginFolder = $pluginFolder;
+        $this->contentFolder = $contentFolder;
+        $this->lang = $lang;
         $this->systemChecker = $systemChecker;
     }
 
@@ -62,9 +65,9 @@ class SystemCheckService
             $this->checkExtension('json'),
             $this->checkXhVersion('1.7.0'),
             $this->checkWritability($this->contentFolder),
-            $this->checkWritability("$this->pluginFolder/config/"),
-            $this->checkWritability("$this->pluginFolder/css/"),
-            $this->checkWritability("$this->pluginFolder/languages/")
+            $this->checkWritability("{$this->pluginFolder}config/"),
+            $this->checkWritability("{$this->pluginFolder}css/"),
+            $this->checkWritability("{$this->pluginFolder}languages/")
         );
     }
 

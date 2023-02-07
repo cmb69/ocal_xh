@@ -36,10 +36,17 @@ class SystemCheckServiceTest extends TestCase
 
     public function setUp(): void
     {
+        global $plugin_tx;
+
         define('CMSIMPLE_XH_VERSION', 'CMSimple_XH 1.7.5');
         $this->setUpLanguage();
         $this->setUpVfs();
-        $this->subject = new SystemCheckService(new SystemChecker());
+        $this->subject = new SystemCheckService(
+            vfsStream::url('test/plugins/'),
+            vfsStream::url('test/'),
+            $plugin_tx['ocal'],
+            new SystemChecker()
+        );
     }
 
     private function setUpLanguage()
@@ -59,14 +66,8 @@ class SystemCheckServiceTest extends TestCase
 
     private function setUpVfs()
     {
-        global $pth;
-
         vfsStreamWrapper::register();
         vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
-        $pth['folder'] = array(
-            'base' => vfsStream::url('test/'),
-            'plugins' => vfsStream::url('test/plugins/')
-        );
         mkdir(vfsStream::url('test/content/ocal/'), 0777, true);
     }
 
