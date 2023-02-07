@@ -70,7 +70,7 @@ class DailyCalendarController extends CalendarController
         $view = new View('daily-calendars');
         $view->occupancyName = $occupancy->getName();
         $view->modeLink = $this->prepareModeLinkView();
-        $view->isEditable = XH_ADM;
+        $view->isEditable = defined('XH_ADM') && XH_ADM;
         if ($view->isEditable) {
             $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
         }

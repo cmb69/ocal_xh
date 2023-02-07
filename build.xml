@@ -17,6 +17,10 @@
         </exec>
     </target>
 
+    <target name="stan" description="runs static analyzer">
+        <exec executable="phpstan" passthru="true" checkreturn="true"/>
+    </target>
+
     <target name="mess" description="detects code flaws">
         <exec executable="phpmd" passthru="true" checkreturn="true">
             <arg line="classes,tests,index.php ansi codesize,unusedcode --ignore-violations-on-exit"/>
@@ -51,6 +55,7 @@
                 <exclude name="README*.md"/>
                 <exclude name="build.xml"/>
                 <exclude name="composer.*"/>
+                <exclude name="phpstan.*"/>
                 <exclude name="phpunit.xml"/>
                 <exclude name="teplad.xml"/>
             </fileset>

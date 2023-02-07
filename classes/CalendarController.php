@@ -137,7 +137,7 @@ abstract class CalendarController implements Controller
     public function saveAction()
     {
         $this->mode = 'calendar';
-        if (XH_ADM && isset($_GET['ocal_name']) && $_GET['ocal_name'] == $this->name) {
+        if (defined('XH_ADM') && XH_ADM && isset($_GET['ocal_name']) && $_GET['ocal_name'] == $this->name) {
             $this->csrfProtector->check();
             $this->purgeOutputBuffers();
             echo $this->saveStates();
@@ -163,7 +163,7 @@ abstract class CalendarController implements Controller
         }
         $config = array(
             'message_unsaved_changes' => $this->lang['message_unsaved_changes'],
-            'isAdmin' => XH_ADM
+            'isAdmin' => defined('XH_ADM') && XH_ADM
         );
         $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
             . 'var OCAL = ' . json_encode($config) . ';'

@@ -29,7 +29,7 @@ abstract class Occupancy
     protected $name;
 
     /**
-     * @var array<date,state>
+     * @var array<string,int>
      */
     protected $states;
 

@@ -119,7 +119,7 @@ class View
     }
 
     /**
-     * @return string
+     * @return void
      */
     public function render()
     {
