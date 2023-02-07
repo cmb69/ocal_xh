@@ -48,6 +48,8 @@ class HourlyCalendarController extends CalendarController
         CsrfProtector $csrfProtector,
         array $config,
         array $lang,
+        DateTime $now,
+        ListService $listService,
         $name,
         $count
     ) {
@@ -57,10 +59,11 @@ class HourlyCalendarController extends CalendarController
             $csrfProtector,
             $config,
             $lang,
+            $now,
+            $listService,
             $name,
             $count
         );
-        $now = new DateTime();
         $this->week = isset($_GET['ocal_week'])
             ? max(1, min(53, (int) $_GET['ocal_week']))
             : (int) $now->format('W');
@@ -119,9 +122,9 @@ class HourlyCalendarController extends CalendarController
      */
     private function prepareWeekCalendarView(Occupancy $occupancy, Week $week)
     {
-        $from = new DateTime();
+        $from = clone $this->now;
         $from->setISODate($week->getYear(), $week->getWeek(), 1);
-        $to = new DateTime();
+        $to = clone $this->now;
         $to->setISODate($week->getYear(), $week->getWeek(), 7);
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'hourly-calendar');
         $view->setData([
@@ -192,9 +195,9 @@ class HourlyCalendarController extends CalendarController
      */
     private function prepareWeekListView(Occupancy $occupancy, Week $week)
     {
-        $from = new DateTime();
+        $from = clone $this->now;
         $from->setISODate($week->getYear(), $week->getWeek(), 1);
-        $to = new DateTime();
+        $to = clone $this->now;
         $to->setISODate($week->getYear(), $week->getWeek(), 7);
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'hourly-list');
         $view->setData([
@@ -211,7 +214,7 @@ class HourlyCalendarController extends CalendarController
     private function getWeekList(Occupancy $occupancy, Week $week)
     {
         $weekList = [];
-        foreach ((new ListService)->getHourlyList($occupancy, $week) as $day) {
+        foreach ($this->listService->getHourlyList($occupancy, $week) as $day) {
             $day->label = $day->date->format($this->lang['date_format']);
             $weekList[] = $day;
         }
@@ -237,7 +240,7 @@ class HourlyCalendarController extends CalendarController
      */
     private function getPaginationItems($weekCount)
     {
-        $items = (new HourlyPagination($this->isoYear, $this->week, new DateTime()))->getItems($weekCount);
+        $items = (new HourlyPagination($this->isoYear, $this->week, $this->now))->getItems($weekCount);
         foreach ($items as $item) {
             $item->url = $this->modifyUrl(array(
                 'ocal_year' => $item->year,

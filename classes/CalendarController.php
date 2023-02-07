@@ -21,6 +21,7 @@
 
 namespace Ocal;
 
+use DateTime;
 use XH\CSRFProtection as CsrfProtector;
 
 abstract class CalendarController
@@ -70,6 +71,12 @@ abstract class CalendarController
      */
     protected $pluginFolder;
 
+    /** @var DateTime */
+    protected $now;
+
+    /** @var ListService */
+    protected $listService;
+
     /**
      * @param array<string,string> $config
      * @param array<string,string> $lang
@@ -82,6 +89,8 @@ abstract class CalendarController
         CsrfProtector $csrfProtector,
         array $config,
         array $lang,
+        DateTime $now,
+        ListService $listService,
         $name,
         $count
     ) {
@@ -92,6 +101,8 @@ abstract class CalendarController
         $this->csrfProtector = $csrfProtector;
         $this->config = $config;
         $this->lang = $lang;
+        $this->now = $now;
+        $this->listService = $listService;
     }
 
     /** @return void|never */

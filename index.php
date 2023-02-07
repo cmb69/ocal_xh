@@ -1,5 +1,7 @@
 <?php
 
+use Ocal\ListService;
+
 /**
  * Copyright 2014-2017 Christoph M. Becker
  *
@@ -39,6 +41,8 @@ function ocal($name, $monthCount = 1)
         $_XH_csrfProtection,
         $plugin_cf['ocal'],
         $plugin_tx['ocal'],
+        new DateTime(),
+        new ListService(),
         $name,
         $monthCount
     );
@@ -74,6 +78,8 @@ function Ocal_hourly($name, $weekCount = 1)
         $_XH_csrfProtection,
         $plugin_cf['ocal'],
         $plugin_tx['ocal'],
+        new DateTime(),
+        new ListService(),
         $name,
         $weekCount
     );

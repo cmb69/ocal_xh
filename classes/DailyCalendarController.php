@@ -49,6 +49,8 @@ class DailyCalendarController extends CalendarController
         CsrfProtector $csrfProtector,
         array $config,
         array $lang,
+        DateTime $now,
+        ListService $listService,
         $name,
         $count
     ) {
@@ -58,10 +60,11 @@ class DailyCalendarController extends CalendarController
             $csrfProtector,
             $config,
             $lang,
+            $now,
+            $listService,
             $name,
             $count
         );
-        $now = new DateTime();
         $this->month = isset($_GET['ocal_month'])
             ? max(1, min(12, (int) $_GET['ocal_month']))
             : (int) $now->format('n');
@@ -216,7 +219,7 @@ class DailyCalendarController extends CalendarController
         $view->setData([
             'heading' => $monthnames[$month->getMonth() - 1]
                 . ' ' . $month->getYear(),
-            'monthList' => (new ListService)->getDailyList($occupancy, $month),
+            'monthList' => $this->listService->getDailyList($occupancy, $month),
         ]);
         return $view;
     }
@@ -238,7 +241,7 @@ class DailyCalendarController extends CalendarController
      */
     private function getPaginationItems()
     {
-        $paginationItems = (new DailyPagination($this->year, $this->month, new DateTime()))->getItems();
+        $paginationItems = (new DailyPagination($this->year, $this->month, $this->now))->getItems();
         foreach ($paginationItems as $item) {
             $item->url = $this->modifyUrl(array(
                 'ocal_year' => $item->year,
