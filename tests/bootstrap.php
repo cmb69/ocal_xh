@@ -17,6 +17,7 @@ require_once "./classes/DailyOccupancy.php";
 require_once "./classes/DailyPagination.php";
 require_once "./classes/Db.php";
 require_once "./classes/DefaultAdminController.php";
+require_once "./classes/HourlyCalendarController.php";
 require_once "./classes/HourlyOccupancy.php";
 require_once "./classes/HourlyPagination.php";
 require_once "./classes/ListService.php";
