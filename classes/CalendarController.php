@@ -66,7 +66,7 @@ abstract class CalendarController
     /**
      * @var string
      */
-    private $pluginFolder;
+    protected $pluginFolder;
 
     /**
      * @param string $name
@@ -184,7 +184,7 @@ abstract class CalendarController
      */
     protected function prepareModeLinkView()
     {
-        $view = new View('mode-link');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'mode-link');
         $view->setData([
             'mode' => $mode = $this->mode == 'calendar' ? 'list' : 'calendar',
             'url' => $this->modifyUrl(array('ocal_action' => $mode)),
@@ -197,7 +197,7 @@ abstract class CalendarController
      */
     protected function prepareStatusbarView()
     {
-        $view = new View('statusbar');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'statusbar');
         $view->setData([
             'image' => "{$this->pluginFolder}ocal/images/ajax-loader-bar.gif",
         ]);
@@ -209,7 +209,7 @@ abstract class CalendarController
      */
     protected function prepareToolbarView()
     {
-        $view = new View('toolbar');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'toolbar');
         $view->setData([
             'states' => range(0, $this->config['state_max']),
         ]);

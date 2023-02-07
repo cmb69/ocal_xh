@@ -48,7 +48,7 @@ class DefaultAdminController
 
     public function defaultAction(): string
     {
-        $view = new View('info');
+        $view = new View("{$this->pluginFolder}views/", $this->lang, 'info');
         $systemCheckService = new SystemCheckService(
             $this->pluginFolder,
             $this->contentFolder,

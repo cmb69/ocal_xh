@@ -23,6 +23,12 @@ namespace Ocal;
 
 class View
 {
+    /** @var string */
+    private $templateFolder;
+
+    /** @var array<string,string> */
+    private $lang;
+
     /**
      * @var string
      */
@@ -34,10 +40,13 @@ class View
     private $data = array();
 
     /**
+     * @param array<string,string> $lang
      * @param string $template
      */
-    public function __construct($template)
+    public function __construct(string $templateFolder, array $lang, $template)
     {
+        $this->templateFolder = $templateFolder;
+        $this->lang = $lang;
         $this->template = $template;
     }
 
@@ -94,11 +103,9 @@ class View
      */
     protected function text($key)
     {
-        global $plugin_tx;
-
         $args = func_get_args();
         array_shift($args);
-        return $this->escape(vsprintf($plugin_tx['ocal'][$key], $args));
+        return $this->escape(vsprintf($this->lang[$key], $args));
     }
 
     /**
@@ -108,8 +115,6 @@ class View
      */
     protected function plural($key, $count)
     {
-        global $plugin_tx;
-
         if ($count == 0) {
             $key .= '_0';
         } else {
@@ -117,7 +122,7 @@ class View
         }
         $args = func_get_args();
         array_shift($args);
-        return $this->escape(vsprintf($plugin_tx['ocal'][$key], $args));
+        return $this->escape(vsprintf($this->lang[$key], $args));
     }
 
     /**
@@ -125,10 +130,8 @@ class View
      */
     public function render()
     {
-        global $pth;
-
         echo "<!-- {$this->template} -->", PHP_EOL;
-        include "{$pth['folder']['plugins']}ocal/views/{$this->template}.php";
+        include "{$this->templateFolder}{$this->template}.php";
     }
 
     /**

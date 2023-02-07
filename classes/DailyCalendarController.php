@@ -68,7 +68,7 @@ class DailyCalendarController extends CalendarController
     {
         $this->emitScriptElements();
 
-        $view = new View('daily-calendars');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'daily-calendars');
         $data = [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->prepareModeLinkView(),
@@ -102,7 +102,7 @@ class DailyCalendarController extends CalendarController
      */
     private function prepareMonthCalendarView(Occupancy $occupancy, Month $month)
     {
-        $view = new View('daily-calendar');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'daily-calendar');
         $view->setData([
             'isoDate' => $month->getIso(),
             'year' => $month->getYear(),
@@ -165,7 +165,7 @@ class DailyCalendarController extends CalendarController
     protected function getListView(Occupancy $occupancy)
     {
         $this->emitScriptElements();
-        $view = new View('daily-lists');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'daily-lists');
         $view->setData([
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->prepareModeLinkView(),
@@ -193,7 +193,7 @@ class DailyCalendarController extends CalendarController
      */
     private function prepareMonthListView(Occupancy $occupancy, Month $month)
     {
-        $view = new View('daily-list');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'daily-list');
         $monthnames = explode(',', $this->lang['date_months']);
         $view->setData([
             'heading' => $monthnames[$month->getMonth() - 1]
@@ -208,7 +208,7 @@ class DailyCalendarController extends CalendarController
      */
     private function preparePaginationView()
     {
-        $view = new View('pagination');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'pagination');
         $view->setData([
             'items' => $this->getPaginationItems(),
         ]);

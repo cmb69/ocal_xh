@@ -67,7 +67,7 @@ class HourlyCalendarController extends CalendarController
     {
         $this->emitScriptElements();
         
-        $view = new View('hourly-calendars');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'hourly-calendars');
         $data = [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->prepareModeLinkView(),
@@ -105,7 +105,7 @@ class HourlyCalendarController extends CalendarController
         $from->setISODate($week->getYear(), $week->getWeek(), 1);
         $to = new DateTime();
         $to->setISODate($week->getYear(), $week->getWeek(), 7);
-        $view = new View('hourly-calendar');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'hourly-calendar');
         $view->setData([
             'date' => $week->getIso(),
             'from' => $from->format($this->lang['date_format']),
@@ -146,7 +146,7 @@ class HourlyCalendarController extends CalendarController
     protected function getListView(Occupancy $occupancy)
     {
         $this->emitScriptElements();
-        $view = new View('hourly-lists');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'hourly-lists');
         $view->setData([
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->prepareModeLinkView(),
@@ -178,7 +178,7 @@ class HourlyCalendarController extends CalendarController
         $from->setISODate($week->getYear(), $week->getWeek(), 1);
         $to = new DateTime();
         $to->setISODate($week->getYear(), $week->getWeek(), 7);
-        $view = new View('hourly-list');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'hourly-list');
         $view->setData([
             'from' => $from->format($this->lang['date_format']),
             'to' => $to->format($this->lang['date_format']),
@@ -206,7 +206,7 @@ class HourlyCalendarController extends CalendarController
      */
     private function preparePaginationView($weekCount)
     {
-        $view = new View('pagination');
+        $view = new View("{$this->pluginFolder}ocal/views/", $this->lang, 'pagination');
         $view->setData([
             'items' => $this->getPaginationItems($weekCount),
         ]);
