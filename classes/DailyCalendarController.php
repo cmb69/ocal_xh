@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTime;
+use stdClass;
 
 class DailyCalendarController extends CalendarController
 {
@@ -135,6 +136,7 @@ class DailyCalendarController extends CalendarController
     }
 
     /**
+     * @param list<int|null> $week
      * @return object[]
      */
     private function getWeekDays(Occupancy $occupancy, Month $month, array $week)
@@ -214,7 +216,7 @@ class DailyCalendarController extends CalendarController
     }
 
     /**
-     * @object[]
+     * @return array<stdClass>
      */
     private function getPaginationItems()
     {
@@ -229,9 +231,7 @@ class DailyCalendarController extends CalendarController
         return $paginationItems;
     }
 
-    /**
-     * @return ?string
-     */
+    /** @return string|never */
     protected function saveStates()
     {
         $states = json_decode($_POST['ocal_states'], true);

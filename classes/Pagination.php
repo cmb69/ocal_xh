@@ -26,7 +26,7 @@ use DateTime;
 abstract class Pagination
 {
     /**
-     * @var array
+     * @var array<string,string>
      */
     protected $config;
 

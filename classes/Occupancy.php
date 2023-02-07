@@ -111,6 +111,7 @@ abstract class Occupancy
 
     /**
      * @param string $name
+     * @return void
      */
     public function setName($name)
     {
@@ -132,6 +133,7 @@ abstract class Occupancy
     /**
      * @param string $date
      * @param int $state
+     * @return void
      */
     public function setState($date, $state)
     {

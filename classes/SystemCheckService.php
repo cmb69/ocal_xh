@@ -34,7 +34,7 @@ class SystemCheckService
     private $contentFolder;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $lang;
 

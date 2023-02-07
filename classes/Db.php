@@ -87,6 +87,7 @@ class Db
         return json_encode(['type' => $hourly ? 'hourly' : 'daily', 'states' => $states]);
     }
 
+    /** @return void */
     public function saveOccupancy(Occupancy $occupancy)
     {
         $filename = $this->getFoldername() . $occupancy->getName() . '.json';

@@ -24,12 +24,12 @@ namespace Ocal;
 class ListService
 {
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $config;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $lang;
 
@@ -64,6 +64,7 @@ class ListService
     }
 
     /**
+     * @param list<int> $range
      * @return string
      */
     private function formatDailyRange(array $range)
@@ -99,7 +100,11 @@ class ListService
         $list = array();
         $currentRange = array();
         $currentState = -1;
-        $hours = range($this->config['hour_first'], $this->config['hour_last'], $this->config['hour_interval']);
+        $hours = range(
+            (int) $this->config['hour_first'],
+            (int) $this->config['hour_last'],
+            (int) $this->config['hour_interval']
+        );
         foreach ($hours as $hour) {
             $state = $occupancy->getHourlyState($week->getYear(), $week->getWeek(), $weekday, $hour);
             if ($currentState == -1 || $state == $currentState) {
@@ -115,6 +120,7 @@ class ListService
     }
 
     /**
+     * @param list<int> $range
      * @return string
      */
     private function formatHourlyRange(array $range)
@@ -125,11 +131,12 @@ class ListService
         } else {
             $end = $range[0];
         }
-        $end += $this->config['hour_interval'] - 1;
+        $end += (int) $this->config['hour_interval'] - 1;
         return sprintf('%02d:00–%02d:59', $start, $end);
     }
 
     /**
+     * @param array<string,int> $list
      * @return object[]
      */
     private function mapFilteredList(array $list)

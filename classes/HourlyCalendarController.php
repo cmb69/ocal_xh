@@ -122,7 +122,11 @@ class HourlyCalendarController extends CalendarController
     private function getDaysOfHours(Occupancy $occupancy, Week $week)
     {
         $daysOfHours = [];
-        $hours = range($this->config['hour_first'], $this->config['hour_last'], $this->config['hour_interval']);
+        $hours = range(
+            (int) $this->config['hour_first'],
+            (int) $this->config['hour_last'],
+            (int) $this->config['hour_interval']
+        );
         foreach ($hours as $hour) {
             $days = [];
             foreach (range(1, 7) as $day) {
@@ -226,6 +230,7 @@ class HourlyCalendarController extends CalendarController
         return $items;
     }
 
+    /** @return string|never */
     protected function saveStates()
     {
         $states = json_decode($_POST['ocal_states'], true);

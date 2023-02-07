@@ -62,8 +62,8 @@ class DailyPagination extends Pagination
     }
 
     /**
-     * @param int $month
-     * @param int $year
+     * @param int|false $month
+     * @param int|false $year
      * @param string $label
      * @return ?object
      */
@@ -95,10 +95,10 @@ class DailyPagination extends Pagination
     /**
      * @param int $month
      */
-    private function isValid($month)
+    private function isValid($month): bool
     {
         $currentMonth = 12 * $this->now->format('Y') + $this->now->format('n');
-        return $month >= $currentMonth - $this->config['pagination_past']
-            && $month <= $currentMonth + $this->config['pagination_future'];
+        return $month >= $currentMonth - (int) $this->config['pagination_past']
+            && $month <= $currentMonth + (int) $this->config['pagination_future'];
     }
 }

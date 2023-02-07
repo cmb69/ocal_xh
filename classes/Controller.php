@@ -23,5 +23,6 @@ namespace Ocal;
 
 interface Controller
 {
+    /** @return void */
     public function defaultAction();
 }

@@ -23,6 +23,7 @@ namespace Ocal;
 
 class Plugin
 {
+    /** @return void */
     public function dispatch()
     {
         if (defined('XH_ADM') && XH_ADM) {
@@ -39,6 +40,7 @@ class Plugin
         }
     }
 
+    /** @return void */
     private function handleAdministration()
     {
         global $admin, $o;
@@ -64,6 +66,7 @@ class Plugin
         return ob_get_clean();
     }
 
+    /** @return void */
     public function disallowIndexing()
     {
         global $cf;

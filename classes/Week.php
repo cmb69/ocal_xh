@@ -111,8 +111,8 @@ class Week
         $date = new DateTime();
         $date->setISODate($this->year, $this->week);
         $date->modify(sprintf('+%-d week', $offset));
-        $week = $date->format('W');
-        $year = $date->format('o');
+        $week = (int) $date->format('W');
+        $year = (int) $date->format('o');
         return new self($week, $year);
     }
 

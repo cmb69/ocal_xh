@@ -28,19 +28,14 @@ class DefaultAdminController implements Controller
      */
     private $pluginFolder;
 
-    /**
-     * @var array
-     */
-    private $lang;
-
     public function __construct()
     {
-        global $pth, $plugin_tx;
+        global $pth;
 
         $this->pluginFolder = "{$pth['folder']['plugins']}ocal";
-        $this->lang = $plugin_tx['ocal'];
     }
 
+    /** @return void */
     public function defaultAction()
     {
         $view = new View('info');

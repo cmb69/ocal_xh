@@ -61,7 +61,7 @@ class HourlyPagination extends Pagination
     }
 
     /**
-     * @param int $offset
+     * @param int|false $offset
      * @param string $label
      * @return ?stdClass
      */
@@ -84,10 +84,11 @@ class HourlyPagination extends Pagination
         return (object) compact('year', 'monthOrWeek', 'label');
     }
 
+    /** @return bool */
     private function isWeekPaginationValid(Week $week)
     {
-        $currentWeek = new Week($this->now->format('W'), $this->now->format('o'));
-        return $week->compare($currentWeek->getNextWeek(-$this->config['pagination_past'])) >= 0
-            && $week->compare($currentWeek->getNextWeek($this->config['pagination_future'])) <= 0;
+        $currentWeek = new Week((int) $this->now->format('W'), (int) $this->now->format('o'));
+        return $week->compare($currentWeek->getNextWeek(-((int) $this->config['pagination_past']))) >= 0
+            && $week->compare($currentWeek->getNextWeek((int) $this->config['pagination_future'])) <= 0;
     }
 }

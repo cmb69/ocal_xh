@@ -85,6 +85,7 @@ abstract class CalendarController implements Controller
         $this->lang = $plugin_tx['ocal'];
     }
 
+    /** @return void|never */
     public function defaultAction()
     {
         $this->mode = 'calendar';
@@ -102,6 +103,7 @@ abstract class CalendarController implements Controller
         }
     }
 
+    /** @return void|never */
     public function listAction()
     {
         $this->mode = 'list';
@@ -134,6 +136,7 @@ abstract class CalendarController implements Controller
      */
     abstract protected function getListView(Occupancy $occupancy);
 
+    /** @return void|never */
     public function saveAction()
     {
         $this->mode = 'calendar';
@@ -145,6 +148,7 @@ abstract class CalendarController implements Controller
         }
     }
 
+    /** @return void */
     private function purgeOutputBuffers()
     {
         while (ob_get_level()) {
@@ -152,8 +156,10 @@ abstract class CalendarController implements Controller
         }
     }
 
+    /** @return string|never */
     abstract protected function saveStates();
 
+    /** @return void */
     protected function emitScriptElements()
     {
         global $bjs;
@@ -211,6 +217,7 @@ abstract class CalendarController implements Controller
     }
 
     /**
+     * @param array<string,string> $newParams
      * @return string
      */
     protected function modifyUrl(array $newParams)
