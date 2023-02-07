@@ -6,6 +6,7 @@
         "phpunit/phpunit": "^9.5",
         "mikey179/vfsstream": "1.6.*",
         "tedivm/jshrink": "1.1.*",
-        "phpstan/phpstan": "^1.9"
+        "phpstan/phpstan": "^1.9",
+        "approvals/approval-tests": "*@dev"
     }
 }
