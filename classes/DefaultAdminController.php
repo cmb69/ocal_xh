@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-class DefaultAdminController implements Controller
+class DefaultAdminController
 {
     /**
      * @var string
