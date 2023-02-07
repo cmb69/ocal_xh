@@ -46,6 +46,7 @@
         </jsMin>
         <move todir="dist">
             <fileset dir="export">
+                <exclude name=".github/**"/>
                 <exclude name="tests/**"/>
                 <exclude name="README*.md"/>
                 <exclude name="build.xml"/>
