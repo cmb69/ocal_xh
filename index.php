@@ -55,9 +55,7 @@ function ocal($name, $monthCount = 1)
     if (!method_exists($controller, "{$action}Action")) {
         $action = 'default';
     }
-    ob_start();
-    $controller->{"{$action}Action"}();
-    return ob_get_clean();
+    return $controller->{"{$action}Action"}()->trigger();
 }
 
 /**
@@ -92,9 +90,7 @@ function Ocal_hourly($name, $weekCount = 1)
     if (!method_exists($controller, "{$action}Action")) {
         $action = 'default';
     }
-    ob_start();
-    $controller->{"{$action}Action"}();
-    return ob_get_clean();
+    return $controller->{"{$action}Action"}()->trigger();
 }
 
 (new Ocal\Plugin())->dispatch();

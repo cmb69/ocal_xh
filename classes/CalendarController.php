@@ -105,39 +105,33 @@ abstract class CalendarController
         $this->listService = $listService;
     }
 
-    /** @return void|never */
-    public function defaultAction()
+    public function defaultAction(): Response
     {
         $this->mode = 'calendar';
         $occupancy = $this->findOccupancy();
         $view = $this->getCalendarView($occupancy);
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             if ($_GET['ocal_name'] == $this->name) {
-                header('Content-Type: text/html; charset=UTF-8');
-                $this->purgeOutputBuffers();
-                echo $view->render();
-                exit;
+                return new Response($view->render(), "text/html");
             }
+            return new Response("");
         } else {
-            echo $view->render();
+            return new Response($view->render());
         }
     }
 
-    /** @return void|never */
-    public function listAction()
+    public function listAction(): Response
     {
         $this->mode = 'list';
         $occupancy = $this->findOccupancy();
         $view = $this->getListView($occupancy);
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             if ($_GET['ocal_name'] == $this->name) {
-                header('Content-Type: text/html; charset=UTF-8');
-                $this->purgeOutputBuffers();
-                echo $view->render();
-                exit;
+                return new Response($view->render(), "text/html");
             }
+            return new Response("");
         } else {
-            echo $view->render();
+            return new Response($view->render());
         }
     }
 
@@ -156,24 +150,14 @@ abstract class CalendarController
      */
     abstract protected function getListView(Occupancy $occupancy);
 
-    /** @return void|never */
-    public function saveAction()
+    public function saveAction(): Response
     {
         $this->mode = 'calendar';
         if (defined('XH_ADM') && XH_ADM && isset($_GET['ocal_name']) && $_GET['ocal_name'] == $this->name) {
             $this->csrfProtector->check();
-            $this->purgeOutputBuffers();
-            echo $this->saveStates();
-            exit;
+            return new Response($this->saveStates(), "text/html");
         }
-    }
-
-    /** @return void */
-    private function purgeOutputBuffers()
-    {
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
+        return new Response("");
     }
 
     /** @return string|never */
