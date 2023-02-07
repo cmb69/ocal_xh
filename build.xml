@@ -47,13 +47,12 @@
         </jsMin>
         <move todir="dist">
             <fileset dir="export">
+                <exclude name="tests/**"/>
+                <exclude name="README*.md"/>
                 <exclude name="build.xml"/>
                 <exclude name="composer.*"/>
                 <exclude name="phpunit.xml"/>
-                <exclude name="ocal.komodoproject"/>
-                <exclude name="README.md"/>
-                <exclude name="tests/**"/>
-                <exclude name="TODO"/>
+                <exclude name="teplad.xml"/>
             </fileset>
         </move>
         <delete dir="export"/>
