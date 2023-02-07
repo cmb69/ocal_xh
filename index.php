@@ -19,9 +19,6 @@
  * along with Ocal_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class_alias('Ocal\Occupancy', 'Ocal_Occupancy');
-class_alias('Ocal\HourlyOccupancy', 'Ocal_HourlyOccupancy');
-
 const OCAL_VERSION = '1.0beta4';
 
 /**
