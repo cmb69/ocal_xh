@@ -105,17 +105,3 @@
     text-decoration: none;
     /*cursor: pointer;*/
 }
-
-/*
- * Back-end
- */
-.ocal_logo {
-    float: left;
-}
-.ocal_license {
-    text-align: justify;
-}
-.ocal_syscheck {
-    list-style: none;
-    padding-left: 0;
-}

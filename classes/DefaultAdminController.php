@@ -50,7 +50,6 @@ class DefaultAdminController
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'info');
         $view->setData([
-            'logo' => "{$this->pluginFolder}ocal.png",
             'version' => OCAL_VERSION,
             'checks' => $this->getChecks(),
         ]);

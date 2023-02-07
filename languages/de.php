@@ -30,7 +30,6 @@ $plugin_tx['ocal']['syscheck_title']="System-Prüfung";
 $plugin_tx['ocal']['syscheck_warning']="Warnung";
 $plugin_tx['ocal']['syscheck_writable']="'%s' schreibbar ist";
 $plugin_tx['ocal']['syscheck_xhversion']="die CMSimple_XH-Version ≥ %s";
-$plugin_tx['ocal']['alt_logo']="Kalender";
 
 $plugin_tx['ocal']['cf_state_max']="Der höchste Zustand, der unterstüzt wird. Details sind im Abschnitt \"Zustände\" des Handbuchs zu finden.";
 $plugin_tx['ocal']['cf_hour_first']="Die erste Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";
