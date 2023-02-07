@@ -35,13 +35,16 @@ class DbTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        global $pth;
+        global $pth, $plugin_cf;
 
         vfsStreamWrapper::register();
         vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
         $pth['folder'] = array(
             'base' => vfsStream::url('test/')
         );
+        $plugin_cf['ocal'] = [
+            'state_max' => "3",
+        ];
         $this->subject = new Db(LOCK_EX);
     }
 
