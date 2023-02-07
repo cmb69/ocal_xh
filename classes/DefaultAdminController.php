@@ -37,8 +37,7 @@ class DefaultAdminController
         $this->systemChecker = $systemChecker;
     }
 
-    /** @return void */
-    public function defaultAction()
+    public function defaultAction(): string
     {
         $view = new View('info');
         $view->setData([
@@ -46,6 +45,8 @@ class DefaultAdminController
             'version' => OCAL_VERSION,
             'checks' => (new SystemCheckService($this->systemChecker))->getChecks(),
         ]);
+        ob_start();
         $view->render();
+        return (string) ob_get_clean();
     }
 }

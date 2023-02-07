@@ -63,9 +63,7 @@ class Plugin
         global $pth;
 
         $controller = new DefaultAdminController("{$pth['folder']['plugins']}ocal/", new SystemChecker());
-        ob_start();
-        $controller->defaultAction();
-        return ob_get_clean();
+        return $controller->defaultAction();
     }
 
     /** @return void */
