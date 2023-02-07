@@ -126,7 +126,7 @@ class View
     public function render(): string
     {
         ob_start();
-        echo "<!-- {$this->template} -->", PHP_EOL;
+        echo "<!-- {$this->template} -->\n";
         include "{$this->templateFolder}{$this->template}.php";
         return (string) ob_get_clean();
     }
