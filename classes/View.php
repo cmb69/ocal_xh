@@ -40,7 +40,7 @@ class View
 
     /**
      * @param string $key
-     * @param mixed $args
+     * @param scalar $args
      * @return string
      */
     public function text($key, ...$args)
@@ -51,7 +51,7 @@ class View
     /**
      * @param string $key
      * @param int $count
-     * @param mixed $args
+     * @param scalar $args
      * @return string
      */
     public function plural($key, $count, ...$args)
@@ -75,15 +75,15 @@ class View
     }
 
     /**
-     * @param mixed $value
-     * @return mixed
+     * @param scalar|HtmlString $value
+     * @return string
      */
     public function esc($value)
     {
         if ($value instanceof HtmlString) {
-            return $value;
+            return (string) $value;
         } else {
-            return XH_hsc($value);
+            return XH_hsc((string) $value);
         }
     }
 }
