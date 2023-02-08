@@ -115,7 +115,7 @@ class View
      */
     protected function escape($value)
     {
-        if ($value instanceof HtmlString || $value instanceof View) {
+        if ($value instanceof HtmlString) {
             return $value;
         } else {
             return XH_hsc($value);
