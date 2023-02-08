@@ -150,7 +150,7 @@ abstract class CalendarController
             . 'var OCAL = ' . json_encode($config) . ';'
             . '/* ]]> */</script>'
             . '<script type="text/javascript" src="'
-            . $this->pluginFolder . 'ocal.js"></script>';
+            . $this->pluginFolder . 'ocal.min.js"></script>';
         self::$isJavaScriptEmitted = true;
     }
 

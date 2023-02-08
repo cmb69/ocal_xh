@@ -54,7 +54,7 @@
     <delete file="export.zip"/>
     <jsMin targetDir="dist" suffix="" failOnError="false">
       <fileset dir="export">
-        <include name="ocal.js"/>
+        <include name="ocal.min.js"/>
       </fileset>
     </jsMin>
     <move todir="dist">
