@@ -92,7 +92,7 @@ class DailyCalendarController extends CalendarController
     {
         $this->emitScriptElements();
 
-        $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-calendars');
+        $view = new View("{$this->pluginFolder}views/", $this->lang);
         $data = [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
@@ -106,7 +106,7 @@ class DailyCalendarController extends CalendarController
             $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
         }
         $view->setData($data);
-        return new HtmlString($view->render());
+        return new HtmlString($view->render('daily-calendars'));
     }
 
     /**
@@ -123,7 +123,7 @@ class DailyCalendarController extends CalendarController
 
     private function renderMonthCalendarView(Occupancy $occupancy, Month $month): HtmlString
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-calendar');
+        $view = new View("{$this->pluginFolder}views/", $this->lang);
         $view->setData([
             'isoDate' => $month->getIso(),
             'year' => $month->getYear(),
@@ -131,7 +131,7 @@ class DailyCalendarController extends CalendarController
             'daynames' => array_map('trim', explode(',', $this->lang['date_days'])),
             'weeks' => $this->getWeeks($occupancy, $month),
         ]);
-        return new HtmlString($view->render());
+        return new HtmlString($view->render('daily-calendar'));
     }
 
     /**
@@ -183,7 +183,7 @@ class DailyCalendarController extends CalendarController
     protected function renderListView(Occupancy $occupancy): HtmlString
     {
         $this->emitScriptElements();
-        $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-lists');
+        $view = new View("{$this->pluginFolder}views/", $this->lang);
         $view->setData([
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
@@ -191,7 +191,7 @@ class DailyCalendarController extends CalendarController
             'monthLists' => $this->getMonthLists($occupancy),
             'monthPagination' => $this->renderPaginationView(),
         ]);
-        return new HtmlString($view->render());
+        return new HtmlString($view->render('daily-lists'));
     }
 
     /**
@@ -208,23 +208,23 @@ class DailyCalendarController extends CalendarController
 
     private function renderMonthListView(Occupancy $occupancy, Month $month): HtmlString
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-list');
+        $view = new View("{$this->pluginFolder}views/", $this->lang);
         $monthnames = explode(',', $this->lang['date_months']);
         $view->setData([
             'heading' => $monthnames[$month->getMonth() - 1]
                 . ' ' . $month->getYear(),
             'monthList' => $this->listService->getDailyList($occupancy, $month),
         ]);
-        return new HtmlString($view->render());
+        return new HtmlString($view->render('daily-list'));
     }
 
     private function renderPaginationView(): HtmlString
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang, 'pagination');
+        $view = new View("{$this->pluginFolder}views/", $this->lang);
         $view->setData([
             'items' => $this->getPaginationItems(),
         ]);
-        return new HtmlString($view->render());
+        return new HtmlString($view->render('pagination'));
     }
 
     /**

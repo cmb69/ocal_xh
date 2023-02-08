@@ -189,30 +189,30 @@ abstract class CalendarController
 
     protected function renderModeLinkView(): HtmlString
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang, 'mode-link');
+        $view = new View("{$this->pluginFolder}views/", $this->lang);
         $view->setData([
             'mode' => $mode = $this->mode == 'calendar' ? 'list' : 'calendar',
             'url' => $this->modifyUrl(array('ocal_action' => $mode)),
         ]);
-        return new HtmlString($view->render());
+        return new HtmlString($view->render('mode-link'));
     }
 
     protected function renderStatusbarView(): HtmlString
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang, 'statusbar');
+        $view = new View("{$this->pluginFolder}views/", $this->lang);
         $view->setData([
             'image' => "{$this->pluginFolder}images/ajax-loader-bar.gif",
         ]);
-        return new HtmlString($view->render());
+        return new HtmlString($view->render('statusbar'));
     }
 
     protected function renderToolbarView(): HtmlString
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang, 'toolbar');
+        $view = new View("{$this->pluginFolder}views/", $this->lang);
         $view->setData([
             'states' => range(0, $this->config['state_max']),
         ]);
-        return new HtmlString($view->render());
+        return new HtmlString($view->render('toolbar'));
     }
 
     /**

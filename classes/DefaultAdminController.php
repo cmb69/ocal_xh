@@ -48,12 +48,12 @@ class DefaultAdminController
 
     public function defaultAction(): string
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang, 'info');
+        $view = new View("{$this->pluginFolder}views/", $this->lang);
         $view->setData([
             'version' => OCAL_VERSION,
             'checks' => $this->getChecks(),
         ]);
-        return $view->render();
+        return $view->render('info');
     }
 
     /**

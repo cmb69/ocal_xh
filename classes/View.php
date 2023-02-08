@@ -30,24 +30,17 @@ class View
     private $lang;
 
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var array<string,mixed>
      */
     private $data = array();
 
     /**
      * @param array<string,string> $lang
-     * @param string $template
      */
-    public function __construct(string $templateFolder, array $lang, $template)
+    public function __construct(string $templateFolder, array $lang)
     {
         $this->templateFolder = $templateFolder;
         $this->lang = $lang;
-        $this->template = $template;
     }
 
     /**
@@ -115,11 +108,11 @@ class View
         return $this->escape(vsprintf($this->lang[$key], $args));
     }
 
-    public function render(): string
+    public function render(string $_template): string
     {
         ob_start();
-        echo "<!-- {$this->template} -->\n";
-        include "{$this->templateFolder}{$this->template}.php";
+        echo "<!-- {$_template} -->\n";
+        include "{$this->templateFolder}{$_template}.php";
         return (string) ob_get_clean();
     }
 
