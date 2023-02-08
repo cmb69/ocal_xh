@@ -49,11 +49,10 @@ class DefaultAdminController
     public function defaultAction(): string
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang);
-        $view->setData([
+        return $view->render('info', [
             'version' => OCAL_VERSION,
             'checks' => $this->getChecks(),
         ]);
-        return $view->render('info');
     }
 
     /**

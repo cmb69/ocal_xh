@@ -105,8 +105,7 @@ class DailyCalendarController extends CalendarController
         if ($this->isAdmin) {
             $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
         }
-        $view->setData($data);
-        return new HtmlString($view->render('daily-calendars'));
+        return new HtmlString($view->render('daily-calendars', $data));
     }
 
     /**
@@ -124,14 +123,13 @@ class DailyCalendarController extends CalendarController
     private function renderMonthCalendarView(Occupancy $occupancy, Month $month): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang);
-        $view->setData([
+        return new HtmlString($view->render('daily-calendar', [
             'isoDate' => $month->getIso(),
             'year' => $month->getYear(),
             'monthname' => $this->getMonthName($month->getMonth()),
             'daynames' => array_map('trim', explode(',', $this->lang['date_days'])),
             'weeks' => $this->getWeeks($occupancy, $month),
-        ]);
-        return new HtmlString($view->render('daily-calendar'));
+        ]));
     }
 
     /**
@@ -184,14 +182,13 @@ class DailyCalendarController extends CalendarController
     {
         $this->emitScriptElements();
         $view = new View("{$this->pluginFolder}views/", $this->lang);
-        $view->setData([
+        return new HtmlString($view->render('daily-lists', [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
             'statusbar' => $this->renderStatusbarView(),
             'monthLists' => $this->getMonthLists($occupancy),
             'monthPagination' => $this->renderPaginationView(),
-        ]);
-        return new HtmlString($view->render('daily-lists'));
+        ]));
     }
 
     /**
@@ -210,21 +207,19 @@ class DailyCalendarController extends CalendarController
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang);
         $monthnames = explode(',', $this->lang['date_months']);
-        $view->setData([
+        return new HtmlString($view->render('daily-list', [
             'heading' => $monthnames[$month->getMonth() - 1]
                 . ' ' . $month->getYear(),
             'monthList' => $this->listService->getDailyList($occupancy, $month),
-        ]);
-        return new HtmlString($view->render('daily-list'));
+        ]));
     }
 
     private function renderPaginationView(): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang);
-        $view->setData([
+        return new HtmlString($view->render('pagination', [
             'items' => $this->getPaginationItems(),
-        ]);
-        return new HtmlString($view->render('pagination'));
+        ]));
     }
 
     /**

@@ -44,15 +44,6 @@ class View
     }
 
     /**
-     * @param array<string,mixed> $data
-     * @return void
-     */
-    public function setData(array $data)
-    {
-        $this->data = $data;
-    }
-
-    /**
      * @param string $name
      * @return string
      */
@@ -108,8 +99,10 @@ class View
         return $this->escape(vsprintf($this->lang[$key], $args));
     }
 
-    public function render(string $_template): string
+    /** @param array<string,mixed> $_data */
+    public function render(string $_template, array $_data): string
     {
+        $this->data = $_data;
         ob_start();
         echo "<!-- {$_template} -->\n";
         include "{$this->templateFolder}{$_template}.php";

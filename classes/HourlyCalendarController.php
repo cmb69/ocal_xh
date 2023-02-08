@@ -104,8 +104,7 @@ class HourlyCalendarController extends CalendarController
         if ($this->isAdmin) {
             $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
         }
-        $view->setData($data);
-        return new HtmlString($view->render('hourly-calendars'));
+        return new HtmlString($view->render('hourly-calendars', $data));
     }
 
     /**
@@ -127,14 +126,13 @@ class HourlyCalendarController extends CalendarController
         $to = clone $this->now;
         $to->setISODate($week->getYear(), $week->getWeek(), 7);
         $view = new View("{$this->pluginFolder}views/", $this->lang);
-        $view->setData([
+        return new HtmlString($view->render('hourly-calendar', [
             'date' => $week->getIso(),
             'from' => $from->format($this->lang['date_format']),
             'to' => $to->format($this->lang['date_format']),
             'daynames' => array_map('trim', explode(',', $this->lang['date_days'])),
             'hours' => $this->getDaysOfHours($occupancy, $week),
-        ]);
-        return new HtmlString($view->render('hourly-calendar'));
+        ]));
     }
 
     /**
@@ -165,14 +163,13 @@ class HourlyCalendarController extends CalendarController
     {
         $this->emitScriptElements();
         $view = new View("{$this->pluginFolder}views/", $this->lang);
-        $view->setData([
+        return new HtmlString($view->render('hourly-lists', [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
             'statusbar' => $this->renderStatusbarView(),
             'weekPagination' => $this->renderPaginationView($this->count),
             'weekLists' => $this->getWeekLists($occupancy),
-        ]);
-        return new HtmlString($view->render('hourly-lists'));
+        ]));
     }
 
     /**
@@ -194,12 +191,11 @@ class HourlyCalendarController extends CalendarController
         $to = clone $this->now;
         $to->setISODate($week->getYear(), $week->getWeek(), 7);
         $view = new View("{$this->pluginFolder}views/", $this->lang);
-        $view->setData([
+        return new HtmlString($view->render('hourly-list', [
             'from' => $from->format($this->lang['date_format']),
             'to' => $to->format($this->lang['date_format']),
             'weekList' => $this->getWeekList($occupancy, $week),
-        ]);
-        return new HtmlString($view->render('hourly-list'));
+        ]));
     }
 
     /**
@@ -221,10 +217,9 @@ class HourlyCalendarController extends CalendarController
     private function renderPaginationView($weekCount): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang);
-        $view->setData([
+        return new HtmlString($view->render('pagination', [
             'items' => $this->getPaginationItems($weekCount),
-        ]);
-        return new HtmlString($view->render('pagination'));
+        ]));
     }
 
     /**
