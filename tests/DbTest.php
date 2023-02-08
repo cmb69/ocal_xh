@@ -35,14 +35,9 @@ class DbTest extends TestCase
 
     public function setUp(): void
     {
-        global $pth;
-
         vfsStreamWrapper::register();
         vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
-        $pth['folder'] = array(
-            'base' => vfsStream::url('test/')
-        );
-        $this->subject = new Db($pth['folder']['base'] . 'content/ocal/', 3);
+        $this->subject = new Db(vfsStream::url('test/content/ocal/'), 3);
         $this->subject->lock(true);
     }
 
