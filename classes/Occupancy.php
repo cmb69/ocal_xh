@@ -46,6 +46,7 @@ abstract class Occupancy
     public static function createFromJson($name, $json)
     {
         $array = json_decode($json, true);
+        assert(is_array($array)); // TODO: proper validation
         if (!($result = self::instantiateType($array['type'], $name))) {
             return null;
         }
