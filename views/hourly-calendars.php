@@ -6,7 +6,7 @@
 <?php endif?>
   <?=$this->statusbar()?>
 <?php foreach ($this->weekCalendars as $weekCalendar):?>
-  <?=$this->escape($weekCalendar)?>
+  <?=$this->esc($weekCalendar)?>
 <?php endforeach?>
   <?=$this->weekPagination()?>
 </div>

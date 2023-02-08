@@ -68,7 +68,7 @@ class View
      */
     public function __call($name, array $args)
     {
-        return $this->escape($this->data[$name]);
+        return $this->esc($this->data[$name]);
     }
 
     /**
@@ -79,7 +79,7 @@ class View
     {
         $args = func_get_args();
         array_shift($args);
-        return $this->escape(vsprintf($this->lang[$key], $args));
+        return $this->esc(vsprintf($this->lang[$key], $args));
     }
 
     /**
@@ -96,7 +96,7 @@ class View
         }
         $args = func_get_args();
         array_shift($args);
-        return $this->escape(vsprintf($this->lang[$key], $args));
+        return $this->esc(vsprintf($this->lang[$key], $args));
     }
 
     /** @param array<string,mixed> $_data */
@@ -113,7 +113,7 @@ class View
      * @param mixed $value
      * @return mixed
      */
-    protected function escape($value)
+    protected function esc($value)
     {
         if ($value instanceof HtmlString) {
             return $value;

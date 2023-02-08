@@ -2,7 +2,7 @@
   <?=$this->modeLink()?>
   <?=$this->statusbar()?>
 <?php foreach ($this->weekLists as $weekList):?>
-  <?=$this->escape($weekList)?>
+  <?=$this->esc($weekList)?>
 <?php endforeach?>
   <?=$this->weekPagination()?>
 </div>

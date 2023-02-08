@@ -6,7 +6,7 @@
 <?php endif?>
   <?=$this->statusbar()?>
 <?php foreach ($this->monthCalendars as $monthCalendar):?>
-  <?=$this->escape($monthCalendar)?>
+  <?=$this->esc($monthCalendar)?>
 <?php endforeach?>
   <?=$this->monthPagination()?>
 </div>

@@ -5,7 +5,7 @@
     </tr>
     <tr>
 <?php foreach ($this->daynames as $dayname):?>
-      <th><?=$this->escape($dayname)?></th>
+      <th><?=$this->esc($dayname)?></th>
 <?php endforeach?>
     </tr>
   </thead>
@@ -16,7 +16,7 @@
 <?php       if (empty($day)):?>
       <td>&nbsp;</td>
 <?php       else:?>
-      <td class="ocal_state <?=$this->escape($day->todayClass)?>" data-ocal_state="<?=$this->escape($day->state)?>" title="<?=$this->text($day->titleKey)?>"><?=$this->escape($day->day)?></td>
+      <td class="ocal_state <?=$this->esc($day->todayClass)?>" data-ocal_state="<?=$this->esc($day->state)?>" title="<?=$this->text($day->titleKey)?>"><?=$this->esc($day->day)?></td>
 <?php       endif?>
 <?php   endforeach?>
     </tr>

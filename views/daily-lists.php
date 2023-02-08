@@ -2,7 +2,7 @@
   <?=$this->modeLink()?>
   <?=$this->statusbar()?>
 <?php foreach ($this->monthLists as $monthList):?>
-  <?=$this->escape($monthList)?>
+  <?=$this->esc($monthList)?>
 <?php endforeach?>
   <?=$this->monthPagination()?>
 </div>
