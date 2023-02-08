@@ -123,7 +123,7 @@ abstract class CalendarController
 
     abstract protected function renderListView(Occupancy $occupancy, int $count): HtmlString;
 
-    public function saveAction(string $name, int $count): Response
+    public function saveAction(string $name): Response
     {
         $this->mode = 'calendar';
         if ($this->isAdmin && isset($_GET['ocal_name']) && $_GET['ocal_name'] === $name) {
