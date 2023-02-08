@@ -63,7 +63,7 @@ class HourlyPagination extends Pagination
     /**
      * @param int|false $offset
      * @param string $label
-     * @return ?stdClass
+     * @return ($offset is false ? stdClass : stdClass|null)
      */
     private function getItem($offset, $label)
     {

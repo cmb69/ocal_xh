@@ -114,7 +114,7 @@ class Month
     }
 
     /**
-     * @return ?int[][]
+     * @return list<list<int|null>>
      */
     public function getDaysOfWeeks()
     {

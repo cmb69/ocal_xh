@@ -65,7 +65,7 @@ class DailyPagination extends Pagination
      * @param int|false $month
      * @param int|false $year
      * @param string $label
-     * @return ?stdClass
+     * @return ($month is false ? ($year is false ? stdClass : stdClass|null) : stdClass|null)
      */
     private function getItem($month, $year, $label)
     {
