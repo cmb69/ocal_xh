@@ -42,17 +42,6 @@ class View
         return $this->esc(vsprintf($this->lang[$key], $args));
     }
 
-    /** @param scalar $args */
-    public function plural(string $key, int $count, ...$args): string
-    {
-        if ($count === 0) {
-            $key .= '_0';
-        } else {
-            $key .= XH_numberSuffix($count);
-        }
-        return $this->esc(sprintf($this->lang[$key], $count, ...$args));
-    }
-
     /** @param array<string,mixed> $_data */
     public function render(string $_template, array $_data): string
     {
