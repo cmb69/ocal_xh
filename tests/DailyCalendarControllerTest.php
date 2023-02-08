@@ -72,6 +72,15 @@ class DailyCalendarControllerTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
+    public function testDefaultActionHandlesAjaxRequest(): void
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $_GET = ['ocal_name' => "test-daily"];
+        $response = $this->sut->defaultAction("test-daily", 1);
+        $this->assertEquals("text/html", $response->contentType());
+        Approvals::verifyHtml($response->output());
+    }
+
     public function testListActionRendersListWithoutEntries(): void
     {
         $response = $this->sut->listAction("test-daily", 1);
@@ -87,9 +96,26 @@ class DailyCalendarControllerTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
-    public function testSaveActionReturnsEmptyResponseWhenNotLoggedIn(): void
+    public function testListActionHandlesAjaxRequest(): void
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $_GET = ['ocal_name' => "test-daily"];
+        $response = $this->sut->listAction("test-daily", 1);
+        $this->assertEquals("text/html", $response->contentType());
+        Approvals::verifyHtml($response->output());
+    }
+
+    public function testSaveActionReturnsEmptyResponseNameIsMissing(): void
     {
         $response = $this->sut->saveAction("test-daily", 1);
         $this->assertEquals("", $response->output());
+    }
+
+    public function testSaveActionReportsSuccess(): void
+    {
+        $_GET = ['ocal_name' => "test-daily"];
+        $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
+        $response = $this->sut->saveAction("test-daily", 1);
+        $this->assertEquals('<p class="xh_success">Successfully saved.</p>', $response->output());
     }
 }

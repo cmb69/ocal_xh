@@ -72,6 +72,15 @@ class HourlyCalendarControllerTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
+    public function testDefaultActionHandlesAjaxRequest(): void
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $_GET = ['ocal_name' => "test-hourly"];
+        $response = $this->sut->defaultAction("test-hourly", 1);
+        $this->assertEquals("text/html", $response->contentType());
+        Approvals::verifyHtml($response->output());
+    }
+
     public function testListActionRendersListWithoutEntries(): void
     {
         $this->listService->method('getHourlyList')->willReturn([]);
@@ -90,9 +99,27 @@ class HourlyCalendarControllerTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
-    public function testSaveActionReturnsEmptyResponseWhenNotLoggedIn(): void
+    public function testListActionHandlesAjaxRequest(): void
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $_GET = ['ocal_name' => "test-hourly"];
+        $this->listService->method('getHourlyList')->willReturn([]);
+        $response = $this->sut->listAction("test-hourly", 1);
+        $this->assertEquals("text/html", $response->contentType());
+        Approvals::verifyHtml($response->output());
+    }
+
+    public function testSaveActionReturnsEmptyResponseWhenNameIsMissing(): void
     {
         $response = $this->sut->saveAction("test-hourly", 1);
         $this->assertEquals("", $response->output());
+    }
+
+    public function testSaveActionReportsSuccess(): void
+    {
+        $_GET = ['ocal_name' => "test-hourly"];
+        $_POST = ['ocal_states' => json_encode(['2023-06' => array_fill(0, 90, "1")])];
+        $response = $this->sut->saveAction("test-hourly", 1);
+        $this->assertEquals('<p class="xh_success">Successfully saved.</p>', $response->output());
     }
 }

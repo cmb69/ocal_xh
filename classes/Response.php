@@ -53,4 +53,9 @@ class Response
     {
         return $this->output;
     }
+
+    public function contentType(): ?string
+    {
+        return $this->contentType;
+    }
 }
