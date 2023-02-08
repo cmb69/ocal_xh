@@ -24,13 +24,13 @@ namespace Ocal;
 class Month
 {
     /** @var int */
-    protected $month;
+    private $month;
 
     /** @var int */
-    protected $year;
+    private $year;
 
     /** @var int */
-    protected $timestamp;
+    private $timestamp;
 
     /** @return list<Month> */
     public static function createRange(int $year, int $month, int $count): array

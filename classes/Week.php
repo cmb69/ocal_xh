@@ -26,10 +26,10 @@ use DateTimeImmutable;
 class Week
 {
     /** @var int */
-    protected $week;
+    private $week;
 
     /** @var int */
-    protected $year;
+    private $year;
 
     /** @return list<Week> */
     public static function createRange(int $year, int $startWeek, int $count): array

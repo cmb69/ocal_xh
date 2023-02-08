@@ -30,7 +30,7 @@ class Db
     private $stateMax;
 
     /** @var resource */
-    protected $lockFile;
+    private $lockFile;
 
     public function __construct(string $foldername, int $stateMax)
     {
@@ -100,7 +100,7 @@ class Db
         return $this->getFoldername() . '.lock';
     }
 
-    protected function getFoldername(): string
+    private function getFoldername(): string
     {
         if (!file_exists($this->foldername)) {
             mkdir($this->foldername, 0777, true);
