@@ -206,7 +206,14 @@ class DailyCalendarController extends CalendarController
     /** @return list<stdClass> */
     private function getPaginationItems(): array
     {
-        $paginationItems = (new DailyPagination($this->year, $this->month, $this->now))->getItems();
+        $pagination = new DailyPagination(
+            $this->year,
+            $this->month,
+            $this->now,
+            (int) $this->config['pagination_past'],
+            (int) $this->config['pagination_future']
+        );
+        $paginationItems = $pagination->getItems();
         foreach ($paginationItems as $item) {
             $item->url = $this->modifyUrl(array(
                 'ocal_year' => $item->year,

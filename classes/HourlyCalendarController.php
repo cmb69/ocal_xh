@@ -202,7 +202,14 @@ class HourlyCalendarController extends CalendarController
     /** @return list<stdClass> */
     private function getPaginationItems(int $weekCount): array
     {
-        $items = (new HourlyPagination($this->isoYear, $this->week, $this->now))->getItems($weekCount);
+        $pagination = new HourlyPagination(
+            $this->isoYear,
+            $this->week,
+            $this->now,
+            (int) $this->config['pagination_past'],
+            (int) $this->config['pagination_future']
+        );
+        $items = $pagination->getItems($weekCount);
         foreach ($items as $item) {
             $item->url = $this->modifyUrl(array(
                 'ocal_year' => $item->year,

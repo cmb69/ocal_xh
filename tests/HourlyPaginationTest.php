@@ -26,14 +26,6 @@ use DateTimeImmutable;
 
 class HourlyPaginationTest extends TestCase
 {
-    public function setUp(): void
-    {
-        global $plugin_cf;
-
-        $plugin_cf['ocal']['pagination_past'] = "0";
-        $plugin_cf['ocal']['pagination_future'] = "18";
-    }
-
     /**
      * @dataProvider provideGetItemsData
      * @param int $year
@@ -41,7 +33,7 @@ class HourlyPaginationTest extends TestCase
      */
     public function testGetItems($year, $week, $now, $weekCount, array $expected)
     {
-        $subject = new HourlyPagination($year, $week, $now);
+        $subject = new HourlyPagination($year, $week, $now, 0, 18);
         $this->assertEquals($expected, $subject->getItems($weekCount));
     }
 

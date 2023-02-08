@@ -32,9 +32,9 @@ class DailyPagination extends Pagination
     /** @var int */
     private $month;
 
-    public function __construct(int $year, int $month, DateTimeImmutable $now)
+    public function __construct(int $year, int $month, DateTimeImmutable $now, int $past, int $future)
     {
-        parent::__construct($now);
+        parent::__construct($now, $past, $future);
         $this->year = (int) $year;
         $this->month = (int) $month;
     }
@@ -84,7 +84,7 @@ class DailyPagination extends Pagination
     private function isValid(int $month): bool
     {
         $currentMonth = 12 * $this->now->format('Y') + $this->now->format('n');
-        return $month >= $currentMonth - (int) $this->config['pagination_past']
-            && $month <= $currentMonth + (int) $this->config['pagination_future'];
+        return $month >= $currentMonth - $this->past
+            && $month <= $currentMonth + $this->future;
     }
 }

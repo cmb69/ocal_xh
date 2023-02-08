@@ -26,18 +26,20 @@ use stdClass;
 
 abstract class Pagination
 {
-    /** @var array<string,string> */
-    protected $config;
-
     /** @var DateTimeImmutable */
     protected $now;
 
-    public function __construct(DateTimeImmutable $now)
-    {
-        global $plugin_cf;
+    /** @var int */
+    protected $past;
 
-        $this->config = $plugin_cf['ocal'];
+    /** @var int */
+    protected $future;
+
+    public function __construct(DateTimeImmutable $now, int $past, int $future)
+    {
         $this->now = $now;
+        $this->past = $past;
+        $this->future = $future;
     }
 
     /** @return list<stdClass> */

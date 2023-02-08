@@ -32,9 +32,9 @@ class HourlyPagination extends Pagination
     /** @var int */
     private $week;
 
-    public function __construct(int $year, int $week, DateTimeImmutable $now)
+    public function __construct(int $year, int $week, DateTimeImmutable $now, int $past, int $future)
     {
-        parent::__construct($now);
+        parent::__construct($now, $past, $future);
         $this->year = (int) $year;
         $this->week = (int) $week;
     }
@@ -75,7 +75,7 @@ class HourlyPagination extends Pagination
     private function isWeekPaginationValid(Week $week): bool
     {
         $currentWeek = new Week((int) $this->now->format('W'), (int) $this->now->format('o'));
-        return $week->compare($currentWeek->getNextWeek(-((int) $this->config['pagination_past']))) >= 0
-            && $week->compare($currentWeek->getNextWeek((int) $this->config['pagination_future'])) <= 0;
+        return $week->compare($currentWeek->getNextWeek(-$this->past)) >= 0
+            && $week->compare($currentWeek->getNextWeek($this->future)) <= 0;
     }
 }
