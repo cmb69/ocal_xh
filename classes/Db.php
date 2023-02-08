@@ -34,13 +34,6 @@ class Db
     public function __construct()
     {
         $this->lockFilename = $this->getFoldername() . '.lock';
-        // $this->lockFile = fopen($lockFilename, 'a');
-        // flock($this->lockFile, (int) $lockMode);
-    }
-
-    public function __destruct()
-    {
-        // flock($this->lockFile, LOCK_UN);
     }
 
     /** @return void */
