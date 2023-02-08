@@ -94,8 +94,8 @@ abstract class CalendarController
         $this->mode = 'calendar';
         $occupancy = $this->findOccupancy($name);
         $html = $this->renderCalendarView($occupancy, $count);
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            if ($_GET['ocal_name'] === $name) {
+        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) === 'XMLHttpRequest') {
+            if (($_GET['ocal_name'] ?? null) === $name) {
                 return new Response($html, "text/html");
             }
             return new Response("");
@@ -109,8 +109,8 @@ abstract class CalendarController
         $this->mode = 'list';
         $occupancy = $this->findOccupancy($name);
         $html = $this->renderListView($occupancy, $count);
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            if ($_GET['ocal_name'] === $name) {
+        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) === 'XMLHttpRequest') {
+            if (($_GET['ocal_name'] ?? null) === $name) {
                 return new Response($html, "text/html");
             }
             return new Response("");

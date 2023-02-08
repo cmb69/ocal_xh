@@ -81,6 +81,14 @@ class DailyCalendarControllerTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
+
+    public function testDefaultActionIgnoresUnrelatedAjaxRequest(): void
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $response = $this->sut->defaultAction("test-daily", 1);
+        $this->assertEquals("", $response->output());
+    }
+
     public function testListActionRendersListWithoutEntries(): void
     {
         $response = $this->sut->listAction("test-daily", 1);
@@ -103,6 +111,13 @@ class DailyCalendarControllerTest extends TestCase
         $response = $this->sut->listAction("test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
+    }
+
+    public function testListActionIgnoresUnrelatedAjaxRequest(): void
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $response = $this->sut->listAction("test-daily", 1);
+        $this->assertEquals("", $response->output());
     }
 
     public function testSaveActionReturnsEmptyResponseNameIsMissing(): void
