@@ -23,19 +23,13 @@ namespace Ocal;
 
 abstract class Occupancy
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $name;
 
-    /**
-     * @var array<string,int>
-     */
+    /** @var array<string,int> */
     protected $states;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $maxState;
 
     public static function createFromJson(string $name, string $json): ?self
@@ -81,9 +75,7 @@ abstract class Occupancy
         return $this->name;
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     public function setName(string $name)
     {
         $this->name = (string) $name;

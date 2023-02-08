@@ -23,24 +23,16 @@ namespace Ocal;
 
 class Month
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $month;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $year;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $timestamp;
 
-    /**
-     * @return Month[]
-     */
+    /** @return Month[] */
     public static function createRange(int $year, int $month, int $count): array
     {
         $months = [];
@@ -91,9 +83,7 @@ class Month
         return new Month($month, $year);
     }
 
-    /**
-     * @return list<list<int|null>>
-     */
+    /** @return list<list<int|null>> */
     public function getDaysOfWeeks(): array
     {
         $mondays = range($this->getDayOffset(), $this->getLastDay(), 7);

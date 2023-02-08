@@ -25,9 +25,7 @@ use stdClass;
 
 class DefaultAdminController
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $pluginFolder;
 
     /** @var string */
@@ -57,9 +55,7 @@ class DefaultAdminController
         ]);
     }
 
-    /**
-     * @return list<stdClass>
-     */
+    /** @return list<stdClass> */
     private function getChecks(): array
     {
         return array(

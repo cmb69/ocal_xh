@@ -26,14 +26,10 @@ use DateTime;
 
 class DailyPagination extends Pagination
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $month;
 
     public function __construct(int $year, int $month, DateTime $now)
@@ -43,9 +39,7 @@ class DailyPagination extends Pagination
         $this->month = (int) $month;
     }
 
-    /**
-     * @return stdClass[]
-     */
+    /** @return stdClass[] */
     public function getItems(): array
     {
         return $this->filterAndSortItems(

@@ -26,49 +26,31 @@ use XH\CSRFProtection as CsrfProtector;
 
 abstract class CalendarController
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected static $isJavaScriptEmitted = false;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $name;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $count;
 
-    /**
-     * @var CsrfProtector
-     */
+    /** @var CsrfProtector */
     protected $csrfProtector;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $config;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $lang;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $mode;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $scriptName;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $pluginFolder;
 
     /** @var DateTime */
@@ -207,9 +189,7 @@ abstract class CalendarController
         ]));
     }
 
-    /**
-     * @param array<string,string> $newParams
-     */
+    /** @param array<string,string> $newParams */
     protected function modifyUrl(array $newParams): string
     {
         parse_str($_SERVER['QUERY_STRING'], $params);

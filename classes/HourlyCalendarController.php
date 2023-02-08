@@ -27,14 +27,10 @@ use XH\CSRFProtection as CsrfProtector;
 
 class HourlyCalendarController extends CalendarController
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     private $week;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $isoYear;
 
     /**
@@ -103,9 +99,7 @@ class HourlyCalendarController extends CalendarController
         return new HtmlString($view->render('hourly-calendars', $data));
     }
 
-    /**
-     * @return list<HtmlString>
-     */
+    /** @return list<HtmlString> */
     private function getWeekCalendars(Occupancy $occupancy): array
     {
         $weekCalendars = [];
@@ -131,9 +125,7 @@ class HourlyCalendarController extends CalendarController
         ]));
     }
 
-    /**
-     * @return list<list<stdClass>>
-     */
+    /** @return list<list<stdClass>> */
     private function getDaysOfHours(Occupancy $occupancy, Week $week): array
     {
         $daysOfHours = [];
@@ -168,9 +160,7 @@ class HourlyCalendarController extends CalendarController
         ]));
     }
 
-    /**
-     * @return list<HtmlString>
-     */
+    /** @return list<HtmlString> */
     private function getWeekLists(Occupancy $occupancy): array
     {
         $weekLists = [];
@@ -194,9 +184,7 @@ class HourlyCalendarController extends CalendarController
         ]));
     }
 
-    /**
-     * @return list<stdClass>
-     */
+    /** @return list<stdClass> */
     private function getWeekList(Occupancy $occupancy, Week $week): array
     {
         $weekList = [];
@@ -215,9 +203,7 @@ class HourlyCalendarController extends CalendarController
         ]));
     }
 
-    /**
-     * @return list<stdClass>
-     */
+    /** @return list<stdClass> */
     private function getPaginationItems(int $weekCount): array
     {
         $items = (new HourlyPagination($this->isoYear, $this->week, $this->now))->getItems($weekCount);

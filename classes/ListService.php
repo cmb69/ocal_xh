@@ -25,14 +25,10 @@ use stdClass;
 
 class ListService
 {
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     private $config;
 
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     private $lang;
 
     public function __construct()
@@ -43,9 +39,7 @@ class ListService
         $this->lang = $plugin_tx['ocal'];
     }
 
-    /**
-     * @return list<stdClass>
-     */
+    /** @return list<stdClass> */
     public function getDailyList(Occupancy $occupancy, Month $month): array
     {
         $list = array();
@@ -65,9 +59,7 @@ class ListService
         return $this->mapFilteredList($list);
     }
 
-    /**
-     * @param list<int> $range
-     */
+    /** @param list<int> $range */
     private function formatDailyRange(array $range): string
     {
         $string = $range[0] . '.';
@@ -77,9 +69,7 @@ class ListService
         return $string;
     }
 
-    /**
-     * @return list<stdClass>
-     */
+    /** @return list<stdClass> */
     public function getHourlyList(Occupancy $occupancy, Week $week): array
     {
         $result = [];
@@ -92,9 +82,7 @@ class ListService
         return $result;
     }
 
-    /**
-     * @return list<stdClass>
-     */
+    /** @return list<stdClass> */
     private function getHourlyListForDay(Occupancy $occupancy, Week $week, int $weekday): array
     {
         $list = array();
@@ -119,9 +107,7 @@ class ListService
         return $this->mapFilteredList($list);
     }
 
-    /**
-     * @param list<int> $range
-     */
+    /** @param list<int> $range */
     private function formatHourlyRange(array $range): string
     {
         $start = $range[0];

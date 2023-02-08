@@ -29,26 +29,20 @@ class View
     /** @var array<string,string> */
     private $lang;
 
-    /**
-     * @param array<string,string> $lang
-     */
+    /** @param array<string,string> $lang */
     public function __construct(string $templateFolder, array $lang)
     {
         $this->templateFolder = $templateFolder;
         $this->lang = $lang;
     }
 
-    /**
-     * @param scalar $args
-     */
+    /** @param scalar $args */
     public function text(string $key, ...$args): string
     {
         return $this->esc(vsprintf($this->lang[$key], $args));
     }
 
-    /**
-     * @param scalar $args
-     */
+    /** @param scalar $args */
     public function plural(string $key, int $count, ...$args): string
     {
         if ($count == 0) {
@@ -69,9 +63,7 @@ class View
         return (string) ob_get_clean();
     }
 
-    /**
-     * @param scalar|HtmlString $value
-     */
+    /** @param scalar|HtmlString $value */
     public function esc($value): string
     {
         if ($value instanceof HtmlString) {

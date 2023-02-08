@@ -25,19 +25,13 @@ use DateTime;
 
 class Week
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $week;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $year;
 
-    /**
-     * @return Week[]
-     */
+    /** @return Week[] */
     public static function createRange(int $year, int $startWeek, int $count): array
     {
         $weeks = [];
@@ -71,9 +65,7 @@ class Week
         return sprintf('%04d-%02d', $this->year, $this->week);
     }
 
-    /**
-     * @return DateTime[]
-     */
+    /** @return DateTime[] */
     public function getDatesOfWeek(): array
     {
         $dates = [];

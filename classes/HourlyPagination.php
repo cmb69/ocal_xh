@@ -26,14 +26,10 @@ use DateTime;
 
 class HourlyPagination extends Pagination
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $week;
 
     public function __construct(int $year, int $week, DateTime $now)
@@ -43,9 +39,7 @@ class HourlyPagination extends Pagination
         $this->week = (int) $week;
     }
 
-    /**
-     * @return stdClass[]
-     */
+    /** @return stdClass[] */
     public function getItems(int $weekCount): array
     {
         return $this->filterAndSortItems(

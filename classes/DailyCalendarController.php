@@ -27,14 +27,10 @@ use XH\CSRFProtection as CsrfProtector;
 
 class DailyCalendarController extends CalendarController
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     private $month;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
     /**
@@ -103,9 +99,7 @@ class DailyCalendarController extends CalendarController
         return new HtmlString($view->render('daily-calendars', $data));
     }
 
-    /**
-     * @return list<HtmlString>
-     */
+    /** @return list<HtmlString> */
     private function getMonthCalendars(Occupancy $occupancy): array
     {
         $monthCalendars = [];
@@ -133,9 +127,7 @@ class DailyCalendarController extends CalendarController
         return $monthnames[$month - 1];
     }
 
-    /**
-     * @return list<list<stdClass|null>>
-     */
+    /** @return list<list<stdClass|null>> */
     private function getWeeks(Occupancy $occupancy, Month $month): array
     {
         $weeks = [];
@@ -182,9 +174,7 @@ class DailyCalendarController extends CalendarController
         ]));
     }
 
-    /**
-     * @return list<HtmlString>
-     */
+    /** @return list<HtmlString> */
     private function getMonthLists(Occupancy $occupancy): array
     {
         $monthLists = [];
@@ -213,9 +203,7 @@ class DailyCalendarController extends CalendarController
         ]));
     }
 
-    /**
-     * @return array<stdClass>
-     */
+    /** @return array<stdClass> */
     private function getPaginationItems(): array
     {
         $paginationItems = (new DailyPagination($this->year, $this->month, $this->now))->getItems();

@@ -26,14 +26,10 @@ use stdClass;
 
 abstract class Pagination
 {
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string,string> */
     protected $config;
 
-    /**
-     * @var DateTime
-     */
+    /** @var DateTime */
     protected $now;
 
     public function __construct(DateTime $now)
@@ -44,9 +40,7 @@ abstract class Pagination
         $this->now = $now;
     }
 
-    /**
-     * @return list<stdClass>
-     */
+    /** @return list<stdClass> */
     protected function filterAndSortItems(stdClass $today, ?stdClass ...$items): array
     {
         $result = [$today];

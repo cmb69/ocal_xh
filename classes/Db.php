@@ -26,9 +26,7 @@ class Db
     /** @var string */
     private $lockFilename;
 
-    /**
-     * @var resource
-     */
+    /** @var resource */
     protected $lockFile;
 
     public function __construct()
