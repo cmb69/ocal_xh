@@ -31,12 +31,14 @@ class ListService
     /** @var array<string,string> */
     private $lang;
 
-    public function __construct()
+    /**
+     * @param array<string,string> $config
+     * @param array<string,string> $lang
+     */
+    public function __construct(array $config, array $lang)
     {
-        global $plugin_cf, $plugin_tx;
-
-        $this->config = $plugin_cf['ocal'];
-        $this->lang = $plugin_tx['ocal'];
+        $this->config = $config;
+        $this->lang = $lang;
     }
 
     /** @return list<stdClass> */

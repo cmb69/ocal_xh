@@ -31,23 +31,9 @@ class ListServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->setUpLang();
-        $this->setUpConfig();
-        $this->sut = new ListService();
-    }
-
-    private function setUpConfig()
-    {
-        global $plugin_cf;
-
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
-    }
-
-    private function setUpLang()
-    {
-        global $plugin_tx;
-
         $plugin_tx = XH_includeVar("./languages/en.php", 'plugin_tx');
+        $this->sut = new ListService($plugin_cf['ocal'], $plugin_tx['ocal']);
     }
 
     public function testGetDailyList()
