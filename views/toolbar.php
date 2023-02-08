@@ -1,3 +1,12 @@
+<?php
+
+use Ocal\View;
+
+/**
+ * @var View $this
+ * @var list<int> $states
+ */
+?>
 <div class="ocal_toolbar">
 <?php foreach ($states as $state):?>
   <span class="ocal_state" data-ocal_state="<?=$this->esc($state)?>" title="<?=$this->text("label_state_$state")?>"></span>

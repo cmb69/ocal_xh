@@ -1,3 +1,16 @@
+<?php
+
+use Ocal\View;
+
+/**
+ * @var View $this
+ * @var string $isoDate
+ * @var string $monthname
+ * @var int $year
+ * @var list<string> $daynames
+ * @var list<list<stdClass|null>> $weeks
+ */
+?>
 <table class="ocal_calendar" data-ocal_date="<?=$this->esc($isoDate)?>">
   <thead>
     <tr>

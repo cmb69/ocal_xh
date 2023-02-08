@@ -143,7 +143,7 @@ class DailyCalendarController extends CalendarController
     }
 
     /**
-     * @return object[][]
+     * @return list<list<stdClass|null>>
      */
     private function getWeeks(Occupancy $occupancy, Month $month)
     {
@@ -156,7 +156,7 @@ class DailyCalendarController extends CalendarController
 
     /**
      * @param list<int|null> $week
-     * @return object[]
+     * @return list<stdClass|null>
      */
     private function getWeekDays(Occupancy $occupancy, Month $month, array $week)
     {

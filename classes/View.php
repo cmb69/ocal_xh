@@ -42,7 +42,7 @@ class View
      * @param string $key
      * @return string
      */
-    protected function text($key)
+    public function text($key)
     {
         $args = func_get_args();
         array_shift($args);
@@ -54,7 +54,7 @@ class View
      * @param int $count
      * @return string
      */
-    protected function plural($key, $count)
+    public function plural($key, $count)
     {
         if ($count == 0) {
             $key .= '_0';
@@ -80,7 +80,7 @@ class View
      * @param mixed $value
      * @return mixed
      */
-    protected function esc($value)
+    public function esc($value)
     {
         if ($value instanceof HtmlString) {
             return $value;

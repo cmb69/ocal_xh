@@ -1,3 +1,13 @@
+<?php
+
+use Ocal\View;
+
+/**
+ * @var View $this
+ * @var string $version
+ * @var list<stdClass> $checks
+ */
+?>
 <h1>Ocal <?=$this->esc($version)?></h1>
 <h2><?=$this->text('syscheck_title')?></h2>
 <ul class="ocal_syscheck">

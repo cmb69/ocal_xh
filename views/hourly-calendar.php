@@ -1,3 +1,16 @@
+<?php
+
+use Ocal\View;
+
+/**
+ * @var View $this
+ * @var string $date
+ * @var string $from
+ * @var string $to
+ * @var list<string> $daynames
+ * @var list<list<stdClass>> $hours
+ */
+?>
 <table class="ocal_calendar" data-ocal_date="<?=$this->esc($date)?>">
   <thead>
     <tr>
