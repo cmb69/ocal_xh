@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-use DateTime;
+use DateTimeImmutable;
 use ApprovalTests\Approvals;
 use PHPUnit\Framework\TestCase;
 use XH\CSRFProtection as CsrfProtector;
@@ -47,7 +47,7 @@ class DailyCalendarControllerTest extends TestCase
         $config = $plugin_cf['ocal'];
         $plugin_tx = XH_includeVar("./languages/en.php", 'plugin_tx');
         $lang = $plugin_tx['ocal'];
-        $now = new DateTime("2023-07-02");
+        $now = new DateTimeImmutable("2023-07-02");
         $this->listService = $this->createStub(ListService::class);
         $db = $this->createStub(Db::class);
         $db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily"));

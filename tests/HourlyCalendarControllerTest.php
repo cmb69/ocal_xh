@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-use DateTime;
+use DateTimeImmutable;
 use ApprovalTests\Approvals;
 use PHPUnit\Framework\TestCase;
 use XH\CSRFProtection as CsrfProtector;
@@ -47,7 +47,7 @@ class HourlyCalendarControllerTest extends TestCase
         $config = $plugin_cf['ocal'];
         $plugin_tx = XH_includeVar("./languages/en.php", 'plugin_tx');
         $lang = $plugin_tx['ocal'];
-        $now = new DateTime("2023-07-02");
+        $now = new DateTimeImmutable("2023-07-02");
         $this->listService = $this->createStub(ListService::class);
         $db = $this->createStub(Db::class);
         $db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly"));
@@ -82,7 +82,7 @@ class HourlyCalendarControllerTest extends TestCase
     public function testListActionRendersListWithAnEntry(): void
     {
         $this->listService->method('getHourlyList')->willReturn([
-            (object) ['date' => new DateTime("2023-02-10T11:00"), 'list' => [
+            (object) ['date' => new DateTimeImmutable("2023-02-10T11:00"), 'list' => [
                 (object) ['range' => "12:00-13:00", 'state' => "1", 'label' => "reserved"],
             ]],
         ]);

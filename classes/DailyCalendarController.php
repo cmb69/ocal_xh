@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-use DateTime;
+use DateTimeImmutable;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
 
@@ -43,7 +43,7 @@ class DailyCalendarController extends CalendarController
         CsrfProtector $csrfProtector,
         array $config,
         array $lang,
-        DateTime $now,
+        DateTimeImmutable $now,
         ListService $listService,
         Db $db,
         bool $isAdmin,

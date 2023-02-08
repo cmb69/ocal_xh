@@ -22,7 +22,7 @@
 namespace Ocal;
 
 use PHPUnit\Framework\TestCase;
-use DateTime;
+use DateTimeImmutable;
 
 class WeekTest extends TestCase
 {
@@ -64,7 +64,7 @@ class WeekTest extends TestCase
     public function testGetDatesOfWeek()
     {
         $actual = $this->subject->getDatesOfWeek();
-        $this->assertContainsOnlyInstancesOf(DateTime::class, $actual);
+        $this->assertContainsOnlyInstancesOf(DateTimeImmutable::class, $actual);
         $this->assertCount(7, $actual);
         $this->assertSame('27', $actual[1]->format('j'));
         $this->assertSame('5', $actual[7]->format('j'));

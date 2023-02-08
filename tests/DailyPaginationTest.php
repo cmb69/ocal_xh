@@ -22,7 +22,7 @@
 namespace Ocal;
 
 use PHPUnit\Framework\TestCase;
-use DateTime;
+use DateTimeImmutable;
 
 class DailyPaginationTest extends TestCase
 {
@@ -51,18 +51,18 @@ class DailyPaginationTest extends TestCase
     public function provideGetItemsData()
     {
         return array(
-            [2017, 3, new DateTime('2017-03-01'), [
+            [2017, 3, new DateTimeImmutable('2017-03-01'), [
                 (object) ['year' => 2017, 'monthOrWeek' => 3, 'label' => 'label_today'],
                 (object) ['year' => 2017, 'monthOrWeek' => 4, 'label' => 'label_next_month'],
                 (object) ['year' => 2018, 'monthOrWeek' => 3, 'label' => 'label_next_year']
             ]],
-            [2017, 1, new DateTime('2016-11-01'), [
+            [2017, 1, new DateTimeImmutable('2016-11-01'), [
                 (object) ['year' => 2016, 'monthOrWeek' => 11, 'label' => 'label_today'],
                 (object) ['year' => 2016, 'monthOrWeek' => 12, 'label' => 'label_prev_month'],
                 (object) ['year' => 2017, 'monthOrWeek' => 2, 'label' => 'label_next_month'],
                 (object) ['year' => 2018, 'monthOrWeek' => 1, 'label' => 'label_next_year']
             ]],
-            [2016, 12, new DateTime('2015-12-01'), [
+            [2016, 12, new DateTimeImmutable('2015-12-01'), [
                 (object) ['year' => 2015, 'monthOrWeek' => 12, 'label' => 'label_today'],
                 (object) ['year' => 2016, 'monthOrWeek' => 11, 'label' => 'label_prev_month'],
                 (object) ['year' => 2017, 'monthOrWeek' => 1, 'label' => 'label_next_month']

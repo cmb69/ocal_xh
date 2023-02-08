@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-use DateTime;
+use DateTimeImmutable;
 use stdClass;
 
 abstract class Pagination
@@ -29,10 +29,10 @@ abstract class Pagination
     /** @var array<string,string> */
     protected $config;
 
-    /** @var DateTime */
+    /** @var DateTimeImmutable */
     protected $now;
 
-    public function __construct(DateTime $now)
+    public function __construct(DateTimeImmutable $now)
     {
         global $plugin_cf;
 

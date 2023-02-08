@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-use DateTime;
+use DateTimeImmutable;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
 
@@ -43,7 +43,7 @@ class HourlyCalendarController extends CalendarController
         CsrfProtector $csrfProtector,
         array $config,
         array $lang,
-        DateTime $now,
+        DateTimeImmutable $now,
         ListService $listService,
         Db $db,
         bool $isAdmin,
@@ -111,10 +111,8 @@ class HourlyCalendarController extends CalendarController
 
     private function renderWeekCalendarView(Occupancy $occupancy, Week $week): HtmlString
     {
-        $from = clone $this->now;
-        $from->setISODate($week->getYear(), $week->getWeek(), 1);
-        $to = clone $this->now;
-        $to->setISODate($week->getYear(), $week->getWeek(), 7);
+        $from = $this->now->setISODate($week->getYear(), $week->getWeek(), 1);
+        $to = $this->now->setISODate($week->getYear(), $week->getWeek(), 7);
         $view = new View("{$this->pluginFolder}views/", $this->lang);
         return new HtmlString($view->render('hourly-calendar', [
             'date' => $week->getIso(),
@@ -172,10 +170,8 @@ class HourlyCalendarController extends CalendarController
 
     private function renderWeekListView(Occupancy $occupancy, Week $week): HtmlString
     {
-        $from = clone $this->now;
-        $from->setISODate($week->getYear(), $week->getWeek(), 1);
-        $to = clone $this->now;
-        $to->setISODate($week->getYear(), $week->getWeek(), 7);
+        $from = $this->now->setISODate($week->getYear(), $week->getWeek(), 1);
+        $to = $this->now->setISODate($week->getYear(), $week->getWeek(), 7);
         $view = new View("{$this->pluginFolder}views/", $this->lang);
         return new HtmlString($view->render('hourly-list', [
             'from' => $from->format($this->lang['date_format']),

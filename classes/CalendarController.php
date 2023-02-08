@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-use DateTime;
+use DateTimeImmutable;
 use XH\CSRFProtection as CsrfProtector;
 
 abstract class CalendarController
@@ -53,7 +53,7 @@ abstract class CalendarController
     /** @var string */
     protected $pluginFolder;
 
-    /** @var DateTime */
+    /** @var DateTimeImmutable */
     protected $now;
 
     /** @var ListService */
@@ -75,7 +75,7 @@ abstract class CalendarController
         CsrfProtector $csrfProtector,
         array $config,
         array $lang,
-        DateTime $now,
+        DateTimeImmutable $now,
         ListService $listService,
         Db $db,
         bool $isAdmin,

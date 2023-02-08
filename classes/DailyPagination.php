@@ -22,7 +22,7 @@
 namespace Ocal;
 
 use stdClass;
-use DateTime;
+use DateTimeImmutable;
 
 class DailyPagination extends Pagination
 {
@@ -32,7 +32,7 @@ class DailyPagination extends Pagination
     /** @var int */
     private $month;
 
-    public function __construct(int $year, int $month, DateTime $now)
+    public function __construct(int $year, int $month, DateTimeImmutable $now)
     {
         parent::__construct($now);
         $this->year = (int) $year;

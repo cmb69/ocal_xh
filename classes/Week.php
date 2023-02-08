@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-use DateTime;
+use DateTimeImmutable;
 
 class Week
 {
@@ -65,14 +65,12 @@ class Week
         return sprintf('%04d-%02d', $this->year, $this->week);
     }
 
-    /** @return DateTime[] */
+    /** @return DateTimeImmutable[] */
     public function getDatesOfWeek(): array
     {
         $dates = [];
         for ($i = 1; $i <= 7; $i++) {
-            $date = new DateTime();
-            $date->setISODate($this->year, $this->week, $i);
-            $date->setTime(0, 0, 0);
+            $date = (new DateTimeImmutable())->setISODate($this->year, $this->week, $i)->setTime(0, 0, 0);
             $dates[$i] = $date;
         }
         return $dates;
@@ -80,9 +78,7 @@ class Week
 
     public function getNextWeek(int $offset = 1): self
     {
-        $date = new DateTime();
-        $date->setISODate($this->year, $this->week);
-        $date->modify(sprintf('+%-d week', $offset));
+        $date = (new DateTimeImmutable())->setISODate($this->year, $this->week)->modify(sprintf('+%-d week', $offset));
         $week = (int) $date->format('W');
         $year = (int) $date->format('o');
         return new self($week, $year);

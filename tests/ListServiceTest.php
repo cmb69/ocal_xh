@@ -22,7 +22,7 @@
 namespace Ocal;
 
 use PHPUnit\Framework\TestCase;
-use DateTime;
+use DateTimeImmutable;
 
 class ListServiceTest extends TestCase
 {
@@ -81,7 +81,7 @@ class ListServiceTest extends TestCase
         $week = new Week(9, 2017);
         $expected = array(
             (object) array(
-                'date' => new DateTime('2017-02-27'),
+                'date' => new DateTimeImmutable('2017-02-27'),
                 'list' => array(
                     (object) ['range' => '08:00–11:59', 'state' => 1, 'label' => 'reserved'],
                     (object) ['range' => '14:00–15:59', 'state' => 2, 'label' => 'booked']
