@@ -26,33 +26,28 @@ use DateTimeImmutable;
 
 class ListServiceTest extends TestCase
 {
+    /** @var ListService */
+    private $sut;
+
     public function setUp(): void
     {
         $this->setUpLang();
         $this->setUpConfig();
+        $this->sut = new ListService();
     }
 
     private function setUpConfig()
     {
         global $plugin_cf;
 
-        $plugin_cf['ocal'] = array(
-            'state_max' => '3',
-            'hour_first' => '8',
-            'hour_last' => '16',
-            'hour_interval' => '2'
-        );
+        $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
     }
 
     private function setUpLang()
     {
         global $plugin_tx;
 
-        $plugin_tx['ocal'] = array(
-            'label_state_0' => '',
-            'label_state_1' => 'reserved',
-            'label_state_2' => 'booked'
-        );
+        $plugin_tx = XH_includeVar("./languages/en.php", 'plugin_tx');
     }
 
     public function testGetDailyList()
@@ -63,10 +58,10 @@ class ListServiceTest extends TestCase
         $occupancy->setState('2017-03-04', 2);
         $month = new Month(3, 2017);
         $expected = array(
-            (object) ['range' => '1.–2.', 'state' => 1 , 'label' => 'reserved'],
-            (object) ['range' =>    '4.', 'state' => 2, 'label' => 'booked']
+            (object) ['range' => '1.–2.', 'state' => 1 , 'label' => 'available'],
+            (object) ['range' =>    '4.', 'state' => 2, 'label' => 'reserved']
         );
-        $this->assertEquals($expected, (new ListService)->getDailyList($occupancy, $month));
+        $this->assertEquals($expected, $this->sut->getDailyList($occupancy, $month));
     }
 
     public function testGetHourlyList()
@@ -83,11 +78,11 @@ class ListServiceTest extends TestCase
             (object) array(
                 'date' => new DateTimeImmutable('2017-02-27'),
                 'list' => array(
-                    (object) ['range' => '08:00–11:59', 'state' => 1, 'label' => 'reserved'],
-                    (object) ['range' => '14:00–15:59', 'state' => 2, 'label' => 'booked']
+                    (object) ['range' => '08:00–11:59', 'state' => 1, 'label' => 'available'],
+                    (object) ['range' => '14:00–15:59', 'state' => 2, 'label' => 'reserved']
                 )
             )
         );
-        $this->assertEquals($expected, (new ListService)->getHourlyList($occupancy, $week));
+        $this->assertEquals($expected, $this->sut->getHourlyList($occupancy, $week));
     }
 }
