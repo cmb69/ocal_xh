@@ -59,6 +59,9 @@ abstract class CalendarController
     /** @var bool */
     protected $isAdmin;
 
+    /** @var View */
+    protected $view;
+
     /**
      * @param array<string,string> $config
      * @param array<string,string> $lang
@@ -83,6 +86,7 @@ abstract class CalendarController
         $this->listService = $listService;
         $this->db = $db;
         $this->isAdmin = $isAdmin;
+        $this->view = new View("{$this->pluginFolder}views/", $this->lang);
     }
 
     public function defaultAction(string $name, int $count): Response
@@ -156,8 +160,7 @@ abstract class CalendarController
 
     protected function renderModeLinkView(): HtmlString
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang);
-        return new HtmlString($view->render('mode-link', [
+        return new HtmlString($this->view->render('mode-link', [
             'mode' => $mode = $this->mode == 'calendar' ? 'list' : 'calendar',
             'url' => $this->modifyUrl(array('ocal_action' => $mode)),
         ]));
@@ -165,16 +168,14 @@ abstract class CalendarController
 
     protected function renderStatusbarView(): HtmlString
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang);
-        return new HtmlString($view->render('statusbar', [
+        return new HtmlString($this->view->render('statusbar', [
             'image' => "{$this->pluginFolder}images/ajax-loader-bar.gif",
         ]));
     }
 
     protected function renderToolbarView(): HtmlString
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang);
-        return new HtmlString($view->render('toolbar', [
+        return new HtmlString($this->view->render('toolbar', [
             'states' => range(0, $this->config['state_max']),
         ]));
     }
