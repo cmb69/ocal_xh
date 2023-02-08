@@ -31,6 +31,9 @@ class HourlyCalendarControllerTest extends TestCase
     /** @var HourlyCalendarController */
     private $sut;
 
+    /** @var CsrfProtector&MockObject */
+    private $csrfProtector;
+
     /** @var ListService&MockObject */
     private $listService;
 
@@ -39,8 +42,8 @@ class HourlyCalendarControllerTest extends TestCase
         global $plugin_cf;
 
         $_SERVER['QUERY_STRING'] = "";
-        $csrfProtector = $this->createStub(CsrfProtector::class);
-        $csrfProtector->method('tokenInput')->willReturn(
+        $this->csrfProtector = $this->createStub(CsrfProtector::class);
+        $this->csrfProtector->method('tokenInput')->willReturn(
             '<input type="hidden" name="xh_csrf_token" value="dcfff515ebf5bd421d5a0777afc6358b">'
         );
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
@@ -54,7 +57,7 @@ class HourlyCalendarControllerTest extends TestCase
         $this->sut = new HourlyCalendarController(
             "/",
             "./",
-            $csrfProtector,
+            $this->csrfProtector,
             $config,
             $lang,
             $now,
@@ -136,5 +139,13 @@ class HourlyCalendarControllerTest extends TestCase
         $_POST = ['ocal_states' => json_encode(['2023-06' => array_fill(0, 90, "1")])];
         $response = $this->sut->saveAction("test-hourly", 1);
         $this->assertEquals('<p class="xh_success">Successfully saved.</p>', $response->output());
+    }
+
+    public function testSaveActionPreventCsrf(): void
+    {
+        $_GET = ['ocal_name' => "test-hourly"];
+        $_POST = ['ocal_states' => json_encode(['2023-06' => array_fill(0, 90, "1")])];
+        $this->csrfProtector->expects($this->once())->method('check');
+        $this->sut->saveAction("test-hourly", 1);
     }
 }
