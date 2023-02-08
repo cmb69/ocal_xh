@@ -1,198 +1,120 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<meta http-equiv="content-type" content="text/html;charset=utf-8">
-<title>Ocal_XH - Manual</title>
-<link rel="stylesheet" type="text/css" href="./stylesheet.css">
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Ocal_XH – User Manual</title>
+  <style type="text/css">
+    body {
+        font-family: Georgia, serif;
+        line-height: 1.5;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        background: #ffffe1;
+        max-width: 32em;
+    }
+    p {
+        text-align: justify;
+    }
+    pre {
+        color: black;
+        background: #ffe;
+        overflow: auto;
+        padding: 0.2em 0.5em;
+        border: 1px solid silver;
+    }
+  </style>
 </head>
-
 <body>
-
-<h1>Ocal_XH – a CMSimple_XH Plugin</h1>
-<img src="../ocal.png" style="float: left" alt="Calendar">
-<p>Ocal_XH facilitates to present calendars on your website which display the
-occupancy of a certain location or other rental, so visitors can easily see
-whether the item is available on a certain date or (hourly) interval. Each
-calendar is only meant for a single rental; however, you can display multiple
-calendars on a single page. Visitors are able to switch between a calendar and a
-list view.</p>
-<p>The plugin does neither provide any actual booking facilities (however, you
-may be able to combine it with a mail form like <a
-href="http://3-magi.net/?CMSimple_XH/Advancedform_XH">Advancedform_XH</a>), nor
-can it be used as an event calendar, such as <a
-href="http://frankziesing.de/cmsimple/en/?Welcome:Calendar">Calendar</a>.</p>
-
-<ul id="nav">
-<li><a href="#notice">Important Notice</a></li>
+<h1 id="ocal_xh">Ocal_XH</h1>
+<p>Ocal_XH facilitates to present calendars on your website which display the occupancy of a certain location or other rental, so visitors can easily see whether the item is available on a certain date or (hourly) interval. Each calendar is only meant for a single rental; however, you can display multiple calendars on a single page. Visitors are able to switch between a calendar and a list view.</p>
+<p>The plugin does neither provide any actual booking facilities (however, you may be able to combine it with a mail form like <a href="https://github.com/cmb69/advancedform_xh">Advancedform_XH</a>), nor can it be used as an event calendar, such as <a href="https://github.com/cmb69/calendar_xh">Calendar_XH</a>.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
 <li><a href="#requirements">Requirements</a></li>
+<li><a href="#download">Download</a></li>
 <li><a href="#installation">Installation</a></li>
 <li><a href="#settings">Settings</a></li>
 <li><a href="#usage">Usage</a>
 <ul>
-<li><a href="#usage-admin">Administration</a></li>
-<li><a href="#usage-states">States</a></li>
-</ul>
-</li>
-<!--<li><a href="#limitations">Limitations</a></li>-->
+<li><a href="#administration">Administration</a></li>
+<li><a href="#states">States</a></li>
+</ul></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
 <li><a href="#license">License</a></li>
 <li><a href="#credits">Credits</a></li>
 </ul>
-
-<div id="body">
-
-<p><strong>Please do read this documentation <em>before</em> you encounter any
-problems!</strong></p>
-
-<h2 id="notice">Important Notice</h2>
-<p style="font-weight: bold">Ocal_XH couldn't be tested so far in various
-environments. It is a so called beta version. Use with caution!</p>
-<div class="toplink"><a href="#">back to top</a></div>
-
 <h2 id="requirements">Requirements</h2>
-<p>Ocal_XH is a plugin for CMSimple_XH. It requires CMSimple_XH &ge; 1.7.0 and
-PHP &ge; 7.1.0 with the json extension.</p>
-<div class="toplink"><a href="#">back to top</a></div>
-
+<p>Ocal_XH is a plugin for CMSimple_XH. It requires CMSimple_XH ≥ 1.7.0, and PHP ≥ 7.1.0 with the <em>json</em> extension.</p>
+<h2 id="download">Download</h2>
+<p>The <a href="https://github.com/cmb69/ocal_xh/releases/latest">lastest release</a> is available for download on Github.</p>
 <h2 id="installation">Installation</h2>
-<p>The installation is done as with many other CMSimple_XH plugins.
-See the <a href="http://www.cmsimple-xh.org/wiki/doku.php/installation">
-CMSimple_XH wiki</a> for further details.</p>
-<ol>
-<li>Backup the data on your server.</li>
+<p>The installation is done as with many other CMSimple_XH plugins. See the <a href="https://wiki.cmsimple-xh.org/?for-users/working-with-the-cms/plugins#id3_install-plugin">CMSimple_XH Wiki</a> for further details.</p>
+<ol type="1">
+<li><strong>Backup the data on your server.</strong></li>
 <li>Unzip the distribution on your computer.</li>
-<li>Upload the whole directory ocal/ to your server into CMSimple_XH's plugins/
-directory.</li>
-<li>Set write permissions for the subdirectories css/<!--, config/--> and
-languages/.</li>
-<!--<li>Browse to Ocal_XH's administration (Plugins &rarr; Ocal), and check
-if all requirements are fulfilled.</li>-->
+<li>Upload the whole directory <code>ocal/</code> to your server into the <code>plugins/</code> directory of CMSimple_XH.</li>
+<li>Set write permissions for the subdirectories <code>css/</code>, <code>config/</code> and <code>languages/</code>.</li>
+<li>Navigate <code>Plugins</code> → <code>Ocal</code> to check if all requirements are fulfilled.</li>
 </ol>
-<div class="toplink"><a href="#">back to top</a></div>
-
 <h2 id="settings">Settings</h2>
-<p>The plugin's configuration is done as with many other CMSimple_XH plugins in
-the website's back-end. Select Plugins &rarr; Ocal.</p>
-<p>You can change the default settings of Ocal_XH under "Config". Hints for the
-options will be displayed when hovering over the help icon with your mouse.</p>
-<p>Localization is done under "Language". You can translate the character
-strings to your own language (if there is no appropriate language file
-available), or customize them according to your needs.</p>
-<p>The look of Ocal_XH can be customized under "Stylesheet".</p>
-<div class="toplink"><a href="#">back to top</a></div>
-
+<p>The configuration of the plugin is done as with many other CMSimple_XH plugins in the back-end of the Website. Select <code>Plugins</code> → <code>Ocal</code>.</p>
+<p>You can change the default settings of Ocal_XH under <code>Config</code>. Hints for the options will be displayed when hovering over the help icon with your mouse.</p>
+<p>Localization is done under <code>Language</code>. You can translate the character strings to your own language (if there is no appropriate language file available), or customize them according to your needs.</p>
+<p>The look of Ocal_XH can be customized under <code>Stylesheet</code>.</p>
 <h2 id="usage">Usage</h2>
 <p>To display a <em>daily</em> occupancy calendar on a <em>page</em>, use:</p>
-<pre>{{{ocal('OCCUPANCY_NAME', NUMBER_OF_MONTHS);}}}</pre>
+<pre><code>{{{ocal(&#39;%OCCUPANCY_NAME%&#39;, %NUMBER_OF_MONTHS%)}}}</code></pre>
 <p>To display an <em>hourly</em> occupancy calendar on a <em>page</em>, use:</p>
-<pre>{{{ocal_hourly('OCCUPANCY_NAME', NUMBER_OF_WEEKS);}}}</pre>
-<p>To display a <em>daily</em> occupancy calendar in the <em>template</em>,
-use:</p>
-<pre>&lt;?php echo ocal('OCCUPANCY_NAME', NUMBER_OF_MONTHS);?&gt;</pre>
-<p>To display an <em>hourly</em> occupancy calendar in the <em>template</em>,
-use:</p>
-<pre>&lt;?php echo ocal_hourly('OCCUPANCY_NAME', NUMBER_OF_WEEKS);?&gt;</pre>
-<p>OCCUPANCY_NAME is an arbitrary name, that must only consist of the letters
-a-z, the digits 0-9 and minus signs. NUMBER_OF_MONTHS resp. NUMBER_OF_WEEKS
-specifies the number of calendars that shall be displayed simultaneously.</p>
-<p>Note that you can put an arbitrary amount of occupancy calendars on a single
-page, even for the same occupancy (what might make sense if you like to present
-a large interval, say a year, on a page, and only a small interval, say a single
-month, in the template).</p>
+<pre><code>{{{ocal_hourly(&#39;%OCCUPANCY_NAME%&#39;, %NUMBER_OF_WEEKS%)}}}</code></pre>
+<p>To display a <em>daily</em> occupancy calendar in the <em>template</em>, use:</p>
+<pre><code>&lt;?=ocal(&#39;%OCCUPANCY_NAME%&#39;, %NUMBER_OF_MONTHS%)?&gt;</code></pre>
+<p>To display an <em>hourly</em> occupancy calendar in the <em>template</em>, use:</p>
+<pre><code>&lt;?=ocal_hourly(&#39;%OCCUPANCY_NAME%&#39;, %NUMBER_OF_WEEKS%)?&gt;</code></pre>
+<p><code>%OCCUPANCY_NAME%</code> is an arbitrary name, that must only consist of the letters <code>a</code>-<code>z</code>, the digits <code>0</code>-<code>9</code> and hyphens (<code>-</code>).</p>
+<p><code>%NUMBER_OF_MONTHS%</code> and <code>%NUMBER_OF_WEEKS%</code> specify the number of calendars that shall be displayed simultaneously.</p>
+<p>Note that you can put an arbitrary amount of occupancy calendars on a single page, even for the same occupancy (what might make sense if you like to present a large interval, say a year, on a page, and only a small interval, say a single month, in the template).</p>
 <p>Some examples:</p>
-<pre>{{{ocal('holiday-appartment', 12);}}}
-&lt;?php echo ocal('holiday-appartment', 1);?&gt;
-{{{ocal_hourly('rickshaw', 2);}}}
-{{{ocal('rubber-raft-1', 6);}}}
-{{{ocal('rubber-raft-2', 6);}}}</pre>
-<div class="toplink"><a href="#">back to top</a></div>
-
-<h3 id="usage-admin">Administration</h2>
-<p>The administration of the occupancy calendars happens on the pages where they
-are displayed. When you're logged in as administrator, you'll see a toolbar
-where you can pick one of the available states by clicking it. Then you can
-click individual dates in the displayed calendars to assign them this state.
-When you're finished, you have to save your modifications.</p>
+<pre><code>{{{ocal(&#39;holiday-appartment&#39;, 12)}}}
+&lt;?=ocal(&#39;holiday-appartment&#39;, 1)?&gt;
+{{{ocal_hourly(&#39;rickshaw&#39;, 2)}}}
+{{{ocal(&#39;rubber-raft-1&#39;, 6)}}}
+{{{ocal(&#39;rubber-raft-2&#39;, 6)}}}</code></pre>
+<h3 id="administration">Administration</h3>
+<p>The administration of the occupancy calendars happens on the pages where they are displayed. When you are logged in as administrator, you will see a toolbar where you can pick one of the available states by clicking it. Then you can click individual dates in the displayed calendars to assign them this state. When you are finished, you have to save your modifications.</p>
 <p>By default, four states are available which have the following meaning:</p>
 <ul>
-<li>0 (white): non applicable</li>
-<li>1 (green): available</li>
-<li>2 (yellow): reserved or partly available</li>
-<li>3 (red): (fully) booked out</li>
+<li><code>0</code> (white): non applicable</li>
+<li><code>1</code> (green): available</li>
+<li><code>2</code> (yellow): reserved or partly available</li>
+<li><code>3</code> (red): (fully) booked out</li>
 </ul>
-<p>
-    Note that the number and meaning of the states <a href="#usage-states">is
-    customizable</a>.
-</p>
-<p>Note that the administration requires JavaScript and a somewhat contemporary
-browser (e.g. IE < 8 is not supported).</p>
-<div class="toplink"><a href="#">back to top</a></div>
-
-<h3 id="usage-states">States</h3>
-<p>
-    It is possible to have an arbitrary amount of states, each with its own
-    meaning. The maximum state that is available has to be set in the
-    configuration (State → Max). Note that in addition to that many states,
-    there is also state 0, which is the default state that is not shown in the
-    list views.
-</p>
-<p>
-    You can customize the state labels in the language settings of the plugin.
-    If you have increased State → Max, you have to manually edit the respective
-    language files in <code>plugins/ocal/languages/</code>, and have to add
-    further state labels, like so:
-</p>
-<pre>
-    $plugin_tx['ocal']['label_state_4']="extra state";
-</pre>
-<p>
-    You can customize the state colors in the plugin's stylesheet, and add rules
-    for additional states like so:
-</p>
-<pre>
-    *[data-ocal_state="4"] {
-        background: blue;
-        color: white;
-    }
-</pre>
-<p>
-    To summarize: set the maximum state in the configuration, add (or remove)
-    the state labels in the language file and add (or remove) state color rules
-    in the stylesheet.
-</p>
-<div class="toplink"><a href="#">back to top</a></div>
-
-<!--<h2 id="limitations">Limitations</h2>
-<div class="toplink"><a href="#">back to top</a></div>-->
-
+<p>Note that the number and meaning of the states <a href="#states">is customizable</a>.</p>
+<p>Also note that the administration requires JavaScript and a somewhat contemporary browser (e.g. IE &lt; 8 is not supported).</p>
+<h3 id="states">States</h3>
+<p>It is possible to have an arbitrary amount of states, each with its own meaning. The maximum state that is available has to be set in the configuration (<code>State</code> → <code>Max</code>). Note that in addition to that many states, there is also state <code>0</code>, which is the default state that is not shown in the list views.</p>
+<p>You can customize the state labels in the language settings of the plugin. If you have increased <code>State</code> → <code>Max</code>, you have to manually edit the respective language files in <code>plugins/ocal/languages/</code>, and have to add further state labels, like so:</p>
+<pre><code>$plugin_tx[&#39;ocal&#39;][&#39;label_state_4&#39;]=&quot;extra state&quot;;</code></pre>
+<p>You can customize the state colors in the stylesheet of the plugin, and add rules for additional states like so:</p>
+<pre><code>*[data-ocal_state=&quot;4&quot;] {
+    background: blue;
+    color: white;
+}</code></pre>
+<p>To summarize: set the maximum state in the configuration, add (or remove) the state labels in the language file and add (or remove) state color rules in the stylesheet.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Report bugs and ask for support either on <a href="https://github.com/cmb69/ocal_xh/issues">Github</a> or in the <a href="https://cmsimpleforum.com/">CMSimple_XH Forum</a>.</p>
 <h2 id="license">License</h2>
-<p>Ocal_XH is licensed under <a
-href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>.</p>
-<p>&copy; 2014-2017 Christoph M. Becker</p>
-<div class="toplink"><a href="#">back to top</a></div>
-
+<p>Ocal_XH is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+<p>Ocal_XH is distributed in the hope that it will be useful, but <em>without any warranty</em>; without even the implied warranty of <em>merchantibility</em> or <em>fitness for a particular purpose</em>. See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with Ocal_XH. If not, see <a href="https://www.gnu.org/licenses/" class="uri">https://www.gnu.org/licenses/</a>.</p>
+<p>© 2014-2017 Christoph M. Becker</p>
 <h2 id="credits">Credits</h2>
-<p>Ocal_XH is inspired by the occcal plugin of <a
-href="http://cmsimple-styles.com/">CMSimple-Styles.com</a>. Many thanks to Jens
-Broecher for having this nice idea.</p>
-<p>The plugin icon is designed by <a
-href="http://deviantdark.deviantart.com/">deviantdark</a>. Many thanks for
-publishing the icon under LGPL.</p>
-<!--<p>This plugin uses free applications icons from <a-->
-<!--href="http://www.aha-soft.com/">Aha-Soft</a>. Many thanks for making these icons-->
-<!--freely available.</p>-->
-<p>Many thanks to the community at the <a
-href="http://www.cmsimpleforum.com/">CMSimple_XH forum</a> for tips, suggestions
-and testing. Especially I like to thank rothom for being the first tester and
-hixi for suggesting the hourly calendars.</p>
-<p>And last but not least many thanks to <a href="http://harteg.dk/">Peter
-Harteg</a>, the "father" of CMSimple, and all developers of <a
-href="http://www.cmsimple-xh.org/"> CMSimple_XH</a> without whom this amazing
-CMS wouldn't exist.</p>
-<div class="toplink"><a href="#">back to top</a></div>
-
-</div>
-
+<p>Ocal_XH is inspired by the occcal plugin of CMSimple-Styles. Many thanks to Jens Broecher for having this nice idea.</p>
+<p>The plugin icon is designed by <a href="https://www.deviantart.com/deviantdark">deviantdark</a>. Many thanks for publishing the icon under LGPL.</p>
+<p>Many thanks to the community at the <a href="https://www.cmsimpleforum.com/">CMSimple_XH Forum</a> for tips, suggestions and testing. Especially I like to thank <em>rothom</em> for being the first tester and <em>hixi</em> for suggesting the hourly calendars.</p>
+<p>And last but not least many thanks to <a href="https://www.harteg.dk/">Peter Harteg</a>, the “father” of CMSimple, and all developers of <a href="https://www.cmsimple-xh.org/">CMSimple_XH</a> without whom this amazing CMS would not exist.</p>
 </body>
-
 </html>
