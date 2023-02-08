@@ -78,7 +78,7 @@ class Week
 
     public function getNextWeek(int $offset = 1): self
     {
-        $date = (new DateTimeImmutable())->setISODate($this->year, $this->week)->modify(sprintf('+%-d week', $offset));
+        $date = (new DateTimeImmutable())->setISODate($this->year, $this->week)->modify("{$offset} week");
         $week = (int) $date->format('W');
         $year = (int) $date->format('o');
         return new self($week, $year);
