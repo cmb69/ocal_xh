@@ -29,12 +29,6 @@ abstract class CalendarController
     /** @var bool */
     protected static $isJavaScriptEmitted = false;
 
-    /** @var string */
-    protected $name;
-
-    /** @var int */
-    protected $count;
-
     /** @var CsrfProtector */
     protected $csrfProtector;
 
@@ -78,12 +72,8 @@ abstract class CalendarController
         DateTimeImmutable $now,
         ListService $listService,
         Db $db,
-        bool $isAdmin,
-        string $name,
-        int $count
+        bool $isAdmin
     ) {
-        $this->name = (string) $name;
-        $this->count = (int) $count;
         $this->scriptName = $scriptName;
         $this->pluginFolder = $pluginFolder;
         $this->csrfProtector = $csrfProtector;
@@ -95,13 +85,13 @@ abstract class CalendarController
         $this->isAdmin = $isAdmin;
     }
 
-    public function defaultAction(): Response
+    public function defaultAction(string $name, int $count): Response
     {
         $this->mode = 'calendar';
-        $occupancy = $this->findOccupancy();
-        $html = $this->renderCalendarView($occupancy);
+        $occupancy = $this->findOccupancy($name);
+        $html = $this->renderCalendarView($occupancy, $count);
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            if ($_GET['ocal_name'] == $this->name) {
+            if ($_GET['ocal_name'] == $name) {
                 return new Response($html, "text/html");
             }
             return new Response("");
@@ -110,13 +100,13 @@ abstract class CalendarController
         }
     }
 
-    public function listAction(): Response
+    public function listAction(string $name, int $count): Response
     {
         $this->mode = 'list';
-        $occupancy = $this->findOccupancy();
-        $html = $this->renderListView($occupancy);
+        $occupancy = $this->findOccupancy($name);
+        $html = $this->renderListView($occupancy, $count);
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            if ($_GET['ocal_name'] == $this->name) {
+            if ($_GET['ocal_name'] == $name) {
                 return new Response($html, "text/html");
             }
             return new Response("");
@@ -125,24 +115,24 @@ abstract class CalendarController
         }
     }
 
-    abstract protected function findOccupancy(): Occupancy;
+    abstract protected function findOccupancy(string $name): Occupancy;
 
-    abstract protected function renderCalendarView(Occupancy $occupancy): HtmlString;
+    abstract protected function renderCalendarView(Occupancy $occupancy, int $count): HtmlString;
 
-    abstract protected function renderListView(Occupancy $occupancy): HtmlString;
+    abstract protected function renderListView(Occupancy $occupancy, int $count): HtmlString;
 
-    public function saveAction(): Response
+    public function saveAction(string $name, int $count): Response
     {
         $this->mode = 'calendar';
-        if ($this->isAdmin && isset($_GET['ocal_name']) && $_GET['ocal_name'] == $this->name) {
+        if ($this->isAdmin && isset($_GET['ocal_name']) && $_GET['ocal_name'] == $name) {
             $this->csrfProtector->check();
-            return new Response($this->saveStates(), "text/html");
+            return new Response($this->saveStates($name), "text/html");
         }
         return new Response("");
     }
 
     /** @return string|never */
-    abstract protected function saveStates();
+    abstract protected function saveStates(string $name);
 
     /** @return void */
     protected function emitScriptElements()

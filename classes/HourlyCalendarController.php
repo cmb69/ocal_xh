@@ -46,9 +46,7 @@ class HourlyCalendarController extends CalendarController
         DateTimeImmutable $now,
         ListService $listService,
         Db $db,
-        bool $isAdmin,
-        string $name,
-        int $count
+        bool $isAdmin
     ) {
         parent::__construct(
             $scriptName,
@@ -59,9 +57,7 @@ class HourlyCalendarController extends CalendarController
             $now,
             $listService,
             $db,
-            $isAdmin,
-            $name,
-            $count
+            $isAdmin
         );
         $this->week = isset($_GET['ocal_week'])
             ? max(1, min(53, (int) $_GET['ocal_week']))
@@ -71,15 +67,15 @@ class HourlyCalendarController extends CalendarController
             : (int) $now->format('o');
     }
 
-    protected function findOccupancy(): Occupancy
+    protected function findOccupancy(string $name): Occupancy
     {
         $this->db->lock(false);
-        $result = $this->db->findOccupancy($this->name, true);
+        $result = $this->db->findOccupancy($name, true);
         $this->db->unlock();
         return $result;
     }
 
-    protected function renderCalendarView(Occupancy $occupancy): HtmlString
+    protected function renderCalendarView(Occupancy $occupancy, int $count): HtmlString
     {
         $this->emitScriptElements();
         
@@ -90,8 +86,8 @@ class HourlyCalendarController extends CalendarController
             'isEditable' => $this->isAdmin,
             'toolbar' => $this->renderToolbarView(),
             'statusbar' => $this->renderStatusbarView(),
-            'weekPagination' => $this->renderPaginationView($this->count),
-            'weekCalendars' => $this->getWeekCalendars($occupancy),
+            'weekPagination' => $this->renderPaginationView($count),
+            'weekCalendars' => $this->getWeekCalendars($occupancy, $count),
         ];
         if ($this->isAdmin) {
             $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
@@ -100,10 +96,10 @@ class HourlyCalendarController extends CalendarController
     }
 
     /** @return list<HtmlString> */
-    private function getWeekCalendars(Occupancy $occupancy): array
+    private function getWeekCalendars(Occupancy $occupancy, int $count): array
     {
         $weekCalendars = [];
-        foreach (Week::createRange($this->isoYear, $this->week, $this->count) as $week) {
+        foreach (Week::createRange($this->isoYear, $this->week, $count) as $week) {
             $weekCalendars[] = $this->renderWeekCalendarView($occupancy, $week);
         }
         return $weekCalendars;
@@ -145,7 +141,7 @@ class HourlyCalendarController extends CalendarController
         return $daysOfHours;
     }
 
-    protected function renderListView(Occupancy $occupancy): HtmlString
+    protected function renderListView(Occupancy $occupancy, int $count): HtmlString
     {
         $this->emitScriptElements();
         $view = new View("{$this->pluginFolder}views/", $this->lang);
@@ -153,16 +149,16 @@ class HourlyCalendarController extends CalendarController
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
             'statusbar' => $this->renderStatusbarView(),
-            'weekPagination' => $this->renderPaginationView($this->count),
-            'weekLists' => $this->getWeekLists($occupancy),
+            'weekPagination' => $this->renderPaginationView($count),
+            'weekLists' => $this->getWeekLists($occupancy, $count),
         ]));
     }
 
     /** @return list<HtmlString> */
-    private function getWeekLists(Occupancy $occupancy): array
+    private function getWeekLists(Occupancy $occupancy, int $count): array
     {
         $weekLists = [];
-        foreach (Week::createRange($this->isoYear, $this->week, $this->count) as $week) {
+        foreach (Week::createRange($this->isoYear, $this->week, $count) as $week) {
             $weekLists[] = $this->renderWeekListView($occupancy, $week);
         }
         return $weekLists;
@@ -221,7 +217,7 @@ class HourlyCalendarController extends CalendarController
     }
 
     /** @return string|never */
-    protected function saveStates()
+    protected function saveStates(string $name)
     {
         $states = json_decode($_POST['ocal_states'], true);
         if (!is_array($states)) {
@@ -229,7 +225,7 @@ class HourlyCalendarController extends CalendarController
             exit;
         }
         $this->db->lock(true);
-        $occupancy = $this->db->findOccupancy($this->name, true);
+        $occupancy = $this->db->findOccupancy($name, true);
         foreach ($states as $week => $states) {
             foreach ($states as $i => $state) {
                 $day = $i % 7 + 1;

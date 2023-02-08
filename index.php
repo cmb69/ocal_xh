@@ -45,15 +45,13 @@ function ocal($name, $monthCount = 1)
         new DateTimeImmutable(),
         new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
         new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
-        defined('XH_ADM') && XH_ADM,
-        $name,
-        $monthCount
+        defined('XH_ADM') && XH_ADM
     );
     $action = $_GET['ocal_action'] ?? 'default';
     if (!is_callable([$controller, "{$action}Action"])) {
         $action = 'default';
     }
-    return $controller->{"{$action}Action"}()->trigger();
+    return $controller->{"{$action}Action"}($name, $monthCount)->trigger();
 }
 
 /**
@@ -77,15 +75,13 @@ function Ocal_hourly($name, $weekCount = 1)
         new DateTimeImmutable(),
         new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
         new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
-        defined('XH_ADM') && XH_ADM,
-        $name,
-        $weekCount
+        defined('XH_ADM') && XH_ADM
     );
     $action = $_GET['ocal_action'] ?? 'default';
     if (!is_callable([$controller, "{$action}Action"])) {
         $action = 'default';
     }
-    return $controller->{"{$action}Action"}()->trigger();
+    return $controller->{"{$action}Action"}($name, $weekCount)->trigger();
 }
 
 if (isset($_GET['ocal_week']) || isset($_GET['ocal_month']) || isset($_GET['ocal_year'])) {

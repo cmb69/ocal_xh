@@ -68,14 +68,14 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testDefaultActionRendersCalendar(): void
     {
-        $response = $this->sut->defaultAction();
+        $response = $this->sut->defaultAction("test-hourly", 1);
         Approvals::verifyHtml($response->output());
     }
 
     public function testListActionRendersListWithoutEntries(): void
     {
         $this->listService->method('getHourlyList')->willReturn([]);
-        $response = $this->sut->ListAction();
+        $response = $this->sut->listAction("test-hourly", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -86,13 +86,13 @@ class HourlyCalendarControllerTest extends TestCase
                 (object) ['range' => "12:00-13:00", 'state' => "1", 'label' => "reserved"],
             ]],
         ]);
-        $response = $this->sut->ListAction();
+        $response = $this->sut->listAction("test-hourly", 1);
         Approvals::verifyHtml($response->output());
     }
 
     public function testSaveActionReturnsEmptyResponseWhenNotLoggedIn(): void
     {
-        $response = $this->sut->SaveAction();
+        $response = $this->sut->saveAction("test-hourly", 1);
         $this->assertEquals("", $response->output());
     }
 }

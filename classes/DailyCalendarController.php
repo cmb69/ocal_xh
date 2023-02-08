@@ -46,9 +46,7 @@ class DailyCalendarController extends CalendarController
         DateTimeImmutable $now,
         ListService $listService,
         Db $db,
-        bool $isAdmin,
-        string $name,
-        int $count
+        bool $isAdmin
     ) {
         parent::__construct(
             $scriptName,
@@ -59,9 +57,7 @@ class DailyCalendarController extends CalendarController
             $now,
             $listService,
             $db,
-            $isAdmin,
-            $name,
-            $count
+            $isAdmin
         );
         $this->month = isset($_GET['ocal_month'])
             ? max(1, min(12, (int) $_GET['ocal_month']))
@@ -71,15 +67,15 @@ class DailyCalendarController extends CalendarController
             : (int) $now->format('Y');
     }
 
-    protected function findOccupancy(): Occupancy
+    protected function findOccupancy(string $name): Occupancy
     {
         $this->db->lock(false);
-        $result = $this->db->findOccupancy($this->name);
+        $result = $this->db->findOccupancy($name);
         $this->db->unlock();
         return $result;
     }
 
-    protected function renderCalendarView(Occupancy $occupancy): HtmlString
+    protected function renderCalendarView(Occupancy $occupancy, int $count): HtmlString
     {
         $this->emitScriptElements();
 
@@ -91,7 +87,7 @@ class DailyCalendarController extends CalendarController
             'toolbar' => $this->renderToolbarView(),
             'statusbar' => $this->renderStatusbarView(),
             'monthPagination' => $this->renderPaginationView(),
-            'monthCalendars' => $this->getMonthCalendars($occupancy),
+            'monthCalendars' => $this->getMonthCalendars($occupancy, $count),
         ];
         if ($this->isAdmin) {
             $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
@@ -100,10 +96,10 @@ class DailyCalendarController extends CalendarController
     }
 
     /** @return list<HtmlString> */
-    private function getMonthCalendars(Occupancy $occupancy): array
+    private function getMonthCalendars(Occupancy $occupancy, int $count): array
     {
         $monthCalendars = [];
-        foreach (Month::createRange($this->year, $this->month, $this->count) as $month) {
+        foreach (Month::createRange($this->year, $this->month, $count) as $month) {
             $monthCalendars[] = $this->renderMonthCalendarView($occupancy, $month);
         }
         return $monthCalendars;
@@ -161,7 +157,7 @@ class DailyCalendarController extends CalendarController
         return $days;
     }
 
-    protected function renderListView(Occupancy $occupancy): HtmlString
+    protected function renderListView(Occupancy $occupancy, int $count): HtmlString
     {
         $this->emitScriptElements();
         $view = new View("{$this->pluginFolder}views/", $this->lang);
@@ -169,16 +165,16 @@ class DailyCalendarController extends CalendarController
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
             'statusbar' => $this->renderStatusbarView(),
-            'monthLists' => $this->getMonthLists($occupancy),
+            'monthLists' => $this->getMonthLists($occupancy, $count),
             'monthPagination' => $this->renderPaginationView(),
         ]));
     }
 
     /** @return list<HtmlString> */
-    private function getMonthLists(Occupancy $occupancy): array
+    private function getMonthLists(Occupancy $occupancy, int $count): array
     {
         $monthLists = [];
-        foreach (Month::createRange($this->year, $this->month, $this->count) as $month) {
+        foreach (Month::createRange($this->year, $this->month, $count) as $month) {
             $monthLists[] = $this->renderMonthListView($occupancy, $month);
         }
         return $monthLists;
@@ -225,7 +221,7 @@ class DailyCalendarController extends CalendarController
     }
 
     /** @return string|never */
-    protected function saveStates()
+    protected function saveStates(string $name)
     {
         $states = json_decode($_POST['ocal_states'], true);
         if (!is_array($states)) {
@@ -233,7 +229,7 @@ class DailyCalendarController extends CalendarController
             exit;
         }
         $this->db->lock(true);
-        $occupancy = $this->db->findOccupancy($this->name);
+        $occupancy = $this->db->findOccupancy($name);
         foreach ($states as $month => $states) {
             foreach ($states as $i => $state) {
                 $date = sprintf('%s-%02d', $month, $i + 1);

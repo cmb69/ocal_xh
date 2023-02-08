@@ -68,13 +68,13 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testDefaultActionRendersCalendar(): void
     {
-        $response = $this->sut->defaultAction();
+        $response = $this->sut->defaultAction("test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
     public function testListActionRendersListWithoutEntries(): void
     {
-        $response = $this->sut->ListAction();
+        $response = $this->sut->listAction("test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -83,13 +83,13 @@ class DailyCalendarControllerTest extends TestCase
         $this->listService->method('getDailyList')->willReturn([
             (object) ['range' => "9.", 'state' => "2", 'label' => "available"],
         ]);
-        $response = $this->sut->listAction();
+        $response = $this->sut->listAction("test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
     public function testSaveActionReturnsEmptyResponseWhenNotLoggedIn(): void
     {
-        $response = $this->sut->SaveAction();
+        $response = $this->sut->saveAction("test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 }
