@@ -30,45 +30,12 @@ class View
     private $lang;
 
     /**
-     * @var array<string,mixed>
-     */
-    private $data = array();
-
-    /**
      * @param array<string,string> $lang
      */
     public function __construct(string $templateFolder, array $lang)
     {
         $this->templateFolder = $templateFolder;
         $this->lang = $lang;
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    public function __get($name)
-    {
-        return $this->data[$name];
-    }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function __isset($name)
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * @param string $name
-     * @param list<mixed> $args
-     * @return string
-     */
-    public function __call($name, array $args)
-    {
-        return $this->esc($this->data[$name]);
     }
 
     /**
@@ -102,7 +69,7 @@ class View
     /** @param array<string,mixed> $_data */
     public function render(string $_template, array $_data): string
     {
-        $this->data = $_data;
+        extract($_data);
         ob_start();
         echo "<!-- {$_template} -->\n";
         include "{$this->templateFolder}{$_template}.php";

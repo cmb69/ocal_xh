@@ -1,9 +1,9 @@
 <dl class="ocal_list">
-<?php if (empty($this->weekList)):?>
-  <dt><?=$this->from()?>–<?=$this->to()?></dt>
+<?php if (empty($weekList)):?>
+  <dt><?=$this->esc($from)?>–<?=$this->esc($to)?></dt>
   <dd class="ocal_noentry"><?=$this->text('message_no_entry')?></dd>
 <?php else:?>
-<?php   foreach ($this->weekList as $day):?>
+<?php   foreach ($weekList as $day):?>
   <dt><?=$this->esc($day->label)?></dt>
   <dd>
     <dl>

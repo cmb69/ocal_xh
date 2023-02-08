@@ -1,16 +1,16 @@
-<table class="ocal_calendar" data-ocal_date="<?=$this->isoDate()?>">
+<table class="ocal_calendar" data-ocal_date="<?=$this->esc($isoDate)?>">
   <thead>
     <tr>
-      <th colspan="7"><?=$this->monthname()?> <?=$this->year()?></th>
+      <th colspan="7"><?=$this->esc($monthname)?> <?=$this->esc($year)?></th>
     </tr>
     <tr>
-<?php foreach ($this->daynames as $dayname):?>
+<?php foreach ($daynames as $dayname):?>
       <th><?=$this->esc($dayname)?></th>
 <?php endforeach?>
     </tr>
   </thead>
   <tbody>
-<?php foreach ($this->weeks as $week):?>
+<?php foreach ($weeks as $week):?>
     <tr>
 <?php   foreach ($week as $day):?>
 <?php       if (empty($day)):?>

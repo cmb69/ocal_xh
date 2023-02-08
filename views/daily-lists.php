@@ -1,8 +1,8 @@
-<div data-name="<?=$this->occupancyName()?>">
-  <?=$this->modeLink()?>
-  <?=$this->statusbar()?>
-<?php foreach ($this->monthLists as $monthList):?>
+<div data-name="<?=$this->esc($occupancyName)?>">
+  <?=$this->esc($modeLink)?>
+  <?=$this->esc($statusbar)?>
+<?php foreach ($monthLists as $monthList):?>
   <?=$this->esc($monthList)?>
 <?php endforeach?>
-  <?=$this->monthPagination()?>
+  <?=$this->esc($monthPagination)?>
 </div>

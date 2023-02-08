@@ -1,8 +1,8 @@
-<div data-name="<?=$this->occupancyName()?>">
-  <?=$this->modeLink()?>
-  <?=$this->statusbar()?>
-<?php foreach ($this->weekLists as $weekList):?>
+<div data-name="<?=$this->esc($occupancyName)?>">
+  <?=$this->esc($modeLink)?>
+  <?=$this->esc($statusbar)?>
+<?php foreach ($weekLists as $weekList):?>
   <?=$this->esc($weekList)?>
 <?php endforeach?>
-  <?=$this->weekPagination()?>
+  <?=$this->esc($weekPagination)?>
 </div>
