@@ -49,13 +49,8 @@ function ocal($name, $monthCount = 1)
         $name,
         $monthCount
     );
-    $action = filter_input(
-        INPUT_GET,
-        'ocal_action',
-        FILTER_VALIDATE_REGEXP,
-        ['options' => ['regexp' => '/^[a-z]+$/', 'default' => 'default']]
-    );
-    if (!method_exists($controller, "{$action}Action")) {
+    $action = $_GET['ocal_action'] ?? 'default';
+    if (!is_callable([$controller, "{$action}Action"])) {
         $action = 'default';
     }
     return $controller->{"{$action}Action"}()->trigger();
@@ -86,13 +81,8 @@ function Ocal_hourly($name, $weekCount = 1)
         $name,
         $weekCount
     );
-    $action = filter_input(
-        INPUT_GET,
-        'ocal_action',
-        FILTER_VALIDATE_REGEXP,
-        ['options' => ['regexp' => '/^[a-z]+$/', 'default' => 'default']]
-    );
-    if (!method_exists($controller, "{$action}Action")) {
+    $action = $_GET['ocal_action'] ?? 'default';
+    if (!is_callable([$controller, "{$action}Action"])) {
         $action = 'default';
     }
     return $controller->{"{$action}Action"}()->trigger();
