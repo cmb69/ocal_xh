@@ -150,10 +150,10 @@ abstract class CalendarController
             'message_unsaved_changes' => $this->lang['message_unsaved_changes'],
             'isAdmin' => $this->isAdmin
         );
-        $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
+        $bjs .= '<script>'
             . 'var OCAL = ' . json_encode($config) . ';'
-            . '/* ]]> */</script>'
-            . '<script type="text/javascript" src="'
+            . '</script>'
+            . '<script src="'
             . $this->pluginFolder . 'ocal.min.js"></script>';
         self::$isJavaScriptEmitted = true;
     }
