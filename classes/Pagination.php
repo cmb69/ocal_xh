@@ -52,6 +52,6 @@ abstract class Pagination
         usort($result, function ($a, $b) {
             return (100 * $a->year + $a->monthOrWeek) - (100 * $b->year + $b->monthOrWeek);
         });
-        return $result;
+        return array_values($result);
     }
 }

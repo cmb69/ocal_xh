@@ -31,7 +31,7 @@ class Week
     /** @var int */
     protected $year;
 
-    /** @return Week[] */
+    /** @return list<Week> */
     public static function createRange(int $year, int $startWeek, int $count): array
     {
         $weeks = [];
@@ -65,7 +65,7 @@ class Week
         return sprintf('%04d-%02d', $this->year, $this->week);
     }
 
-    /** @return DateTimeImmutable[] */
+    /** @return array<int,DateTimeImmutable> */
     public function getDatesOfWeek(): array
     {
         $dates = [];

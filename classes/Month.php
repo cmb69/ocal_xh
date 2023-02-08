@@ -32,7 +32,7 @@ class Month
     /** @var int */
     protected $timestamp;
 
-    /** @return Month[] */
+    /** @return list<Month> */
     public static function createRange(int $year, int $month, int $count): array
     {
         $months = [];

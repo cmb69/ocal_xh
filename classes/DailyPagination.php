@@ -39,7 +39,7 @@ class DailyPagination extends Pagination
         $this->month = (int) $month;
     }
 
-    /** @return stdClass[] */
+    /** @return list<stdClass> */
     public function getItems(): array
     {
         return $this->filterAndSortItems(

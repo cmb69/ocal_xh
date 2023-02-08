@@ -39,7 +39,7 @@ class HourlyPagination extends Pagination
         $this->week = (int) $week;
     }
 
-    /** @return stdClass[] */
+    /** @return list<stdClass> */
     public function getItems(int $weekCount): array
     {
         return $this->filterAndSortItems(

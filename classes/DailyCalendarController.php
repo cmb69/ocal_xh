@@ -203,7 +203,7 @@ class DailyCalendarController extends CalendarController
         ]));
     }
 
-    /** @return array<stdClass> */
+    /** @return list<stdClass> */
     private function getPaginationItems(): array
     {
         $paginationItems = (new DailyPagination($this->year, $this->month, $this->now))->getItems();

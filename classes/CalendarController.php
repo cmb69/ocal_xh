@@ -38,10 +38,10 @@ abstract class CalendarController
     /** @var CsrfProtector */
     protected $csrfProtector;
 
-    /** @var string[] */
+    /** @var array<string,string> */
     protected $config;
 
-    /** @var string[] */
+    /** @var array<string,string> */
     protected $lang;
 
     /** @var string */
