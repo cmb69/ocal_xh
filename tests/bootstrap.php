@@ -20,6 +20,7 @@ require_once "./classes/DefaultAdminController.php";
 require_once "./classes/HourlyCalendarController.php";
 require_once "./classes/HourlyOccupancy.php";
 require_once "./classes/HourlyPagination.php";
+require_once "./classes/HtmlString.php";
 require_once "./classes/ListService.php";
 require_once "./classes/Month.php";
 require_once "./classes/Response.php";

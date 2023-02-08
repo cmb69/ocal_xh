@@ -31,6 +31,9 @@ class DailyCalendarControllerTest extends TestCase
     /** @var DailyCalendarController */
     private $sut;
 
+    /** @var ListService&MockObject */
+    private $listService;
+
     public function setUp(): void
     {
         global $plugin_cf;
@@ -42,7 +45,7 @@ class DailyCalendarControllerTest extends TestCase
         $plugin_tx = XH_includeVar("./languages/en.php", 'plugin_tx');
         $lang = $plugin_tx['ocal'];
         $now = new DateTime("2023-07-02");
-        $listService = $this->createStub(ListService::class);
+        $this->listService = $this->createStub(ListService::class);
         $db = $this->createStub(Db::class);
         $db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily"));
         $this->sut = new DailyCalendarController(
@@ -52,9 +55,9 @@ class DailyCalendarControllerTest extends TestCase
             $config,
             $lang,
             $now,
-            $listService,
+            $this->listService,
             $db,
-            false,
+            true,
             "test-daily",
             1
         );
@@ -66,8 +69,17 @@ class DailyCalendarControllerTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
-    public function testListActionRendersList(): void
+    public function testListActionRendersListWithoutEntries(): void
     {
+        $response = $this->sut->ListAction();
+        Approvals::verifyHtml($response->output());
+    }
+
+    public function testListActionRendersListWithAnEntry(): void
+    {
+        $this->listService->method('getDailyList')->willReturn([
+            (object) ['range' => "9.", 'state' => "2", 'label' => "available"],
+        ]);
         $response = $this->sut->ListAction();
         Approvals::verifyHtml($response->output());
     }

@@ -57,7 +57,7 @@ class HourlyCalendarControllerTest extends TestCase
             $now,
             $this->listService,
             $db,
-            false,
+            true,
             "test-hourly",
             1
         );
@@ -69,9 +69,20 @@ class HourlyCalendarControllerTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
-    public function testListActionRendersList(): void
+    public function testListActionRendersListWithoutEntries(): void
     {
         $this->listService->method('getHourlyList')->willReturn([]);
+        $response = $this->sut->ListAction();
+        Approvals::verifyHtml($response->output());
+    }
+
+    public function testListActionRendersListWithAnEntry(): void
+    {
+        $this->listService->method('getHourlyList')->willReturn([
+            (object) ['date' => new DateTime("2023-02-10T11:00"), 'list' => [
+                (object) ['range' => "12:00-13:00", 'state' => "1", 'label' => "reserved"],
+            ]],
+        ]);
         $response = $this->sut->ListAction();
         Approvals::verifyHtml($response->output());
     }
