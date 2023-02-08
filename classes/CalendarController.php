@@ -94,14 +94,13 @@ abstract class CalendarController
         $this->mode = 'calendar';
         $occupancy = $this->findOccupancy($name);
         $html = $this->renderCalendarView($occupancy, $count);
-        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) === 'XMLHttpRequest') {
-            if (($_GET['ocal_name'] ?? null) === $name) {
-                return new Response($html, "text/html");
-            }
-            return new Response("");
-        } else {
+        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
             return new Response($html);
         }
+        if (($_GET['ocal_name'] ?? null) === $name) {
+            return new Response($html, "text/html");
+        }
+        return new Response("");
     }
 
     public function listAction(string $name, int $count): Response
@@ -109,14 +108,13 @@ abstract class CalendarController
         $this->mode = 'list';
         $occupancy = $this->findOccupancy($name);
         $html = $this->renderListView($occupancy, $count);
-        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) === 'XMLHttpRequest') {
-            if (($_GET['ocal_name'] ?? null) === $name) {
-                return new Response($html, "text/html");
-            }
-            return new Response("");
-        } else {
+        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
             return new Response($html);
         }
+        if (($_GET['ocal_name'] ?? null) === $name) {
+            return new Response($html, "text/html");
+        }
+        return new Response("");
     }
 
     abstract protected function findOccupancy(string $name): Occupancy;
