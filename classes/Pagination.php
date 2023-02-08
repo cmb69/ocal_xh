@@ -46,12 +46,11 @@ abstract class Pagination
 
     /**
      * @param stdClass $today
+     * @param stdClass|null $items
      * @return list<stdClass>
      */
-    protected function filterAndSortItems($today)
+    protected function filterAndSortItems($today, ...$items)
     {
-        $items = func_get_args();
-        array_shift($items);
         $result = [$today];
         foreach ($items as $item) {
             if ($item && !($item->year === $today->year && $item->monthOrWeek === $today->monthOrWeek)) {
