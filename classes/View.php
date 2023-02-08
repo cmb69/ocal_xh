@@ -88,14 +88,6 @@ class View
     }
 
     /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->render();
-    }
-    
-    /**
      * @param string $key
      * @return string
      */

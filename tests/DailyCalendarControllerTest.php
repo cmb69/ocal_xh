@@ -80,7 +80,7 @@ class DailyCalendarControllerTest extends TestCase
         $this->listService->method('getDailyList')->willReturn([
             (object) ['range' => "9.", 'state' => "2", 'label' => "available"],
         ]);
-        $response = $this->sut->ListAction();
+        $response = $this->sut->listAction();
         Approvals::verifyHtml($response->output());
     }
 

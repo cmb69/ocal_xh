@@ -119,14 +119,14 @@ abstract class CalendarController
     {
         $this->mode = 'calendar';
         $occupancy = $this->findOccupancy();
-        $view = $this->getCalendarView($occupancy);
+        $html = $this->renderCalendarView($occupancy);
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             if ($_GET['ocal_name'] == $this->name) {
-                return new Response($view->render(), "text/html");
+                return new Response($html, "text/html");
             }
             return new Response("");
         } else {
-            return new Response($view->render());
+            return new Response($html);
         }
     }
 
@@ -134,14 +134,14 @@ abstract class CalendarController
     {
         $this->mode = 'list';
         $occupancy = $this->findOccupancy();
-        $view = $this->getListView($occupancy);
+        $html = $this->renderListView($occupancy);
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
             if ($_GET['ocal_name'] == $this->name) {
-                return new Response($view->render(), "text/html");
+                return new Response($html, "text/html");
             }
             return new Response("");
         } else {
-            return new Response($view->render());
+            return new Response($html);
         }
     }
 
@@ -150,15 +150,9 @@ abstract class CalendarController
      */
     abstract protected function findOccupancy();
 
-    /**
-     * @return View
-     */
-    abstract protected function getCalendarView(Occupancy $occupancy);
+    abstract protected function renderCalendarView(Occupancy $occupancy): HtmlString;
 
-    /**
-     * @return View
-     */
-    abstract protected function getListView(Occupancy $occupancy);
+    abstract protected function renderListView(Occupancy $occupancy): HtmlString;
 
     public function saveAction(): Response
     {
@@ -193,41 +187,32 @@ abstract class CalendarController
         self::$isJavaScriptEmitted = true;
     }
 
-    /**
-     * @return View
-     */
-    protected function prepareModeLinkView()
+    protected function renderModeLinkView(): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'mode-link');
         $view->setData([
             'mode' => $mode = $this->mode == 'calendar' ? 'list' : 'calendar',
             'url' => $this->modifyUrl(array('ocal_action' => $mode)),
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
-    /**
-     * @return View
-     */
-    protected function prepareStatusbarView()
+    protected function renderStatusbarView(): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'statusbar');
         $view->setData([
             'image' => "{$this->pluginFolder}images/ajax-loader-bar.gif",
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
-    /**
-     * @return View
-     */
-    protected function prepareToolbarView()
+    protected function renderToolbarView(): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'toolbar');
         $view->setData([
             'states' => range(0, $this->config['state_max']),
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
     /**

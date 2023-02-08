@@ -87,46 +87,40 @@ class HourlyCalendarController extends CalendarController
         return $result;
     }
 
-    /**
-     * @return View
-     */
-    protected function getCalendarView(Occupancy $occupancy)
+    protected function renderCalendarView(Occupancy $occupancy): HtmlString
     {
         $this->emitScriptElements();
         
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'hourly-calendars');
         $data = [
             'occupancyName' => $occupancy->getName(),
-            'modeLink' => $this->prepareModeLinkView(),
+            'modeLink' => $this->renderModeLinkView(),
             'isEditable' => $this->isAdmin,
-            'toolbar' => $this->prepareToolbarView(),
-            'statusbar' => $this->prepareStatusbarView(),
-            'weekPagination' => $this->preparePaginationView($this->count),
+            'toolbar' => $this->renderToolbarView(),
+            'statusbar' => $this->renderStatusbarView(),
+            'weekPagination' => $this->renderPaginationView($this->count),
             'weekCalendars' => $this->getWeekCalendars($occupancy),
         ];
         if ($this->isAdmin) {
             $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
         }
         $view->setData($data);
-        return $view;
+        return new HtmlString($view->render());
     }
 
     /**
-     * @return View[]
+     * @return list<HtmlString>
      */
     private function getWeekCalendars(Occupancy $occupancy)
     {
         $weekCalendars = [];
         foreach (Week::createRange($this->isoYear, $this->week, $this->count) as $week) {
-            $weekCalendars[] = $this->prepareWeekCalendarView($occupancy, $week);
+            $weekCalendars[] = $this->renderWeekCalendarView($occupancy, $week);
         }
         return $weekCalendars;
     }
 
-    /**
-     * @return View
-     */
-    private function prepareWeekCalendarView(Occupancy $occupancy, Week $week)
+    private function renderWeekCalendarView(Occupancy $occupancy, Week $week): HtmlString
     {
         $from = clone $this->now;
         $from->setISODate($week->getYear(), $week->getWeek(), 1);
@@ -140,7 +134,7 @@ class HourlyCalendarController extends CalendarController
             'daynames' => array_map('trim', explode(',', $this->lang['date_days'])),
             'hours' => $this->getDaysOfHours($occupancy, $week),
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
     /**
@@ -167,39 +161,33 @@ class HourlyCalendarController extends CalendarController
         return $daysOfHours;
     }
 
-    /**
-     * @return View
-     */
-    protected function getListView(Occupancy $occupancy)
+    protected function renderListView(Occupancy $occupancy): HtmlString
     {
         $this->emitScriptElements();
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'hourly-lists');
         $view->setData([
             'occupancyName' => $occupancy->getName(),
-            'modeLink' => $this->prepareModeLinkView(),
-            'statusbar' => $this->prepareStatusbarView(),
-            'weekPagination' => $this->preparePaginationView($this->count),
+            'modeLink' => $this->renderModeLinkView(),
+            'statusbar' => $this->renderStatusbarView(),
+            'weekPagination' => $this->renderPaginationView($this->count),
             'weekLists' => $this->getWeekLists($occupancy),
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
     /**
-     * @return View[]
+     * @return list<HtmlString>
      */
     private function getWeekLists(Occupancy $occupancy)
     {
         $weekLists = [];
         foreach (Week::createRange($this->isoYear, $this->week, $this->count) as $week) {
-            $weekLists[] = $this->prepareWeekListView($occupancy, $week);
+            $weekLists[] = $this->renderWeekListView($occupancy, $week);
         }
         return $weekLists;
     }
 
-    /**
-     * @return View
-     */
-    private function prepareWeekListView(Occupancy $occupancy, Week $week)
+    private function renderWeekListView(Occupancy $occupancy, Week $week): HtmlString
     {
         $from = clone $this->now;
         $from->setISODate($week->getYear(), $week->getWeek(), 1);
@@ -211,7 +199,7 @@ class HourlyCalendarController extends CalendarController
             'to' => $to->format($this->lang['date_format']),
             'weekList' => $this->getWeekList($occupancy, $week),
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
     /**
@@ -229,15 +217,14 @@ class HourlyCalendarController extends CalendarController
 
     /**
      * @param int $weekCount
-     * @return View
      */
-    private function preparePaginationView($weekCount)
+    private function renderPaginationView($weekCount): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'pagination');
         $view->setData([
             'items' => $this->getPaginationItems($weekCount),
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
     /**

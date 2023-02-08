@@ -88,46 +88,40 @@ class DailyCalendarController extends CalendarController
         return $result;
     }
 
-    /**
-     * @return View
-     */
-    protected function getCalendarView(Occupancy $occupancy)
+    protected function renderCalendarView(Occupancy $occupancy): HtmlString
     {
         $this->emitScriptElements();
 
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-calendars');
         $data = [
             'occupancyName' => $occupancy->getName(),
-            'modeLink' => $this->prepareModeLinkView(),
+            'modeLink' => $this->renderModeLinkView(),
             'isEditable' => $this->isAdmin,
-            'toolbar' => $this->prepareToolbarView(),
-            'statusbar' => $this->prepareStatusbarView(),
-            'monthPagination' => $this->preparePaginationView(),
+            'toolbar' => $this->renderToolbarView(),
+            'statusbar' => $this->renderStatusbarView(),
+            'monthPagination' => $this->renderPaginationView(),
             'monthCalendars' => $this->getMonthCalendars($occupancy),
         ];
         if ($this->isAdmin) {
             $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
         }
         $view->setData($data);
-        return $view;
+        return new HtmlString($view->render());
     }
 
     /**
-     * @return View[]
+     * @return list<HtmlString>
      */
     private function getMonthCalendars(Occupancy $occupancy)
     {
         $monthCalendars = [];
         foreach (Month::createRange($this->year, $this->month, $this->count) as $month) {
-            $monthCalendars[] = $this->prepareMonthCalendarView($occupancy, $month);
+            $monthCalendars[] = $this->renderMonthCalendarView($occupancy, $month);
         }
         return $monthCalendars;
     }
 
-    /**
-     * @return View
-     */
-    private function prepareMonthCalendarView(Occupancy $occupancy, Month $month)
+    private function renderMonthCalendarView(Occupancy $occupancy, Month $month): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-calendar');
         $view->setData([
@@ -137,7 +131,7 @@ class DailyCalendarController extends CalendarController
             'daynames' => array_map('trim', explode(',', $this->lang['date_days'])),
             'weeks' => $this->getWeeks($occupancy, $month),
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
     /**
@@ -186,39 +180,33 @@ class DailyCalendarController extends CalendarController
         return $days;
     }
 
-    /**
-     * @return View
-     */
-    protected function getListView(Occupancy $occupancy)
+    protected function renderListView(Occupancy $occupancy): HtmlString
     {
         $this->emitScriptElements();
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-lists');
         $view->setData([
             'occupancyName' => $occupancy->getName(),
-            'modeLink' => $this->prepareModeLinkView(),
-            'statusbar' => $this->prepareStatusbarView(),
+            'modeLink' => $this->renderModeLinkView(),
+            'statusbar' => $this->renderStatusbarView(),
             'monthLists' => $this->getMonthLists($occupancy),
-            'monthPagination' => $this->preparePaginationView(),
+            'monthPagination' => $this->renderPaginationView(),
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
     /**
-     * @return View[]
+     * @return list<HtmlString>
      */
     private function getMonthLists(Occupancy $occupancy)
     {
         $monthLists = [];
         foreach (Month::createRange($this->year, $this->month, $this->count) as $month) {
-            $monthLists[] = $this->prepareMonthListView($occupancy, $month);
+            $monthLists[] = $this->renderMonthListView($occupancy, $month);
         }
         return $monthLists;
     }
 
-    /**
-     * @return View
-     */
-    private function prepareMonthListView(Occupancy $occupancy, Month $month)
+    private function renderMonthListView(Occupancy $occupancy, Month $month): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'daily-list');
         $monthnames = explode(',', $this->lang['date_months']);
@@ -227,19 +215,16 @@ class DailyCalendarController extends CalendarController
                 . ' ' . $month->getYear(),
             'monthList' => $this->listService->getDailyList($occupancy, $month),
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
-    /**
-     * @return View
-     */
-    private function preparePaginationView()
+    private function renderPaginationView(): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang, 'pagination');
         $view->setData([
             'items' => $this->getPaginationItems(),
         ]);
-        return $view;
+        return new HtmlString($view->render());
     }
 
     /**
