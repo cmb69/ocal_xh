@@ -49,7 +49,7 @@ class ListService
         $currentState = -1;
         for ($day = 1; $day <= $month->getLastDay(); $day++) {
             $state = $occupancy->getDailyState($month->getYear(), $month->getMonth(), $day);
-            if ($currentState == -1 || $state == $currentState) {
+            if ($currentState === -1 || $state === $currentState) {
                 $currentRange[] = $day;
             } else {
                 $list[$this->formatDailyRange($currentRange)] = $currentState;
@@ -97,7 +97,7 @@ class ListService
         );
         foreach ($hours as $hour) {
             $state = $occupancy->getHourlyState($week->getYear(), $week->getWeek(), $weekday, $hour);
-            if ($currentState == -1 || $state == $currentState) {
+            if ($currentState === -1 || $state === $currentState) {
                 $currentRange[] = $hour;
             } else {
                 $list[$this->formatHourlyRange($currentRange)] = $currentState;

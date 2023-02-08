@@ -45,7 +45,7 @@ class View
     /** @param scalar $args */
     public function plural(string $key, int $count, ...$args): string
     {
-        if ($count == 0) {
+        if ($count === 0) {
             $key .= '_0';
         } else {
             $key .= XH_numberSuffix($count);

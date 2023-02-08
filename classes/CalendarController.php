@@ -95,7 +95,7 @@ abstract class CalendarController
         $occupancy = $this->findOccupancy($name);
         $html = $this->renderCalendarView($occupancy, $count);
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            if ($_GET['ocal_name'] == $name) {
+            if ($_GET['ocal_name'] === $name) {
                 return new Response($html, "text/html");
             }
             return new Response("");
@@ -110,7 +110,7 @@ abstract class CalendarController
         $occupancy = $this->findOccupancy($name);
         $html = $this->renderListView($occupancy, $count);
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
-            if ($_GET['ocal_name'] == $name) {
+            if ($_GET['ocal_name'] === $name) {
                 return new Response($html, "text/html");
             }
             return new Response("");
@@ -128,7 +128,7 @@ abstract class CalendarController
     public function saveAction(string $name, int $count): Response
     {
         $this->mode = 'calendar';
-        if ($this->isAdmin && isset($_GET['ocal_name']) && $_GET['ocal_name'] == $name) {
+        if ($this->isAdmin && isset($_GET['ocal_name']) && $_GET['ocal_name'] === $name) {
             $this->csrfProtector->check();
             return new Response($this->saveStates($name), "text/html");
         }
@@ -161,7 +161,7 @@ abstract class CalendarController
     protected function renderModeLinkView(): HtmlString
     {
         return new HtmlString($this->view->render('mode-link', [
-            'mode' => $mode = $this->mode == 'calendar' ? 'list' : 'calendar',
+            'mode' => $mode = $this->mode === 'calendar' ? 'list' : 'calendar',
             'url' => $this->modifyUrl(array('ocal_action' => $mode)),
         ]));
     }
