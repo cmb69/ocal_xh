@@ -21,6 +21,8 @@
 
 namespace Ocal;
 
+use stdClass;
+
 class DefaultAdminController
 {
     /**
@@ -56,7 +58,7 @@ class DefaultAdminController
     }
 
     /**
-     * @return object[]
+     * @return list<stdClass>
      */
     private function getChecks()
     {
@@ -74,7 +76,7 @@ class DefaultAdminController
 
     /**
      * @param string $version
-     * @return object
+     * @return stdClass
      */
     private function checkPhpVersion($version)
     {
@@ -86,7 +88,7 @@ class DefaultAdminController
 
     /**
      * @param string $extension
-     * @return object
+     * @return stdClass
      */
     private function checkExtension($extension)
     {
@@ -98,7 +100,7 @@ class DefaultAdminController
 
     /**
      * @param string $version
-     * @return object
+     * @return stdClass
      */
     private function checkXhVersion($version)
     {
@@ -110,7 +112,7 @@ class DefaultAdminController
 
     /**
      * @param string $folder
-     * @return object
+     * @return stdClass
      */
     private function checkWritability($folder)
     {

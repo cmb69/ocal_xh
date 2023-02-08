@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTime;
+use stdClass;
 use XH\CSRFProtection as CsrfProtector;
 
 class HourlyCalendarController extends CalendarController
@@ -136,7 +137,7 @@ class HourlyCalendarController extends CalendarController
     }
 
     /**
-     * @return object[][]
+     * @return list<list<stdClass>>
      */
     private function getDaysOfHours(Occupancy $occupancy, Week $week)
     {
@@ -199,7 +200,7 @@ class HourlyCalendarController extends CalendarController
     }
 
     /**
-     * @return object[]
+     * @return list<stdClass>
      */
     private function getWeekList(Occupancy $occupancy, Week $week)
     {
@@ -224,7 +225,7 @@ class HourlyCalendarController extends CalendarController
 
     /**
      * @param int $weekCount
-     * @return object[]
+     * @return list<stdClass>
      */
     private function getPaginationItems($weekCount)
     {

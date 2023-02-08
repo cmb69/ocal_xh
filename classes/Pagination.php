@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTime;
+use stdClass;
 
 abstract class Pagination
 {
@@ -44,8 +45,8 @@ abstract class Pagination
     }
 
     /**
-     * @param object $today
-     * @return object[]
+     * @param stdClass $today
+     * @return list<stdClass>
      */
     protected function filterAndSortItems($today)
     {

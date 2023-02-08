@@ -21,6 +21,8 @@
 
 namespace Ocal;
 
+use stdClass;
+
 class ListService
 {
     /**
@@ -42,7 +44,7 @@ class ListService
     }
 
     /**
-     * @return object[]
+     * @return list<stdClass>
      */
     public function getDailyList(Occupancy $occupancy, Month $month)
     {
@@ -77,7 +79,7 @@ class ListService
     }
 
     /**
-     * @return object[]
+     * @return list<stdClass>
      */
     public function getHourlyList(Occupancy $occupancy, Week $week)
     {
@@ -93,7 +95,7 @@ class ListService
 
     /**
      * @param int $weekday
-     * @return object[]
+     * @return list<stdClass>
      */
     private function getHourlyListForDay(Occupancy $occupancy, Week $week, $weekday)
     {
@@ -137,7 +139,7 @@ class ListService
 
     /**
      * @param array<string,int> $list
-     * @return object[]
+     * @return list<stdClass>
      */
     private function mapFilteredList(array $list)
     {
