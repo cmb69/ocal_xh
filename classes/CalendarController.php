@@ -80,6 +80,9 @@ abstract class CalendarController
     /** @var Db */
     protected $db;
 
+    /** @var bool */
+    protected $isAdmin;
+
     /**
      * @param array<string,string> $config
      * @param array<string,string> $lang
@@ -95,6 +98,7 @@ abstract class CalendarController
         DateTime $now,
         ListService $listService,
         Db $db,
+        bool $isAdmin,
         $name,
         $count
     ) {
@@ -108,6 +112,7 @@ abstract class CalendarController
         $this->now = $now;
         $this->listService = $listService;
         $this->db = $db;
+        $this->isAdmin = $isAdmin;
     }
 
     public function defaultAction(): Response
@@ -158,7 +163,7 @@ abstract class CalendarController
     public function saveAction(): Response
     {
         $this->mode = 'calendar';
-        if (defined('XH_ADM') && XH_ADM && isset($_GET['ocal_name']) && $_GET['ocal_name'] == $this->name) {
+        if ($this->isAdmin && isset($_GET['ocal_name']) && $_GET['ocal_name'] == $this->name) {
             $this->csrfProtector->check();
             return new Response($this->saveStates(), "text/html");
         }
@@ -178,7 +183,7 @@ abstract class CalendarController
         }
         $config = array(
             'message_unsaved_changes' => $this->lang['message_unsaved_changes'],
-            'isAdmin' => defined('XH_ADM') && XH_ADM
+            'isAdmin' => $this->isAdmin
         );
         $bjs .= '<script type="text/javascript">/* <![CDATA[ */'
             . 'var OCAL = ' . json_encode($config) . ';'

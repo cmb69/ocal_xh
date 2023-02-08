@@ -54,6 +54,7 @@ class DailyCalendarControllerTest extends TestCase
             $now,
             $listService,
             $db,
+            false,
             "test-daily",
             1
         );

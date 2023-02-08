@@ -57,6 +57,7 @@ class HourlyCalendarControllerTest extends TestCase
             $now,
             $this->listService,
             $db,
+            false,
             "test-hourly",
             1
         );

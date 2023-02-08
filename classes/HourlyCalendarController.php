@@ -51,6 +51,7 @@ class HourlyCalendarController extends CalendarController
         DateTime $now,
         ListService $listService,
         Db $db,
+        bool $isAdmin,
         $name,
         $count
     ) {
@@ -63,6 +64,7 @@ class HourlyCalendarController extends CalendarController
             $now,
             $listService,
             $db,
+            $isAdmin,
             $name,
             $count
         );
@@ -96,13 +98,13 @@ class HourlyCalendarController extends CalendarController
         $data = [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->prepareModeLinkView(),
-            'isEditable' => defined('XH_ADM') && XH_ADM,
+            'isEditable' => $this->isAdmin,
             'toolbar' => $this->prepareToolbarView(),
             'statusbar' => $this->prepareStatusbarView(),
             'weekPagination' => $this->preparePaginationView($this->count),
             'weekCalendars' => $this->getWeekCalendars($occupancy),
         ];
-        if (defined('XH_ADM') && XH_ADM) {
+        if ($this->isAdmin) {
             $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
         }
         $view->setData($data);

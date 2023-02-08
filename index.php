@@ -45,6 +45,7 @@ function ocal($name, $monthCount = 1)
         new DateTime(),
         new ListService(),
         new Db(),
+        defined('XH_ADM') && XH_ADM,
         $name,
         $monthCount
     );
@@ -81,6 +82,7 @@ function Ocal_hourly($name, $weekCount = 1)
         new DateTime(),
         new ListService(),
         new Db(),
+        defined('XH_ADM') && XH_ADM,
         $name,
         $weekCount
     );
