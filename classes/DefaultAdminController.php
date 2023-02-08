@@ -60,7 +60,7 @@ class DefaultAdminController
     /**
      * @return list<stdClass>
      */
-    private function getChecks()
+    private function getChecks(): array
     {
         return array(
             $this->checkPhpVersion('7.1.0'),
@@ -74,11 +74,7 @@ class DefaultAdminController
         );
     }
 
-    /**
-     * @param string $version
-     * @return stdClass
-     */
-    private function checkPhpVersion($version)
+    private function checkPhpVersion(string $version): stdClass
     {
         $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_phpversion'], $version);
@@ -86,11 +82,7 @@ class DefaultAdminController
         return (object) compact('state', 'label', 'stateLabel');
     }
 
-    /**
-     * @param string $extension
-     * @return stdClass
-     */
-    private function checkExtension($extension)
+    private function checkExtension(string $extension): stdClass
     {
         $state = $this->systemChecker->checkExtension($extension) ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_extension'], $extension);
@@ -98,11 +90,7 @@ class DefaultAdminController
         return (object) compact('state', 'label', 'stateLabel');
     }
 
-    /**
-     * @param string $version
-     * @return stdClass
-     */
-    private function checkXhVersion($version)
+    private function checkXhVersion(string $version): stdClass
     {
         $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version") ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_xhversion'], $version);
@@ -110,11 +98,7 @@ class DefaultAdminController
         return (object) compact('state', 'label', 'stateLabel');
     }
 
-    /**
-     * @param string $folder
-     * @return stdClass
-     */
-    private function checkWritability($folder)
+    private function checkWritability(string $folder): stdClass
     {
         $state = $this->systemChecker->checkWritability($folder) ? 'success' : 'warning';
         $label = sprintf($this->lang['syscheck_writable'], $folder);

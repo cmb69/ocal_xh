@@ -73,7 +73,7 @@ class DailyOccupancyTest extends TestCase
 
     public function testSerialization()
     {
-        $this->subject->setName(null);
+        $this->subject->setName("");
         $subject = unserialize(serialize($this->subject));
         $this->assertEquals($this->subject, $subject);
     }

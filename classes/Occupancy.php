@@ -38,12 +38,7 @@ abstract class Occupancy
      */
     private $maxState;
 
-    /**
-     * @param string $name
-     * @param string $json
-     * @return ?self
-     */
-    public static function createFromJson($name, $json)
+    public static function createFromJson(string $name, string $json): ?self
     {
         $array = json_decode($json, true);
         assert(is_array($array)); // TODO: proper validation
@@ -56,12 +51,7 @@ abstract class Occupancy
         return $result;
     }
 
-    /**
-     * @param string $type
-     * @param string $name
-     * @return self|null
-     */
-    private static function instantiateType($type, $name)
+    private static function instantiateType(string $type, string $name): ?self
     {
         switch ($type) {
             case 'daily':
@@ -73,10 +63,7 @@ abstract class Occupancy
         }
     }
 
-    /**
-     * @param string $name
-     */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         global $plugin_cf;
 
@@ -85,45 +72,24 @@ abstract class Occupancy
         $this->maxState = (int) $plugin_cf['ocal']['state_max'];
     }
 
-    /**
-     * @param int $year
-     * @param int $month
-     * @param int $day
-     * @return int
-     */
-    abstract public function getDailyState($year, $month, $day);
+    abstract public function getDailyState(int $year, int $month, int $day): int;
 
-    /**
-     * @param int $year
-     * @param int $week
-     * @param int $day
-     * @param int $hour
-     * @return int
-     */
-    abstract public function getHourlyState($year, $week, $day, $hour);
+    abstract public function getHourlyState(int $year, int $week, int $day, int $hour): int;
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param string $name
      * @return void
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = (string) $name;
     }
 
-    /**
-     * @param string $date
-     * @return int
-     */
-    protected function getState($date)
+    protected function getState(string $date): int
     {
         if (!isset($this->states[$date])) {
             return 0;
@@ -131,12 +97,8 @@ abstract class Occupancy
         return $this->states[$date];
     }
 
-    /**
-     * @param string $date
-     * @param int $state
-     * @return void
-     */
-    public function setState($date, $state)
+    /** @return void */
+    public function setState(string $date, int $state)
     {
         if ($state > 0 && $state <= $this->maxState) {
             $this->states[$date] = $state;
@@ -145,8 +107,5 @@ abstract class Occupancy
         }
     }
 
-    /**
-     * @return string
-     */
-    abstract public function toJson();
+    abstract public function toJson(): string;
 }

@@ -40,8 +40,6 @@ class DailyCalendarController extends CalendarController
     /**
      * @param array<string,string> $config
      * @param array<string,string> $lang
-     * @param string $name
-     * @param int $count
      */
     public function __construct(
         string $scriptName,
@@ -53,8 +51,8 @@ class DailyCalendarController extends CalendarController
         ListService $listService,
         Db $db,
         bool $isAdmin,
-        $name,
-        $count
+        string $name,
+        int $count
     ) {
         parent::__construct(
             $scriptName,
@@ -77,10 +75,7 @@ class DailyCalendarController extends CalendarController
             : (int) $now->format('Y');
     }
 
-    /**
-     * @return Occupancy
-     */
-    protected function findOccupancy()
+    protected function findOccupancy(): Occupancy
     {
         $this->db->lock(false);
         $result = $this->db->findOccupancy($this->name);
@@ -111,7 +106,7 @@ class DailyCalendarController extends CalendarController
     /**
      * @return list<HtmlString>
      */
-    private function getMonthCalendars(Occupancy $occupancy)
+    private function getMonthCalendars(Occupancy $occupancy): array
     {
         $monthCalendars = [];
         foreach (Month::createRange($this->year, $this->month, $this->count) as $month) {
@@ -132,11 +127,7 @@ class DailyCalendarController extends CalendarController
         ]));
     }
 
-    /**
-     * @param int $month
-     * @return string
-     */
-    private function getMonthName($month)
+    private function getMonthName(int $month): string
     {
         $monthnames = array_map('trim', explode(',', $this->lang['date_months']));
         return $monthnames[$month - 1];
@@ -145,7 +136,7 @@ class DailyCalendarController extends CalendarController
     /**
      * @return list<list<stdClass|null>>
      */
-    private function getWeeks(Occupancy $occupancy, Month $month)
+    private function getWeeks(Occupancy $occupancy, Month $month): array
     {
         $weeks = [];
         foreach ($month->getDaysOfWeeks() as $week) {
@@ -158,7 +149,7 @@ class DailyCalendarController extends CalendarController
      * @param list<int|null> $week
      * @return list<stdClass|null>
      */
-    private function getWeekDays(Occupancy $occupancy, Month $month, array $week)
+    private function getWeekDays(Occupancy $occupancy, Month $month, array $week): array
     {
         $days = [];
         foreach ($week as $day) {
@@ -194,7 +185,7 @@ class DailyCalendarController extends CalendarController
     /**
      * @return list<HtmlString>
      */
-    private function getMonthLists(Occupancy $occupancy)
+    private function getMonthLists(Occupancy $occupancy): array
     {
         $monthLists = [];
         foreach (Month::createRange($this->year, $this->month, $this->count) as $month) {
@@ -225,7 +216,7 @@ class DailyCalendarController extends CalendarController
     /**
      * @return array<stdClass>
      */
-    private function getPaginationItems()
+    private function getPaginationItems(): array
     {
         $paginationItems = (new DailyPagination($this->year, $this->month, $this->now))->getItems();
         foreach ($paginationItems as $item) {

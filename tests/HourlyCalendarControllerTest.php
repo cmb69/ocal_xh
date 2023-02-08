@@ -40,6 +40,9 @@ class HourlyCalendarControllerTest extends TestCase
 
         $_SERVER['QUERY_STRING'] = "";
         $csrfProtector = $this->createStub(CsrfProtector::class);
+        $csrfProtector->method('tokenInput')->willReturn(
+            '<input type="hidden" name="xh_csrf_token" value="dcfff515ebf5bd421d5a0777afc6358b">'
+        );
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
         $config = $plugin_cf['ocal'];
         $plugin_tx = XH_includeVar("./languages/en.php", 'plugin_tx');

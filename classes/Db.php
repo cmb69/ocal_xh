@@ -52,12 +52,7 @@ class Db
         fclose($this->lockFile);
     }
 
-    /**
-     * @param string $name
-     * @param bool $hourly
-     * @return Occupancy
-     */
-    public function findOccupancy($name, $hourly = false)
+    public function findOccupancy(string $name, bool $hourly = false): Occupancy
     {
         $filename = $this->getFoldername() . $name . '.json';
         if (is_readable($filename)) {
@@ -74,12 +69,7 @@ class Db
         return new DailyOccupancy($name);
     }
 
-    /**
-     * @param string $name
-     * @param bool $hourly
-     * @return ?string
-     */
-    private function migrateContents($name, $hourly)
+    private function migrateContents(string $name, bool $hourly): ?string
     {
         $filename = $this->getFoldername() . $name . '.dat';
         if (!is_readable($filename)) {
@@ -103,10 +93,7 @@ class Db
         file_put_contents($filename, $occupancy->toJson());
     }
 
-    /**
-     * @return string
-     */
-    protected function getFoldername()
+    protected function getFoldername(): string
     {
         global $pth;
 

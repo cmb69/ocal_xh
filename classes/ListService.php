@@ -46,7 +46,7 @@ class ListService
     /**
      * @return list<stdClass>
      */
-    public function getDailyList(Occupancy $occupancy, Month $month)
+    public function getDailyList(Occupancy $occupancy, Month $month): array
     {
         $list = array();
         $currentRange = array();
@@ -67,9 +67,8 @@ class ListService
 
     /**
      * @param list<int> $range
-     * @return string
      */
-    private function formatDailyRange(array $range)
+    private function formatDailyRange(array $range): string
     {
         $string = $range[0] . '.';
         if (count($range) > 1) {
@@ -81,7 +80,7 @@ class ListService
     /**
      * @return list<stdClass>
      */
-    public function getHourlyList(Occupancy $occupancy, Week $week)
+    public function getHourlyList(Occupancy $occupancy, Week $week): array
     {
         $result = [];
         foreach ($week->getDatesOfWeek() as $weekday => $date) {
@@ -94,10 +93,9 @@ class ListService
     }
 
     /**
-     * @param int $weekday
      * @return list<stdClass>
      */
-    private function getHourlyListForDay(Occupancy $occupancy, Week $week, $weekday)
+    private function getHourlyListForDay(Occupancy $occupancy, Week $week, int $weekday): array
     {
         $list = array();
         $currentRange = array();
@@ -123,9 +121,8 @@ class ListService
 
     /**
      * @param list<int> $range
-     * @return string
      */
-    private function formatHourlyRange(array $range)
+    private function formatHourlyRange(array $range): string
     {
         $start = $range[0];
         if (count($range) > 1) {
@@ -141,7 +138,7 @@ class ListService
      * @param array<string,int> $list
      * @return list<stdClass>
      */
-    private function mapFilteredList(array $list)
+    private function mapFilteredList(array $list): array
     {
         $result = [];
         foreach ($list as $range => $state) {

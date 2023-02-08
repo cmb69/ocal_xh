@@ -86,8 +86,6 @@ abstract class CalendarController
     /**
      * @param array<string,string> $config
      * @param array<string,string> $lang
-     * @param string $name
-     * @param int $count
      */
     public function __construct(
         string $scriptName,
@@ -99,8 +97,8 @@ abstract class CalendarController
         ListService $listService,
         Db $db,
         bool $isAdmin,
-        $name,
-        $count
+        string $name,
+        int $count
     ) {
         $this->name = (string) $name;
         $this->count = (int) $count;
@@ -145,10 +143,7 @@ abstract class CalendarController
         }
     }
 
-    /**
-     * @return Occupancy
-     */
-    abstract protected function findOccupancy();
+    abstract protected function findOccupancy(): Occupancy;
 
     abstract protected function renderCalendarView(Occupancy $occupancy): HtmlString;
 
@@ -214,9 +209,8 @@ abstract class CalendarController
 
     /**
      * @param array<string,string> $newParams
-     * @return string
      */
-    protected function modifyUrl(array $newParams)
+    protected function modifyUrl(array $newParams): string
     {
         parse_str($_SERVER['QUERY_STRING'], $params);
         $params = array_merge($params, $newParams);

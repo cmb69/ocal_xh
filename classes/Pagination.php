@@ -45,11 +45,9 @@ abstract class Pagination
     }
 
     /**
-     * @param stdClass $today
-     * @param stdClass|null $items
      * @return list<stdClass>
      */
-    protected function filterAndSortItems($today, ...$items)
+    protected function filterAndSortItems(stdClass $today, ?stdClass ...$items): array
     {
         $result = [$today];
         foreach ($items as $item) {

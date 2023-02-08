@@ -36,11 +36,7 @@ class DailyPagination extends Pagination
      */
     private $month;
 
-    /**
-     * @param int $year
-     * @param int $month
-     */
-    public function __construct($year, $month, DateTime $now)
+    public function __construct(int $year, int $month, DateTime $now)
     {
         parent::__construct($now);
         $this->year = (int) $year;
@@ -50,7 +46,7 @@ class DailyPagination extends Pagination
     /**
      * @return stdClass[]
      */
-    public function getItems()
+    public function getItems(): array
     {
         return $this->filterAndSortItems(
             $this->getItem(false, false, 'today'),
@@ -64,10 +60,9 @@ class DailyPagination extends Pagination
     /**
      * @param int|false $month
      * @param int|false $year
-     * @param string $label
      * @return ($month is false ? ($year is false ? stdClass : stdClass|null) : stdClass|null)
      */
-    private function getItem($month, $year, $label)
+    private function getItem($month, $year, string $label): ?stdClass
     {
         if ($month === false && $year === false) {
             $year = (int) $this->now->format('Y');
@@ -92,10 +87,7 @@ class DailyPagination extends Pagination
         return (object) compact('year', 'monthOrWeek', 'label');
     }
 
-    /**
-     * @param int $month
-     */
-    private function isValid($month): bool
+    private function isValid(int $month): bool
     {
         $currentMonth = 12 * $this->now->format('Y') + $this->now->format('n');
         return $month >= $currentMonth - (int) $this->config['pagination_past']

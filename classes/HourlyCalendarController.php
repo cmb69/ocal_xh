@@ -40,8 +40,6 @@ class HourlyCalendarController extends CalendarController
     /**
      * @param array<string,string> $config
      * @param array<string,string> $lang
-     * @param string $name
-     * @param int $count
      */
     public function __construct(
         string $scriptName,
@@ -53,8 +51,8 @@ class HourlyCalendarController extends CalendarController
         ListService $listService,
         Db $db,
         bool $isAdmin,
-        $name,
-        $count
+        string $name,
+        int $count
     ) {
         parent::__construct(
             $scriptName,
@@ -77,10 +75,7 @@ class HourlyCalendarController extends CalendarController
             : (int) $now->format('o');
     }
 
-    /**
-     * @return Occupancy
-     */
-    protected function findOccupancy()
+    protected function findOccupancy(): Occupancy
     {
         $this->db->lock(false);
         $result = $this->db->findOccupancy($this->name, true);
@@ -111,7 +106,7 @@ class HourlyCalendarController extends CalendarController
     /**
      * @return list<HtmlString>
      */
-    private function getWeekCalendars(Occupancy $occupancy)
+    private function getWeekCalendars(Occupancy $occupancy): array
     {
         $weekCalendars = [];
         foreach (Week::createRange($this->isoYear, $this->week, $this->count) as $week) {
@@ -139,7 +134,7 @@ class HourlyCalendarController extends CalendarController
     /**
      * @return list<list<stdClass>>
      */
-    private function getDaysOfHours(Occupancy $occupancy, Week $week)
+    private function getDaysOfHours(Occupancy $occupancy, Week $week): array
     {
         $daysOfHours = [];
         $hours = range(
@@ -176,7 +171,7 @@ class HourlyCalendarController extends CalendarController
     /**
      * @return list<HtmlString>
      */
-    private function getWeekLists(Occupancy $occupancy)
+    private function getWeekLists(Occupancy $occupancy): array
     {
         $weekLists = [];
         foreach (Week::createRange($this->isoYear, $this->week, $this->count) as $week) {
@@ -202,7 +197,7 @@ class HourlyCalendarController extends CalendarController
     /**
      * @return list<stdClass>
      */
-    private function getWeekList(Occupancy $occupancy, Week $week)
+    private function getWeekList(Occupancy $occupancy, Week $week): array
     {
         $weekList = [];
         foreach ($this->listService->getHourlyList($occupancy, $week) as $day) {
@@ -212,10 +207,7 @@ class HourlyCalendarController extends CalendarController
         return $weekList;
     }
 
-    /**
-     * @param int $weekCount
-     */
-    private function renderPaginationView($weekCount): HtmlString
+    private function renderPaginationView(int $weekCount): HtmlString
     {
         $view = new View("{$this->pluginFolder}views/", $this->lang);
         return new HtmlString($view->render('pagination', [
@@ -224,10 +216,9 @@ class HourlyCalendarController extends CalendarController
     }
 
     /**
-     * @param int $weekCount
      * @return list<stdClass>
      */
-    private function getPaginationItems($weekCount)
+    private function getPaginationItems(int $weekCount): array
     {
         $items = (new HourlyPagination($this->isoYear, $this->week, $this->now))->getItems($weekCount);
         foreach ($items as $item) {

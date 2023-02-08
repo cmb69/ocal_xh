@@ -25,34 +25,18 @@ use LogicException;
 
 class DailyOccupancy extends Occupancy
 {
-    /**
-     * @param int $year
-     * @param int $month
-     * @param int $day
-     * @return int
-     */
-    public function getDailyState($year, $month, $day)
+    public function getDailyState(int $year, int $month, int $day): int
     {
         $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
         return $this->getState($date);
     }
 
-    /**
-     * @param int $year
-     * @param int $week
-     * @param int $day
-     * @param int $hour
-     * @return int
-     */
-    public function getHourlyState($year, $week, $day, $hour)
+    public function getHourlyState(int $year, int $week, int $day, int $hour): int
     {
         throw new LogicException("not implemented in subclass");
     }
 
-    /**
-     * @return string
-     */
-    public function toJson()
+    public function toJson(): string
     {
         return (string) json_encode(['type' => 'daily', 'states' => $this->states], JSON_PRETTY_PRINT);
     }

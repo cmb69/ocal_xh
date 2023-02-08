@@ -39,22 +39,17 @@ class View
     }
 
     /**
-     * @param string $key
      * @param scalar $args
-     * @return string
      */
-    public function text($key, ...$args)
+    public function text(string $key, ...$args): string
     {
         return $this->esc(vsprintf($this->lang[$key], $args));
     }
 
     /**
-     * @param string $key
-     * @param int $count
      * @param scalar $args
-     * @return string
      */
-    public function plural($key, $count, ...$args)
+    public function plural(string $key, int $count, ...$args): string
     {
         if ($count == 0) {
             $key .= '_0';
@@ -76,9 +71,8 @@ class View
 
     /**
      * @param scalar|HtmlString $value
-     * @return string
      */
-    public function esc($value)
+    public function esc($value): string
     {
         if ($value instanceof HtmlString) {
             return (string) $value;

@@ -36,12 +36,9 @@ class Week
     protected $year;
 
     /**
-     * @param int $year
-     * @param int $startWeek
-     * @param int $count
      * @return Week[]
      */
-    public static function createRange($year, $startWeek, $count)
+    public static function createRange(int $year, int $startWeek, int $count): array
     {
         $weeks = [];
         $week = new Week($startWeek, $year);
@@ -53,36 +50,23 @@ class Week
         return $weeks;
     }
 
-    /**
-     * @param int $week
-     * @param int $year
-     */
-    public function __construct($week, $year)
+    public function __construct(int $week, int $year)
     {
         $this->week = (int) $week;
         $this->year = (int) $year;
     }
 
-    /**
-     * @return int
-     */
-    public function getWeek()
+    public function getWeek(): int
     {
         return $this->week;
     }
 
-    /**
-     * @return int
-     */
-    public function getYear()
+    public function getYear(): int
     {
         return $this->year;
     }
 
-    /**
-     * @return string
-     */
-    public function getIso()
+    public function getIso(): string
     {
         return sprintf('%04d-%02d', $this->year, $this->week);
     }
@@ -90,7 +74,7 @@ class Week
     /**
      * @return DateTime[]
      */
-    public function getDatesOfWeek()
+    public function getDatesOfWeek(): array
     {
         $dates = [];
         for ($i = 1; $i <= 7; $i++) {
@@ -102,11 +86,7 @@ class Week
         return $dates;
     }
 
-    /**
-     * @param int $offset
-     * @return Week
-     */
-    public function getNextWeek($offset = 1)
+    public function getNextWeek(int $offset = 1): self
     {
         $date = new DateTime();
         $date->setISODate($this->year, $this->week);
@@ -116,10 +96,7 @@ class Week
         return new self($week, $year);
     }
 
-    /**
-     * @return int
-     */
-    public function compare(Week $other)
+    public function compare(Week $other): int
     {
         if ($this->year < $other->year || $this->year === $other->year && $this->week < $other->week) {
             return -1;

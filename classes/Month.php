@@ -39,12 +39,9 @@ class Month
     protected $timestamp;
 
     /**
-     * @param int $year
-     * @param int $month
-     * @param int $count
      * @return Month[]
      */
-    public static function createRange($year, $month, $count)
+    public static function createRange(int $year, int $month, int $count): array
     {
         $months = [];
         $month = new Month($month, $year);
@@ -56,53 +53,34 @@ class Month
         return $months;
     }
 
-    /**
-     * @param int $month
-     * @param int $year
-     */
-    public function __construct($month, $year)
+    public function __construct(int $month, int $year)
     {
         $this->month = (int) $month;
         $this->year = (int) $year;
         $this->timestamp = (int) mktime(0, 0, 0, $month, 1, $year);
     }
 
-    /**
-     * @return int
-     */
-    public function getLastDay()
+    public function getLastDay(): int
     {
         return (int) date('t', $this->timestamp);
     }
 
-    /**
-     * @return int
-     */
-    public function getMonth()
+    public function getMonth(): int
     {
         return $this->month;
     }
 
-    /**
-     * @return int
-     */
-    public function getYear()
+    public function getYear(): int
     {
         return $this->year;
     }
 
-    /**
-     * @return string
-     */
-    public function getIso()
+    public function getIso(): string
     {
         return sprintf('%04d-%02d', $this->year, $this->month);
     }
 
-    /**
-     * @return Month
-     */
-    public function getNextMonth()
+    public function getNextMonth(): self
     {
         $month = $this->month + 1;
         $year = $this->year;
@@ -116,7 +94,7 @@ class Month
     /**
      * @return list<list<int|null>>
      */
-    public function getDaysOfWeeks()
+    public function getDaysOfWeeks(): array
     {
         $mondays = range($this->getDayOffset(), $this->getLastDay(), 7);
         $getWeekDays = function ($monday) {
@@ -130,10 +108,7 @@ class Month
         return array_map($getWeekDays, $mondays);
     }
 
-    /**
-     * @return int
-     */
-    private function getDayOffset()
+    private function getDayOffset(): int
     {
         $weekday = date('w', $this->timestamp);
         return $weekday ? 2 - $weekday : 2 - 7;

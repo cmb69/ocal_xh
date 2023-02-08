@@ -36,11 +36,7 @@ class HourlyPagination extends Pagination
      */
     private $week;
 
-    /**
-     * @param int $year
-     * @param int $week
-     */
-    public function __construct($year, $week, DateTime $now)
+    public function __construct(int $year, int $week, DateTime $now)
     {
         parent::__construct($now);
         $this->year = (int) $year;
@@ -48,10 +44,9 @@ class HourlyPagination extends Pagination
     }
 
     /**
-     * @param int $weekCount
      * @return stdClass[]
      */
-    public function getItems($weekCount)
+    public function getItems(int $weekCount): array
     {
         return $this->filterAndSortItems(
             $this->getItem(false, 'today'),
@@ -62,10 +57,9 @@ class HourlyPagination extends Pagination
 
     /**
      * @param int|false $offset
-     * @param string $label
      * @return ($offset is false ? stdClass : stdClass|null)
      */
-    private function getItem($offset, $label)
+    private function getItem($offset, string $label)
     {
         if ($offset) {
             $week = new Week($this->week, $this->year);
@@ -84,8 +78,7 @@ class HourlyPagination extends Pagination
         return (object) compact('year', 'monthOrWeek', 'label');
     }
 
-    /** @return bool */
-    private function isWeekPaginationValid(Week $week)
+    private function isWeekPaginationValid(Week $week): bool
     {
         $currentWeek = new Week((int) $this->now->format('W'), (int) $this->now->format('o'));
         return $week->compare($currentWeek->getNextWeek(-((int) $this->config['pagination_past']))) >= 0
