@@ -52,11 +52,13 @@
     <exec command="git archive -o export.zip HEAD" checkreturn="true"/>
     <unzip file="export.zip" todir="export"/>
     <delete file="export.zip"/>
-    <jsMin targetDir="dist" suffix="" failOnError="false">
-      <fileset dir="export">
-        <include name="ocal.min.js"/>
-      </fileset>
-    </jsMin>
+    <exec executable="uglifyjs" passthru="true" checkreturn="true">
+      <arg file="export/ocal.min.js"/>
+      <arg value="--compress"/>
+      <arg value="--mangle"/>
+      <arg value="--output"/>
+      <arg file="export/ocal.min.js"/>
+    </exec>
     <move todir="dist">
       <fileset dir="export">
         <exclude name=".github/**"/>
