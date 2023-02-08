@@ -19,8 +19,7 @@
  * along with Ocal_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Ocal\Db;
-use Ocal\ListService;
+use Ocal\Dic;
 
 const OCAL_VERSION = '1.0beta4';
 
@@ -31,22 +30,12 @@ const OCAL_VERSION = '1.0beta4';
  */
 function ocal($name, $monthCount = 1)
 {
-    global $sn, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+    global $plugin_tx;
 
     if (!preg_match('/^[a-z0-9-]+$/', $name)) {
         return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
     }
-    $controller = new Ocal\DailyCalendarController(
-        $sn,
-        "{$pth['folder']['plugins']}ocal/",
-        $_XH_csrfProtection,
-        $plugin_cf['ocal'],
-        $plugin_tx['ocal'],
-        new DateTimeImmutable(),
-        new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
-        new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
-        defined('XH_ADM') && XH_ADM
-    );
+    $controller = Dic::makeDailyCalendarController();
     $action = $_GET['ocal_action'] ?? 'default';
     if (!is_callable([$controller, "{$action}Action"])) {
         $action = 'default';
@@ -61,22 +50,12 @@ function ocal($name, $monthCount = 1)
  */
 function Ocal_hourly($name, $weekCount = 1)
 {
-    global $sn, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+    global $plugin_tx;
 
     if (!preg_match('/^[a-z0-9-]+$/', $name)) {
         return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
     }
-    $controller = new Ocal\HourlyCalendarController(
-        $sn,
-        "{$pth['folder']['plugins']}ocal/",
-        $_XH_csrfProtection,
-        $plugin_cf['ocal'],
-        $plugin_tx['ocal'],
-        new DateTimeImmutable(),
-        new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
-        new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
-        defined('XH_ADM') && XH_ADM
-    );
+    $controller = Dic::makeHourlyCalendarController();
     $action = $_GET['ocal_action'] ?? 'default';
     if (!is_callable([$controller, "{$action}Action"])) {
         $action = 'default';

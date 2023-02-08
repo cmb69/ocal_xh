@@ -21,6 +21,8 @@
 
 namespace Ocal;
 
+use DateTimeImmutable;
+
 class Dic
 {
     public static function makeDefaultAdminController(): DefaultAdminController
@@ -32,6 +34,40 @@ class Dic
             "{$pth['folder']['base']}content/ocal/",
             $plugin_tx['ocal'],
             new SystemChecker()
+        );
+    }
+
+    public static function makeDailyCalendarController(): DailyCalendarController
+    {
+        global $sn, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+
+        return new DailyCalendarController(
+            $sn,
+            "{$pth['folder']['plugins']}ocal/",
+            $_XH_csrfProtection,
+            $plugin_cf['ocal'],
+            $plugin_tx['ocal'],
+            new DateTimeImmutable(),
+            new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
+            new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
+            defined('XH_ADM') && XH_ADM
+        );
+    }
+
+    public static function makeHourlyCalendarController(): HourlyCalendarController
+    {
+        global $sn, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+
+        return new HourlyCalendarController(
+            $sn,
+            "{$pth['folder']['plugins']}ocal/",
+            $_XH_csrfProtection,
+            $plugin_cf['ocal'],
+            $plugin_tx['ocal'],
+            new DateTimeImmutable(),
+            new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
+            new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
+            defined('XH_ADM') && XH_ADM
         );
     }
 }
