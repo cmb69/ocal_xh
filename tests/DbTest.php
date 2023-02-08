@@ -45,7 +45,7 @@ class DbTest extends TestCase
         $plugin_cf['ocal'] = [
             'state_max' => "3",
         ];
-        $this->subject = new Db();
+        $this->subject = new Db($pth['folder']['base'] . 'content/ocal/');
         $this->subject->lock(true);
     }
 

@@ -24,20 +24,20 @@ namespace Ocal;
 class Db
 {
     /** @var string */
-    private $lockFilename;
+    private $foldername;
 
     /** @var resource */
     protected $lockFile;
 
-    public function __construct()
+    public function __construct(string $foldername)
     {
-        $this->lockFilename = $this->getFoldername() . '.lock';
+        $this->foldername = $foldername;
     }
 
     /** @return void */
     public function lock(bool $exclusive)
     {
-        $lockFile = fopen($this->lockFilename, 'a');
+        $lockFile = fopen($this->getLockfilename(), 'a');
         assert($lockFile !== false);
         $this->lockFile = $lockFile;
         flock($this->lockFile, $exclusive ? LOCK_EX : LOCK_SH);
@@ -91,15 +91,17 @@ class Db
         file_put_contents($filename, $occupancy->toJson());
     }
 
+    private function getLockfilename(): string
+    {
+        return $this->getFoldername() . '.lock';
+    }
+
     protected function getFoldername(): string
     {
-        global $pth;
-
-        $foldername = $pth['folder']['base'] . 'content/ocal/';
-        if (!file_exists($foldername)) {
-            mkdir($foldername, 0777, true);
-            chmod($foldername, 0777);
+        if (!file_exists($this->foldername)) {
+            mkdir($this->foldername, 0777, true);
+            chmod($this->foldername, 0777);
         }
-        return $foldername;
+        return $this->foldername;
     }
 }
