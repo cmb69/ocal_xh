@@ -54,6 +54,6 @@ class HourlyOccupancy extends Occupancy
      */
     public function toJson()
     {
-        return json_encode(['type' => 'hourly', 'states' => $this->states], JSON_PRETTY_PRINT);
+        return (string) json_encode(['type' => 'hourly', 'states' => $this->states], JSON_PRETTY_PRINT);
     }
 }

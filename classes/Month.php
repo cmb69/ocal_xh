@@ -64,7 +64,7 @@ class Month
     {
         $this->month = (int) $month;
         $this->year = (int) $year;
-        $this->timestamp = mktime(0, 0, 0, $month, 1, $year);
+        $this->timestamp = (int) mktime(0, 0, 0, $month, 1, $year);
     }
 
     /**

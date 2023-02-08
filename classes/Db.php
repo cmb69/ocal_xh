@@ -46,7 +46,9 @@ class Db
     /** @return void */
     public function lock(bool $exclusive)
     {
-        $this->lockFile = fopen($this->lockFilename, 'a');
+        $lockFile = fopen($this->lockFilename, 'a');
+        assert($lockFile !== false);
+        $this->lockFile = $lockFile;
         flock($this->lockFile, $exclusive ? LOCK_EX : LOCK_SH);
     }
 
@@ -98,7 +100,7 @@ class Db
             return null;
         }
         $states = unserialize($matches[1]);
-        return json_encode(['type' => $hourly ? 'hourly' : 'daily', 'states' => $states]);
+        return (string) json_encode(['type' => $hourly ? 'hourly' : 'daily', 'states' => $states]);
     }
 
     /** @return void */
