@@ -52,7 +52,7 @@ class ListServiceTest extends TestCase
 
     public function testGetDailyList()
     {
-        $occupancy = new DailyOccupancy('daily');
+        $occupancy = new DailyOccupancy('daily', 3);
         $occupancy->setState('2017-03-01', 1);
         $occupancy->setState('2017-03-02', 1);
         $occupancy->setState('2017-03-04', 2);
@@ -66,7 +66,7 @@ class ListServiceTest extends TestCase
 
     public function testGetHourlyList()
     {
-        $occupancy = new HourlyOccupancy('hourly');
+        $occupancy = new HourlyOccupancy('hourly', 3);
         $occupancy->setState('2017-09-01-08', 1);
         $occupancy->setState('2017-09-01-09', 1);
         $occupancy->setState('2017-09-01-10', 1);

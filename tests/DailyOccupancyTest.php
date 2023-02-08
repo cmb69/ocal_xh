@@ -32,15 +32,12 @@ class DailyOccupancyTest extends TestCase
 
     public function setUp(): void
     {
-        global $plugin_cf;
-
-        $plugin_cf['ocal']['state_max'] = '3';
-        $this->subject = new DailyOccupancy('foo');
+        $this->subject = new DailyOccupancy('foo', 3);
     }
 
     public function testCreateFromJsonWithInvalidType()
     {
-        $this->assertNull(Occupancy::createFromJson('foo', '{"type": "invalid", "states": {}}'));
+        $this->assertNull(Occupancy::createFromJson('foo', '{"type": "invalid", "states": {}}', 3));
     }
 
     public function testGetName()

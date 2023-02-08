@@ -35,17 +35,14 @@ class DbTest extends TestCase
 
     public function setUp(): void
     {
-        global $pth, $plugin_cf;
+        global $pth;
 
         vfsStreamWrapper::register();
         vfsStreamWrapper::setRoot(new vfsStreamDirectory('test'));
         $pth['folder'] = array(
             'base' => vfsStream::url('test/')
         );
-        $plugin_cf['ocal'] = [
-            'state_max' => "3",
-        ];
-        $this->subject = new Db($pth['folder']['base'] . 'content/ocal/');
+        $this->subject = new Db($pth['folder']['base'] . 'content/ocal/', 3);
         $this->subject->lock(true);
     }
 
@@ -68,7 +65,7 @@ class DbTest extends TestCase
 
     public function testSaveAndFindOccupancy()
     {
-        $occupancy1 = new DailyOccupancy('foo');
+        $occupancy1 = new DailyOccupancy('foo', 3);
         $this->subject->saveOccupancy($occupancy1);
         $occupancy2 = $this->subject->findOccupancy('foo');
         $this->assertEquals($occupancy1, $occupancy2);
@@ -76,7 +73,7 @@ class DbTest extends TestCase
 
     public function testSaveAndFindHourlyOccupancy()
     {
-        $occupancy1 = new HourlyOccupancy('bar');
+        $occupancy1 = new HourlyOccupancy('bar', 3);
         $this->subject->saveOccupancy($occupancy1);
         $occupancy2 = $this->subject->findOccupancy('bar');
         $this->assertEquals($occupancy1, $occupancy2);
@@ -97,6 +94,6 @@ class DbTest extends TestCase
             vfsStream::url('test/content/ocal/foo.dat'),
             ''
         );
-        $this->assertEquals(new DailyOccupancy('foo'), $this->subject->findOccupancy('foo'));
+        $this->assertEquals(new DailyOccupancy('foo', 3), $this->subject->findOccupancy('foo'));
     }
 }

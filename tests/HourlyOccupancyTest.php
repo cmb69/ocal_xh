@@ -32,10 +32,7 @@ class HourlyOccupancyTest extends TestCase
 
     public function setUp(): void
     {
-        global $plugin_cf;
-
-        $plugin_cf['ocal']['state_max'] = '3';
-        $this->subject = new HourlyOccupancy('bar');
+        $this->subject = new HourlyOccupancy('bar', 3);
     }
 
     public function testSetAndGetState()

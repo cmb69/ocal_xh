@@ -32,11 +32,11 @@ abstract class Occupancy
     /** @var int */
     private $maxState;
 
-    public static function createFromJson(string $name, string $json): ?self
+    public static function createFromJson(string $name, string $json, int $stateMax): ?self
     {
         $array = json_decode($json, true);
         assert(is_array($array)); // TODO: proper validation
-        if (!($result = self::instantiateType($array['type'], $name))) {
+        if (!($result = self::instantiateType($array['type'], $name, $stateMax))) {
             return null;
         }
         foreach ($array['states'] as $date => $state) {
@@ -45,25 +45,23 @@ abstract class Occupancy
         return $result;
     }
 
-    private static function instantiateType(string $type, string $name): ?self
+    private static function instantiateType(string $type, string $name, int $stateMax): ?self
     {
         switch ($type) {
             case 'daily':
-                return new DailyOccupancy($name);
+                return new DailyOccupancy($name, $stateMax);
             case 'hourly':
-                return new HourlyOccupancy($name);
+                return new HourlyOccupancy($name, $stateMax);
             default:
                 return null;
         }
     }
 
-    public function __construct(string $name)
+    public function __construct(string $name, int $stateMax)
     {
-        global $plugin_cf;
-
         $this->name = (string) $name;
         $this->states = array();
-        $this->maxState = (int) $plugin_cf['ocal']['state_max'];
+        $this->maxState = $stateMax;
     }
 
     abstract public function getDailyState(int $year, int $month, int $day): int;

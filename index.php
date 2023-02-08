@@ -44,7 +44,7 @@ function ocal($name, $monthCount = 1)
         $plugin_tx['ocal'],
         new DateTimeImmutable(),
         new ListService(),
-        new Db("{$pth['folder']['base']}content/ocal/"),
+        new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
         defined('XH_ADM') && XH_ADM,
         $name,
         $monthCount
@@ -76,7 +76,7 @@ function Ocal_hourly($name, $weekCount = 1)
         $plugin_tx['ocal'],
         new DateTimeImmutable(),
         new ListService(),
-        new Db("{$pth['folder']['base']}content/ocal/"),
+        new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
         defined('XH_ADM') && XH_ADM,
         $name,
         $weekCount

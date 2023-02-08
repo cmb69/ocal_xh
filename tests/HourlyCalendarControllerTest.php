@@ -50,7 +50,7 @@ class HourlyCalendarControllerTest extends TestCase
         $now = new DateTimeImmutable("2023-07-02");
         $this->listService = $this->createStub(ListService::class);
         $db = $this->createStub(Db::class);
-        $db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly"));
+        $db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $this->sut = new HourlyCalendarController(
             "/",
             "./",

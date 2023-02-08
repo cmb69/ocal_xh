@@ -50,7 +50,7 @@ class DailyCalendarControllerTest extends TestCase
         $now = new DateTimeImmutable("2023-07-02");
         $this->listService = $this->createStub(ListService::class);
         $db = $this->createStub(Db::class);
-        $db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily"));
+        $db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->sut = new DailyCalendarController(
             "/",
             "./",
