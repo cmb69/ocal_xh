@@ -38,7 +38,7 @@ class HourlyCalendarController extends CalendarController
      * @param array<string,string> $lang
      */
     public function __construct(
-        string $scriptName,
+        Url $url,
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
@@ -49,7 +49,7 @@ class HourlyCalendarController extends CalendarController
         bool $isAdmin
     ) {
         parent::__construct(
-            $scriptName,
+            $url,
             $pluginFolder,
             $csrfProtector,
             $config,
@@ -204,11 +204,11 @@ class HourlyCalendarController extends CalendarController
         );
         $items = $pagination->getItems($weekCount);
         foreach ($items as $item) {
-            $item->url = $this->modifyUrl(array(
+            $item->url = $this->url->replace([
                 'ocal_year' => $item->year,
                 'ocal_week' => $item->monthOrWeek,
                 'ocal_action' => $this->mode
-            ));
+            ]);
         }
         return $items;
     }

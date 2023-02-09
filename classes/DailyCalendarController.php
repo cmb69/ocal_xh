@@ -38,7 +38,7 @@ class DailyCalendarController extends CalendarController
      * @param array<string,string> $lang
      */
     public function __construct(
-        string $scriptName,
+        Url $url,
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
@@ -49,7 +49,7 @@ class DailyCalendarController extends CalendarController
         bool $isAdmin
     ) {
         parent::__construct(
-            $scriptName,
+            $url,
             $pluginFolder,
             $csrfProtector,
             $config,
@@ -208,11 +208,11 @@ class DailyCalendarController extends CalendarController
         );
         $paginationItems = $pagination->getItems();
         foreach ($paginationItems as $item) {
-            $item->url = $this->modifyUrl(array(
+            $item->url = $this->url->replace([
                 'ocal_year' => $item->year,
                 'ocal_month' => $item->monthOrWeek,
                 'ocal_action' => $this->mode
-            ));
+            ]);
         }
         return $paginationItems;
     }

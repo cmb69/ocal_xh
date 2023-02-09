@@ -25,5 +25,6 @@ require_once "./classes/ListService.php";
 require_once "./classes/Month.php";
 require_once "./classes/Response.php";
 require_once "./classes/SystemChecker.php";
+require_once "./classes/Url.php";
 require_once "./classes/Week.php";
 require_once "./classes/View.php";

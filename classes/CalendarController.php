@@ -41,8 +41,8 @@ abstract class CalendarController
     /** @var string */
     protected $mode;
 
-    /** @var string */
-    private $scriptName;
+    /** @var Url */
+    protected $url;
 
     /** @var string */
     protected $pluginFolder;
@@ -70,7 +70,7 @@ abstract class CalendarController
      * @param array<string,string> $lang
      */
     public function __construct(
-        string $scriptName,
+        Url $url,
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
@@ -81,7 +81,7 @@ abstract class CalendarController
         bool $isAdmin,
         string $type
     ) {
-        $this->scriptName = $scriptName;
+        $this->url = $url;
         $this->pluginFolder = $pluginFolder;
         $this->csrfProtector = $csrfProtector;
         $this->config = $config;
@@ -184,7 +184,7 @@ abstract class CalendarController
     {
         return new HtmlString($this->view->render('mode-link', [
             'mode' => $mode = $this->mode === 'calendar' ? 'list' : 'calendar',
-            'url' => $this->modifyUrl(array('ocal_action' => $mode)),
+            'url' => $this->url->replace(['ocal_action' => $mode]),
         ]));
     }
 
@@ -200,14 +200,5 @@ abstract class CalendarController
         return new HtmlString($this->view->render('toolbar', [
             'states' => range(0, $this->config['state_max']),
         ]));
-    }
-
-    /** @param array<string,string> $newParams */
-    protected function modifyUrl(array $newParams): string
-    {
-        parse_str($_SERVER['QUERY_STRING'], $params);
-        $params = array_merge($params, $newParams);
-        $query = str_replace('=&', '&', http_build_query($params));
-        return "{$this->scriptName}?$query";
     }
 }

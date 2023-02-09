@@ -1,11 +1,12 @@
 <?php
 
+use Ocal\Url;
 use Ocal\View;
 
 /**
  * @var View $this
  * @var string $mode
- * @var string $url
+ * @var Url $url
  */
 ?>
 <p class="ocal_mode">

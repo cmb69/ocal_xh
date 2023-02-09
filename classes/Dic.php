@@ -39,10 +39,10 @@ class Dic
 
     public static function makeDailyCalendarController(): DailyCalendarController
     {
-        global $sn, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+        global $sn, $su, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
         return new DailyCalendarController(
-            $sn,
+            new Url($sn, $su, ($su !== "" ? array_slice($_GET, 1) : $_GET)),
             "{$pth['folder']['plugins']}ocal/",
             $_XH_csrfProtection,
             $plugin_cf['ocal'],
@@ -56,10 +56,10 @@ class Dic
 
     public static function makeHourlyCalendarController(): HourlyCalendarController
     {
-        global $sn, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+        global $sn, $su, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
         return new HourlyCalendarController(
-            $sn,
+            new Url($sn, $su, ($su !== "" ? array_slice($_GET, 1) : $_GET)),
             "{$pth['folder']['plugins']}ocal/",
             $_XH_csrfProtection,
             $plugin_cf['ocal'],
