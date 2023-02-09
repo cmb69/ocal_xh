@@ -215,6 +215,9 @@ class DailyCalendarController extends CalendarController
         return $paginationItems;
     }
 
+    /**
+     * @todo Properly validate the JSON payload
+     */
     protected function saveStates(string $name): ?string
     {
         $states = json_decode($_POST['ocal_states'], true);
