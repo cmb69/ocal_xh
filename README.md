@@ -183,6 +183,8 @@ Many thanks to the community at the [CMSimple_XH Forum](https://www.cmsimpleforu
 for tips, suggestions and testing.
 Especially I like to thank *rothom* for being the first tester and
 *hixi* for suggesting the hourly calendars.
+And many thanks to *lck* who found and reported serious bugs right after the
+release of version 1.0.
 
 And last but not least many thanks to [Peter Harteg](https://www.harteg.dk/),
 the “father” of CMSimple, and all developers of [CMSimple_XH](https://www.cmsimple-xh.org/)
