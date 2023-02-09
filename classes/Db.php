@@ -88,11 +88,10 @@ class Db
         return (string) json_encode(['type' => $hourly ? 'hourly' : 'daily', 'states' => $states]);
     }
 
-    /** @return void */
-    public function saveOccupancy(Occupancy $occupancy)
+    public function saveOccupancy(Occupancy $occupancy): bool
     {
         $filename = $this->getFoldername() . $occupancy->getName() . '.json';
-        file_put_contents($filename, $occupancy->toJson());
+        return (file_put_contents($filename, $occupancy->toJson()) !== false);
     }
 
     private function getLockfilename(): string

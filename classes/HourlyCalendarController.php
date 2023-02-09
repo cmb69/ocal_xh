@@ -227,8 +227,11 @@ class HourlyCalendarController extends CalendarController
                 $occupancy->setState($date, $state);
             }
         }
-        $this->db->saveOccupancy($occupancy);
+        $res = $this->db->saveOccupancy($occupancy);
         $this->db->unlock();
+        if (!$res) {
+            return XH_message('fail', $this->lang['message_not_saved']);
+        }
         return XH_message('success', $this->lang['message_saved']);
     }
 }

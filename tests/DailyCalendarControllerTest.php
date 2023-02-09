@@ -37,6 +37,9 @@ class DailyCalendarControllerTest extends TestCase
     /** @var ListService&MockObject */
     private $listService;
 
+    /** @var Db&MockObject */
+    private $db;
+
     public function setUp(): void
     {
         global $plugin_cf;
@@ -52,8 +55,8 @@ class DailyCalendarControllerTest extends TestCase
         $lang = $plugin_tx['ocal'];
         $now = new DateTimeImmutable("2023-07-02");
         $this->listService = $this->createStub(ListService::class);
-        $db = $this->createStub(Db::class);
-        $db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
+        $this->db = $this->createStub(Db::class);
+        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->sut = new DailyCalendarController(
             "/",
             "./",
@@ -62,7 +65,7 @@ class DailyCalendarControllerTest extends TestCase
             $lang,
             $now,
             $this->listService,
-            $db,
+            $this->db,
             true,
             "test-daily",
             1
@@ -123,7 +126,7 @@ class DailyCalendarControllerTest extends TestCase
         $this->assertEquals("", $response->output());
     }
 
-    public function testSaveActionReturnsEmptyResponseNameIsMissing(): void
+    public function testSaveActionReturnsEmptyResponseIfNameIsMissing(): void
     {
         $response = $this->sut->saveAction("test-daily", 1);
         $this->assertEquals("", $response->output());
@@ -133,6 +136,7 @@ class DailyCalendarControllerTest extends TestCase
     {
         $_GET = ['ocal_name' => "test-daily"];
         $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
+        $this->db->method('saveOccupancy')->willReturn(true);
         $response = $this->sut->saveAction("test-daily", 1);
         $this->assertEquals('<p class="xh_success">Successfully saved.</p>', $response->output());
     }
@@ -143,5 +147,14 @@ class DailyCalendarControllerTest extends TestCase
         $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
         $this->csrfProtector->expects($this->once())->method('check');
         $this->sut->saveAction("test-daily", 1);
+    }
+
+    public function testSaveActionReportsFailureToSave(): void
+    {
+        $_GET = ['ocal_name' => "test-daily"];
+        $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
+        $this->db->method('saveOccupancy')->willReturn(false);
+        $response = $this->sut->saveAction("test-daily", 1);
+        $this->assertEquals('<p class="xh_fail">Saving failed!</p>', $response->output());
     }
 }

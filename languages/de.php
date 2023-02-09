@@ -19,6 +19,7 @@ $plugin_tx['ocal']['label_state_2']="reserviert";
 $plugin_tx['ocal']['label_state_3']="gebucht";
 $plugin_tx['ocal']['message_no_entry']="Es gibt keinen Eintrag für diesen Zeitraum.";
 $plugin_tx['ocal']['message_saved']="Erfolgreich gespeichert.";
+$plugin_tx['ocal']['message_not_saved']="Das Speichern schlug fehl!";
 $plugin_tx['ocal']['message_unsaved_changes']="Es gibt ungesicherte Änderungen, die beim Verlassen der Seite verloren gehen!";
 $plugin_tx['ocal']['error_occupancy_name']="Ein Belegungs-Name darf nur die Buchstaben a-z, die Ziffern 0-9 and Minus-Zeichen enthalten!";
 $plugin_tx['ocal']['syscheck_extension']="die Erweiterung '%s' geladen ist";
