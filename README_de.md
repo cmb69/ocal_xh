@@ -87,6 +87,7 @@ Um einen *stündlichen* Belegungskalender im *Template* anzuzeigen, verwenden Si
 
 `%NAME_DER_BELEGUNG%` ist ein beliebiger Name, der nur aus den Buchstaben `a`-`z`,
 den Ziffern `0`-`9` und dem Minuszeichen (`-`) bestehen darf.
+Tägliche und stündliche Belegungskalender dürfen *nicht* denselben Namen haben.
 
 `%ANZAHL_DER_MONATE%` bzw. `%ANZAHL_DER_WOCHEN%` gibt die Anzahl der Kalender an,
 die gleichzeitig angezeigt werden sollen.

@@ -62,7 +62,7 @@ class DbTest extends TestCase
     {
         $occupancy1 = new DailyOccupancy('foo', 3);
         $this->subject->saveOccupancy($occupancy1);
-        $occupancy2 = $this->subject->findOccupancy('foo');
+        $occupancy2 = $this->subject->findOccupancy('foo', false);
         $this->assertEquals($occupancy1, $occupancy2);
     }
 
@@ -70,8 +70,24 @@ class DbTest extends TestCase
     {
         $occupancy1 = new HourlyOccupancy('bar', 3);
         $this->subject->saveOccupancy($occupancy1);
-        $occupancy2 = $this->subject->findOccupancy('bar');
+        $occupancy2 = $this->subject->findOccupancy('bar', true);
         $this->assertEquals($occupancy1, $occupancy2);
+    }
+
+    public function testReadingDailyAsHourlyOccupancyReturnsNull()
+    {
+        $occupancy1 = new DailyOccupancy("foo", 1);
+        $this->subject->saveOccupancy($occupancy1);
+        $occupancy2 = $this->subject->findOccupancy("foo", true);
+        $this->assertNull($occupancy2);
+    }
+
+    public function testReadingHourlyAsDailyOccupancyReturnsNull()
+    {
+        $occupancy1 = new HourlyOccupancy("foo", 1);
+        $this->subject->saveOccupancy($occupancy1);
+        $occupancy2 = $this->subject->findOccupancy("foo", false);
+        $this->assertNull($occupancy2);
     }
 
     public function testMigrateContents()

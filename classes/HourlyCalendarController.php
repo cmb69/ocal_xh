@@ -57,7 +57,8 @@ class HourlyCalendarController extends CalendarController
             $now,
             $listService,
             $db,
-            $isAdmin
+            $isAdmin,
+            "hourly"
         );
         $this->week = isset($_GET['ocal_week'])
             ? max(1, min(53, (int) $_GET['ocal_week']))
@@ -67,7 +68,7 @@ class HourlyCalendarController extends CalendarController
             : (int) $now->format('o');
     }
 
-    protected function findOccupancy(string $name): Occupancy
+    protected function findOccupancy(string $name): ?Occupancy
     {
         $this->db->lock(false);
         $result = $this->db->findOccupancy($name, true);
@@ -223,6 +224,9 @@ class HourlyCalendarController extends CalendarController
         }
         $this->db->lock(true);
         $occupancy = $this->db->findOccupancy($name, true);
+        if ($occupancy === null) {
+            return null;
+        }
         foreach ($states as $week => $states) {
             foreach ($states as $i => $state) {
                 $day = $i % 7 + 1;

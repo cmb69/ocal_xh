@@ -62,6 +62,9 @@ abstract class CalendarController
     /** @var View */
     protected $view;
 
+    /** @var string */
+    protected $type;
+
     /**
      * @param array<string,string> $config
      * @param array<string,string> $lang
@@ -75,7 +78,8 @@ abstract class CalendarController
         DateTimeImmutable $now,
         ListService $listService,
         Db $db,
-        bool $isAdmin
+        bool $isAdmin,
+        string $type
     ) {
         $this->scriptName = $scriptName;
         $this->pluginFolder = $pluginFolder;
@@ -86,6 +90,7 @@ abstract class CalendarController
         $this->listService = $listService;
         $this->db = $db;
         $this->isAdmin = $isAdmin;
+        $this->type = $type;
         $this->view = new View("{$this->pluginFolder}views/", $this->lang);
     }
 
@@ -93,7 +98,15 @@ abstract class CalendarController
     {
         $this->mode = 'calendar';
         $occupancy = $this->findOccupancy($name);
-        $html = $this->renderCalendarView($occupancy, $count);
+        if ($occupancy !== null) {
+            $html = $this->renderCalendarView($occupancy, $count);
+        } else {
+            $html = XH_message(
+                'fail',
+                $this->lang["message_not_{$this->type}"],
+                $name
+            );
+        }
         if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
             return new Response($html);
         }
@@ -107,7 +120,15 @@ abstract class CalendarController
     {
         $this->mode = 'list';
         $occupancy = $this->findOccupancy($name);
-        $html = $this->renderListView($occupancy, $count);
+        if ($occupancy !== null) {
+            $html = $this->renderListView($occupancy, $count);
+        } else {
+            $html = XH_message(
+                'fail',
+                $this->lang["message_not_{$this->type}"],
+                $name
+            );
+        }
         if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
             return new Response($html);
         }
@@ -117,7 +138,7 @@ abstract class CalendarController
         return new Response("");
     }
 
-    abstract protected function findOccupancy(string $name): Occupancy;
+    abstract protected function findOccupancy(string $name): ?Occupancy;
 
     abstract protected function renderCalendarView(Occupancy $occupancy, int $count): HtmlString;
 

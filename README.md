@@ -85,6 +85,7 @@ To display an *hourly* occupancy calendar in the *template*, use:
 
 `%OCCUPANCY_NAME%` is an arbitrary name, that must only consist of the letters
 `a`-`z`, the digits `0`-`9` and hyphens (`-`).
+Daily and hourly occupancy calendars must *not* have the same name.
 
 `%NUMBER_OF_MONTHS%` and `%NUMBER_OF_WEEKS%` specify the number of calendars
 that shall be displayed simultaneously.

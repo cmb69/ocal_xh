@@ -57,7 +57,8 @@ class DailyCalendarController extends CalendarController
             $now,
             $listService,
             $db,
-            $isAdmin
+            $isAdmin,
+            "daily"
         );
         $this->month = isset($_GET['ocal_month'])
             ? max(1, min(12, (int) $_GET['ocal_month']))
@@ -67,7 +68,7 @@ class DailyCalendarController extends CalendarController
             : (int) $now->format('Y');
     }
 
-    protected function findOccupancy(string $name): Occupancy
+    protected function findOccupancy(string $name): ?Occupancy
     {
         $this->db->lock(false);
         $result = $this->db->findOccupancy($name);
@@ -227,6 +228,9 @@ class DailyCalendarController extends CalendarController
         }
         $this->db->lock(true);
         $occupancy = $this->db->findOccupancy($name);
+        if ($occupancy === null) {
+            return null;
+        }
         foreach ($states as $month => $states) {
             foreach ($states as $i => $state) {
                 $date = sprintf('%s-%02d', $month, $i + 1);
