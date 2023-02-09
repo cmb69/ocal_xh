@@ -211,13 +211,11 @@ class HourlyCalendarController extends CalendarController
         return $items;
     }
 
-    /** @return string|never */
-    protected function saveStates(string $name)
+    protected function saveStates(string $name): ?string
     {
         $states = json_decode($_POST['ocal_states'], true);
         if (!is_array($states)) {
-            header('HTTP/1.0 400 Bad Request');
-            exit;
+            return null;
         }
         $this->db->lock(true);
         $occupancy = $this->db->findOccupancy($name, true);

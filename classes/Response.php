@@ -29,10 +29,14 @@ class Response
     /** @var string|null */
     private $contentType;
 
-    public function __construct(string $output, ?string $contentType = null)
+    /** @var int|null */
+    private $statusCode;
+
+    public function __construct(string $output, ?string $contentType = null, ?int $statusCode = null)
     {
         $this->output = $output;
         $this->contentType = $contentType;
+        $this->statusCode = $statusCode;
     }
 
     /** @return string|never */
@@ -41,6 +45,10 @@ class Response
         if ($this->contentType !== null) {
             while (ob_get_level()) {
                 ob_end_clean();
+            }
+            if ($this->statusCode !== null) {
+                assert($this->statusCode === 400);
+                header("HTTP/1.1 400 Bad Request");
             }
             header("Content-Type: {$this->contentType}; charset=UTF-8");
             echo $this->output;
@@ -57,5 +65,10 @@ class Response
     public function contentType(): ?string
     {
         return $this->contentType;
+    }
+
+    public function statuscode(): ?int
+    {
+        return $this->statusCode;
     }
 }

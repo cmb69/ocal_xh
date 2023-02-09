@@ -126,15 +126,18 @@ abstract class CalendarController
     public function saveAction(string $name): Response
     {
         $this->mode = 'calendar';
-        if ($this->isAdmin && isset($_GET['ocal_name']) && $_GET['ocal_name'] === $name) {
-            $this->csrfProtector->check();
-            return new Response($this->saveStates($name), "text/html");
+        if (!$this->isAdmin || ($_GET['ocal_name'] ?? null) !== $name) {
+            return new Response("");
         }
-        return new Response("");
+        $this->csrfProtector->check();
+        $message = $this->saveStates($name);
+        if ($message === null) {
+            return new Response("", "text/plain", 400);
+        }
+        return new Response($message, "text/html");
     }
 
-    /** @return string|never */
-    abstract protected function saveStates(string $name);
+    abstract protected function saveStates(string $name): ?string;
 
     /** @return void */
     protected function emitScriptElements()
