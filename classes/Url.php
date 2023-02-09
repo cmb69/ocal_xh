@@ -29,10 +29,10 @@ class Url
     /** @var string */
     private $page;
 
-    /** @var array<string,string> */
+    /** @var array<string,string|array<string>> */
     private $params;
 
-    /** @param array<string,string> $params */
+    /** @param array<string,string|array<string>> $params */
     public function __construct(string $base, string $page, array $params)
     {
         $this->base = $base;

@@ -40,6 +40,14 @@ class UrlTest extends TestCase
             'with_params' => [new Url("/", "Page", ["foo" => "bar", "qux" => "bar"]), "/?Page&foo=bar&qux=bar"],
             'params_but_no_page' => [new Url("/", "", ["foo" => "bar"]), "/?&foo=bar"],
             'gh-35' => [new Url("/", "Ocal-1.0", []), "/?Ocal-1.0"],
+            'get_with_list' => [
+                new Url("/", "", ["foo" => ["bar", "baz"]]),
+                "/?&foo%5B0%5D=bar&foo%5B1%5D=baz"
+            ],
+            'get_with_dict' => [
+                new Url("/", "", ["foo" => ["one" => "bar", "two" => "baz"]]),
+                "/?&foo%5Bone%5D=bar&foo%5Btwo%5D=baz"
+            ],
         ];
     }
 
