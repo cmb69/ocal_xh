@@ -153,6 +153,16 @@ class HourlyCalendarControllerTest extends TestCase
         $this->sut->saveAction("test-hourly", 1);
     }
 
+    public function testSaveActionRejectsBadRequest(): void
+    {
+        $_GET = ['ocal_name' => "test-hourly"];
+        $_POST = ['ocal_states' => ""];
+        $response = $this->sut->saveAction("test-hourly", 1);
+        $this->assertEquals(400, $response->statuscode());
+        $this->assertEquals("text/plain", $response->contentType());
+        $this->assertEquals("", $response->output());
+    }
+
     public function testSaveActionReportsFailureToSave(): void
     {
         $_GET = ['ocal_name' => "test-hourly"];

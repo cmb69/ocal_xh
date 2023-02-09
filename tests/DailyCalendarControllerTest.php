@@ -149,6 +149,16 @@ class DailyCalendarControllerTest extends TestCase
         $this->sut->saveAction("test-daily", 1);
     }
 
+    public function testSaveActionRejectsBadRequest(): void
+    {
+        $_GET = ['ocal_name' => "test-daily"];
+        $_POST = ['ocal_states' => ""];
+        $response = $this->sut->saveAction("test-daily", 1);
+        $this->assertEquals(400, $response->statuscode());
+        $this->assertEquals("text/plain", $response->contentType());
+        $this->assertEquals("", $response->output());
+    }
+
     public function testSaveActionReportsFailureToSave(): void
     {
         $_GET = ['ocal_name' => "test-daily"];
