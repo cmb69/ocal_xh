@@ -42,8 +42,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function setUp(): void
     {
-        global $plugin_cf;
-
         $_SERVER['QUERY_STRING'] = "";
         $this->csrfProtector = $this->createStub(CsrfProtector::class);
         $this->csrfProtector->method('tokenInput')->willReturn(
