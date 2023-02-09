@@ -29,7 +29,7 @@ abstract class CalendarController
     /** @var bool */
     protected static $isJavaScriptEmitted = false;
 
-    /** @var CsrfProtector */
+    /** @var ?CsrfProtector */
     protected $csrfProtector;
 
     /** @var array<string,string> */
@@ -69,7 +69,7 @@ abstract class CalendarController
     public function __construct(
         string $scriptName,
         string $pluginFolder,
-        CsrfProtector $csrfProtector,
+        ?CsrfProtector $csrfProtector,
         array $config,
         array $lang,
         DateTimeImmutable $now,
@@ -126,7 +126,7 @@ abstract class CalendarController
     public function saveAction(string $name): Response
     {
         $this->mode = 'calendar';
-        if (!$this->isAdmin || ($_GET['ocal_name'] ?? null) !== $name) {
+        if (!$this->isAdmin || ($_GET['ocal_name'] ?? null) !== $name || $this->csrfProtector === null) {
             return new Response("");
         }
         $this->csrfProtector->check();

@@ -40,7 +40,7 @@ class HourlyCalendarController extends CalendarController
     public function __construct(
         string $scriptName,
         string $pluginFolder,
-        CsrfProtector $csrfProtector,
+        ?CsrfProtector $csrfProtector,
         array $config,
         array $lang,
         DateTimeImmutable $now,
@@ -89,6 +89,7 @@ class HourlyCalendarController extends CalendarController
             'weekCalendars' => $this->getWeekCalendars($occupancy, $count),
         ];
         if ($this->isAdmin) {
+            assert($this->csrfProtector !== null);
             $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
         }
         return new HtmlString($this->view->render('hourly-calendars', $data));
