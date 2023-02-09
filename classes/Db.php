@@ -63,7 +63,8 @@ class Db
             $contents = $this->migrateContents($name, $hourly);
         }
         if ($contents && ($occupancy = Occupancy::createFromJson($name, $contents, $this->stateMax))) {
-            if ((!$hourly && $occupancy instanceof HourlyOccupancy) || ($hourly && $occupancy instanceof DailyOccupancy)) {
+            if ((!$hourly && $occupancy instanceof HourlyOccupancy)
+                || ($hourly && $occupancy instanceof DailyOccupancy)) {
                 return null;
             }
             return $occupancy;
