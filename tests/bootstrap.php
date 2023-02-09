@@ -1,7 +1,7 @@
 <?php
 
 const CMSIMPLE_XH_VERSION = "CMSimple_XH 1.7.5";
-const OCAL_VERSION = "1.0beta4";
+const OCAL_VERSION = "1.0";
 
 require_once './vendor/autoload.php';
 require_once '../../cmsimple/classes/CSRFProtection.php';
