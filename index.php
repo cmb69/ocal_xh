@@ -21,7 +21,7 @@
 
 use Ocal\Dic;
 
-const OCAL_VERSION = "1.2";
+const OCAL_VERSION = "1.3-dev";
 
 /**
  * @param string $name
