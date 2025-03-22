@@ -28,8 +28,12 @@ nor can it be used as an event calendar, such as
 
 ## Requirements
 
-Ocal_XH is a plugin for CMSimple_XH.
+Ocal_XH is a plugin for [CMSimple_XH](https://cmsimple-xh.org/).
 It requires CMSimple_XH ≥ 1.7.0, and PHP ≥ 7.1.0 with the *json* extension.
+Ocal_XH also requires [Plib_XH](https://github.com/cmb69/plib_xh) ≥ 1.3;
+if that is not already installed (see `Settings` → `Info`),
+get the [lastest release](https://github.com/cmb69/plib_xh/releases/latest),
+and install it.
 
 ## Download
 
