@@ -51,8 +51,7 @@ class Dic
             new DateTimeImmutable(),
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
             new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
-            self::view(),
-            defined('XH_ADM') && XH_ADM
+            self::view()
         );
     }
 
@@ -68,8 +67,7 @@ class Dic
             new DateTimeImmutable(),
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
             new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
-            self::view(),
-            defined('XH_ADM') && XH_ADM
+            self::view()
         );
     }
 

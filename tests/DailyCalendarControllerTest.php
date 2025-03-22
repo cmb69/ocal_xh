@@ -24,6 +24,7 @@ namespace Ocal;
 use DateTimeImmutable;
 use ApprovalTests\Approvals;
 use PHPUnit\Framework\TestCase;
+use Plib\FakeRequest;
 use Plib\View;
 use XH\CSRFProtection as CsrfProtector;
 
@@ -71,7 +72,7 @@ class DailyCalendarControllerTest extends TestCase
     public function testDefaultActionRendersCalendar(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->defaultAction("test-daily", 1);
+        $response = $this->sut->defaultAction(new FakeRequest(["admin" => true]), "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -80,7 +81,7 @@ class DailyCalendarControllerTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $_GET = ['ocal_name' => "test-daily"];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->defaultAction("test-daily", 1);
+        $response = $this->sut->defaultAction(new FakeRequest(["admin" => true]), "test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -89,21 +90,21 @@ class DailyCalendarControllerTest extends TestCase
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->defaultAction("test-daily", 1);
+        $response = $this->sut->defaultAction(new FakeRequest(), "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 
     public function testDefaultActionReportsWrongCalendarType(): void
     {
         $this->db->method('findOccupancy')->willReturn(null);
-        $response = $this->sut->defaultAction("test-hourly", 1);
+        $response = $this->sut->defaultAction(new FakeRequest(), "test-hourly", 1);
         $this->assertStringContainsString("'test-hourly' is not a daily occupancy calendar!", $response->output());
     }
 
     public function testListActionRendersListWithoutEntries(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction("test-daily", 1);
+        $response = $this->sut->listAction(new FakeRequest(), "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -113,7 +114,7 @@ class DailyCalendarControllerTest extends TestCase
             (object) ['range' => "9.", 'state' => "2", 'label' => "available"],
         ]);
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction("test-daily", 1);
+        $response = $this->sut->listAction(new FakeRequest(), "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -122,7 +123,7 @@ class DailyCalendarControllerTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $_GET = ['ocal_name' => "test-daily"];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction("test-daily", 1);
+        $response = $this->sut->listAction(new FakeRequest(), "test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -131,21 +132,21 @@ class DailyCalendarControllerTest extends TestCase
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction("test-daily", 1);
+        $response = $this->sut->listAction(new FakeRequest(), "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 
     public function testListActionReportsWrongCalendarType(): void
     {
         $this->db->method('findOccupancy')->willReturn(null);
-        $response = $this->sut->listAction("test-hourly", 1);
+        $response = $this->sut->listAction(new FakeRequest(), "test-hourly", 1);
         $this->assertStringContainsString("'test-hourly' is not a daily occupancy calendar!", $response->output());
     }
 
     public function testSaveActionReturnsEmptyResponseIfNameIsMissing(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->saveAction("test-daily", 1);
+        $response = $this->sut->saveAction(new FakeRequest(), "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 
@@ -155,7 +156,7 @@ class DailyCalendarControllerTest extends TestCase
         $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->db->method('saveOccupancy')->willReturn(true);
-        $response = $this->sut->saveAction("test-daily", 1);
+        $response = $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-daily", 1);
         $this->assertStringContainsString('Successfully saved.', $response->output());
     }
 
@@ -165,7 +166,7 @@ class DailyCalendarControllerTest extends TestCase
         $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->csrfProtector->expects($this->once())->method('check');
-        $this->sut->saveAction("test-daily", 1);
+        $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-daily", 1);
     }
 
     public function testSaveActionRejectsBadRequest(): void
@@ -173,7 +174,7 @@ class DailyCalendarControllerTest extends TestCase
         $_GET = ['ocal_name' => "test-daily"];
         $_POST = ['ocal_states' => ""];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->saveAction("test-daily", 1);
+        $response = $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-daily", 1);
         $this->assertEquals(400, $response->status());
         $this->assertEquals("", $response->output());
     }
@@ -184,7 +185,7 @@ class DailyCalendarControllerTest extends TestCase
         $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->db->method('saveOccupancy')->willReturn(false);
-        $response = $this->sut->saveAction("test-daily", 1);
+        $response = $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-daily", 1);
         $this->assertStringContainsString('Saving failed!', $response->output());
     }
 

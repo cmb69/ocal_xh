@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTimeImmutable;
+use Plib\Request;
 use Plib\Response;
 use Plib\View;
 use XH\CSRFProtection as CsrfProtector;
@@ -55,9 +56,6 @@ abstract class CalendarController
     /** @var Db */
     protected $db;
 
-    /** @var bool */
-    protected $isAdmin;
-
     /** @var View */
     protected $view;
 
@@ -76,7 +74,6 @@ abstract class CalendarController
         ListService $listService,
         Db $db,
         View $view,
-        bool $isAdmin,
         string $type
     ) {
         $this->url = $url;
@@ -87,16 +84,15 @@ abstract class CalendarController
         $this->listService = $listService;
         $this->db = $db;
         $this->view = $view;
-        $this->isAdmin = $isAdmin;
         $this->type = $type;
     }
 
-    public function defaultAction(string $name, int $count): Response
+    public function defaultAction(Request $request, string $name, int $count): Response
     {
         $this->mode = 'calendar';
         $occupancy = $this->findOccupancy($name);
         if ($occupancy !== null) {
-            $html = $this->renderCalendarView($occupancy, $count);
+            $html = $this->renderCalendarView($request, $occupancy, $count);
         } else {
             $html = $this->view->message("fail", "message_not_{$this->type}", $name);
         }
@@ -109,12 +105,12 @@ abstract class CalendarController
         return Response::create();
     }
 
-    public function listAction(string $name, int $count): Response
+    public function listAction(Request $request, string $name, int $count): Response
     {
         $this->mode = 'list';
         $occupancy = $this->findOccupancy($name);
         if ($occupancy !== null) {
-            $html = $this->renderListView($occupancy, $count);
+            $html = $this->renderListView($request, $occupancy, $count);
         } else {
             $html = $this->view->message("fail", "message_not_{$this->type}", $name);
         }
@@ -129,14 +125,14 @@ abstract class CalendarController
 
     abstract protected function findOccupancy(string $name): ?Occupancy;
 
-    abstract protected function renderCalendarView(Occupancy $occupancy, int $count): string;
+    abstract protected function renderCalendarView(Request $request, Occupancy $occupancy, int $count): string;
 
-    abstract protected function renderListView(Occupancy $occupancy, int $count): string;
+    abstract protected function renderListView(Request $request, Occupancy $occupancy, int $count): string;
 
-    public function saveAction(string $name): Response
+    public function saveAction(Request $request, string $name): Response
     {
         $this->mode = 'calendar';
-        if (!$this->isAdmin || ($_GET['ocal_name'] ?? null) !== $name || $this->csrfProtector === null) {
+        if (!$request->admin() || ($_GET['ocal_name'] ?? null) !== $name || $this->csrfProtector === null) {
             return Response::create();
         }
         $this->csrfProtector->check();
@@ -150,7 +146,7 @@ abstract class CalendarController
     abstract protected function saveStates(string $name): ?string;
 
     /** @return void */
-    protected function emitScriptElements()
+    protected function emitScriptElements(Request $request)
     {
         global $bjs;
 
@@ -159,7 +155,7 @@ abstract class CalendarController
         }
         $config = array(
             'message_unsaved_changes' => $this->view->plain("message_unsaved_changes"),
-            'isAdmin' => $this->isAdmin
+            'isAdmin' => $request->admin(),
         );
         $bjs .= '<script>'
             . 'var OCAL = ' . json_encode($config) . ';'

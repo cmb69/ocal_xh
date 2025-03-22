@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTimeImmutable;
+use Plib\Request;
 use Plib\View;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
@@ -45,8 +46,7 @@ class HourlyCalendarController extends CalendarController
         DateTimeImmutable $now,
         ListService $listService,
         Db $db,
-        View $view,
-        bool $isAdmin
+        View $view
     ) {
         parent::__construct(
             $url,
@@ -57,7 +57,6 @@ class HourlyCalendarController extends CalendarController
             $listService,
             $db,
             $view,
-            $isAdmin,
             "hourly"
         );
         $this->week = isset($_GET['ocal_week'])
@@ -76,20 +75,20 @@ class HourlyCalendarController extends CalendarController
         return $result;
     }
 
-    protected function renderCalendarView(Occupancy $occupancy, int $count): string
+    protected function renderCalendarView(Request $request, Occupancy $occupancy, int $count): string
     {
-        $this->emitScriptElements();
+        $this->emitScriptElements($request);
 
         $data = [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
-            'isEditable' => $this->isAdmin,
+            'isEditable' => $request->admin(),
             'toolbar' => $this->renderToolbarView(),
             'statusbar' => $this->renderStatusbarView(),
             'weekPagination' => $this->renderPaginationView($count),
             'weekCalendars' => $this->getWeekCalendars($occupancy, $count),
         ];
-        if ($this->isAdmin) {
+        if ($request->admin()) {
             assert($this->csrfProtector !== null);
             $data['csrfTokenInput'] = $this->csrfProtector->tokenInput();
         }
@@ -141,9 +140,9 @@ class HourlyCalendarController extends CalendarController
         return $daysOfHours;
     }
 
-    protected function renderListView(Occupancy $occupancy, int $count): string
+    protected function renderListView(Request $request, Occupancy $occupancy, int $count): string
     {
-        $this->emitScriptElements();
+        $this->emitScriptElements($request);
         return $this->view->render('hourly-lists', [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
