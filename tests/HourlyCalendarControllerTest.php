@@ -161,7 +161,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsSuccess(): void
     {
-        $_POST = ['ocal_states' => json_encode(['2023-06' => array_fill(0, 90, "1")])];
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $this->db->method('saveOccupancy')->willReturn(true);
         $response = $this->sut->saveAction(new FakeRequest(), "test-hourly", 1);
@@ -170,7 +169,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionPreventCsrf(): void
     {
-        $_POST = ['ocal_states' => json_encode(['2023-06' => array_fill(0, 90, "1")])];
         $this->csrfProtector->expects($this->once())->method('check');
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
@@ -182,7 +180,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionRejectsBadRequest(): void
     {
-        $_POST = ['ocal_states' => ""];
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-hourly",
@@ -195,12 +192,12 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsFailureToSave(): void
     {
-        $_POST = ['ocal_states' => json_encode(['2023-06' => array_fill(0, 90, "1")])];
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $this->db->method('saveOccupancy')->willReturn(false);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-hourly",
             "admin" => true,
+            "post" => ["ocal_states" => json_encode(['2023-06' => array_fill(0, 90, "1")])],
         ]);
         $response = $this->sut->saveAction($request, "test-hourly", 1);
         $this->assertStringContainsString("Saving failed!", $response->output());

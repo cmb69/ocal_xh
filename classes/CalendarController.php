@@ -21,7 +21,6 @@
 
 namespace Ocal;
 
-use DateTimeImmutable;
 use Plib\Request;
 use Plib\Response;
 use Plib\View;
@@ -131,14 +130,14 @@ abstract class CalendarController
             return Response::create();
         }
         $this->csrfProtector->check();
-        $message = $this->saveStates($name);
+        $message = $this->saveStates($request, $name);
         if ($message === null) {
             return Response::error(400);
         }
         return Response::create($message)->withContentType("text/html");
     }
 
-    abstract protected function saveStates(string $name): ?string;
+    abstract protected function saveStates(Request $request, string $name): ?string;
 
     /** @return void */
     protected function emitScriptElements(Request $request)

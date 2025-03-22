@@ -156,12 +156,12 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsSuccess(): void
     {
-        $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->db->method('saveOccupancy')->willReturn(true);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily",
             "admin" => true,
+            "post" => ["ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")])],
         ]);
         $response = $this->sut->saveAction($request, "test-daily", 1);
         $this->assertStringContainsString('Successfully saved.', $response->output());
@@ -169,7 +169,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionPreventCsrf(): void
     {
-        $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->csrfProtector->expects($this->once())->method('check');
         $request = new FakeRequest([
@@ -181,7 +180,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionRejectsBadRequest(): void
     {
-        $_POST = ['ocal_states' => ""];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily",
@@ -194,12 +192,12 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsFailureToSave(): void
     {
-        $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->db->method('saveOccupancy')->willReturn(false);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily",
             "admin" => true,
+            "post" => ["ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")])]
         ]);
         $response = $this->sut->saveAction($request, "test-daily", 1);
         $this->assertStringContainsString('Saving failed!', $response->output());

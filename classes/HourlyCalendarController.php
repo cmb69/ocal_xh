@@ -216,9 +216,9 @@ class HourlyCalendarController extends CalendarController
     /**
      * @todo Properly validate the JSON payload
      */
-    protected function saveStates(string $name): ?string
+    protected function saveStates(Request $request, string $name): ?string
     {
-        $states = json_decode($_POST['ocal_states'], true);
+        $states = json_decode($request->post("ocal_states") ?? "", true);
         if (!is_array($states)) {
             return null;
         }
