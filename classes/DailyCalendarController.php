@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTimeImmutable;
+use Plib\View;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
 
@@ -35,17 +36,16 @@ class DailyCalendarController extends CalendarController
 
     /**
      * @param array<string,string> $config
-     * @param array<string,string> $lang
      */
     public function __construct(
         Url $url,
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
-        array $lang,
         DateTimeImmutable $now,
         ListService $listService,
         Db $db,
+        View $view,
         bool $isAdmin
     ) {
         parent::__construct(
@@ -53,10 +53,10 @@ class DailyCalendarController extends CalendarController
             $pluginFolder,
             $csrfProtector,
             $config,
-            $lang,
             $now,
             $listService,
             $db,
+            $view,
             $isAdmin,
             "daily"
         );
@@ -112,14 +112,14 @@ class DailyCalendarController extends CalendarController
             'isoDate' => $month->getIso(),
             'year' => $month->getYear(),
             'monthname' => $this->getMonthName($month->getMonth()),
-            'daynames' => array_map('trim', explode(',', $this->lang['date_days'])),
+            'daynames' => array_map('trim', explode(',', $this->view->plain("date_days"))),
             'weeks' => $this->getWeeks($occupancy, $month),
         ]);
     }
 
     private function getMonthName(int $month): string
     {
-        $monthnames = array_map('trim', explode(',', $this->lang['date_months']));
+        $monthnames = array_map('trim', explode(',', $this->view->plain("date_months")));
         return $monthnames[$month - 1];
     }
 
@@ -181,7 +181,7 @@ class DailyCalendarController extends CalendarController
 
     private function renderMonthListView(Occupancy $occupancy, Month $month): string
     {
-        $monthnames = explode(',', $this->lang['date_months']);
+        $monthnames = explode(',', $this->view->plain("date_months"));
         return $this->view->render('daily-list', [
             'heading' => $monthnames[$month->getMonth() - 1]
                 . ' ' . $month->getYear(),

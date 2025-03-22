@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTimeImmutable;
+use Plib\View;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
 
@@ -35,17 +36,16 @@ class HourlyCalendarController extends CalendarController
 
     /**
      * @param array<string,string> $config
-     * @param array<string,string> $lang
      */
     public function __construct(
         Url $url,
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
-        array $lang,
         DateTimeImmutable $now,
         ListService $listService,
         Db $db,
+        View $view,
         bool $isAdmin
     ) {
         parent::__construct(
@@ -53,10 +53,10 @@ class HourlyCalendarController extends CalendarController
             $pluginFolder,
             $csrfProtector,
             $config,
-            $lang,
             $now,
             $listService,
             $db,
+            $view,
             $isAdmin,
             "hourly"
         );
@@ -112,9 +112,9 @@ class HourlyCalendarController extends CalendarController
         $to = $this->now->setISODate($week->getYear(), $week->getWeek(), 7);
         return $this->view->render('hourly-calendar', [
             'date' => $week->getIso(),
-            'from' => $from->format($this->lang['date_format']),
-            'to' => $to->format($this->lang['date_format']),
-            'daynames' => array_map('trim', explode(',', $this->lang['date_days'])),
+            'from' => $from->format($this->view->plain("date_format")),
+            'to' => $to->format($this->view->plain("date_format")),
+            'daynames' => array_map('trim', explode(',', $this->view->plain("date_days"))),
             'hours' => $this->getDaysOfHours($occupancy, $week),
         ]);
     }
@@ -168,8 +168,8 @@ class HourlyCalendarController extends CalendarController
         $from = $this->now->setISODate($week->getYear(), $week->getWeek(), 1);
         $to = $this->now->setISODate($week->getYear(), $week->getWeek(), 7);
         return $this->view->render('hourly-list', [
-            'from' => $from->format($this->lang['date_format']),
-            'to' => $to->format($this->lang['date_format']),
+            'from' => $from->format($this->view->plain("date_format")),
+            'to' => $to->format($this->view->plain("date_format")),
             'weekList' => $this->getWeekList($occupancy, $week),
         ]);
     }
@@ -179,7 +179,7 @@ class HourlyCalendarController extends CalendarController
     {
         $weekList = [];
         foreach ($this->listService->getHourlyList($occupancy, $week) as $day) {
-            $day->label = $day->date->format($this->lang['date_format']);
+            $day->label = $day->date->format($this->view->plain("date_format"));
             $weekList[] = $day;
         }
         return $weekList;

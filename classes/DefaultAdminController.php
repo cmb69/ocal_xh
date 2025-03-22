@@ -33,25 +33,27 @@ class DefaultAdminController
     /** @var string */
     private $contentFolder;
 
-    /** @var array<string,string> $lang */
-    private $lang;
-
     /** @var SystemChecker */
     private $systemChecker;
 
-    /** @param array<string,string> $lang */
-    public function __construct(string $pluginFolder, string $contentFolder, array $lang, SystemChecker $systemChecker)
-    {
+    /** @var View */
+    private $view;
+
+    public function __construct(
+        string $pluginFolder,
+        string $contentFolder,
+        SystemChecker $systemChecker,
+        View $view
+    ) {
         $this->pluginFolder = $pluginFolder;
         $this->contentFolder = $contentFolder;
-        $this->lang = $lang;
         $this->systemChecker = $systemChecker;
+        $this->view = $view;
     }
 
     public function defaultAction(): string
     {
-        $view = new View("{$this->pluginFolder}views/", $this->lang);
-        return $view->render('info', [
+        return $this->view->render('info', [
             'version' => OCAL_VERSION,
             'checks' => $this->getChecks(),
         ]);
@@ -76,40 +78,40 @@ class DefaultAdminController
     private function checkPhpVersion(string $version): stdClass
     {
         $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? 'success' : 'fail';
-        $label = sprintf($this->lang['syscheck_phpversion'], $version);
-        $stateLabel = $this->lang["syscheck_$state"];
+        $label = $this->view->plain("syscheck_phpversion", $version);
+        $stateLabel = $this->view->plain("syscheck_$state");
         return (object) compact('state', 'label', 'stateLabel');
     }
 
     private function checkExtension(string $extension): stdClass
     {
         $state = $this->systemChecker->checkExtension($extension) ? 'success' : 'fail';
-        $label = sprintf($this->lang['syscheck_extension'], $extension);
-        $stateLabel = $this->lang["syscheck_$state"];
+        $label = $this->view->plain("syscheck_extension", $extension);
+        $stateLabel = $this->view->plain("syscheck_$state");
         return (object) compact('state', 'label', 'stateLabel');
     }
 
     private function checkXhVersion(string $version): stdClass
     {
         $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version") ? 'success' : 'fail';
-        $label = sprintf($this->lang['syscheck_xhversion'], $version);
-        $stateLabel = $this->lang["syscheck_$state"];
+        $label = $this->view->plain("syscheck_xhversion", $version);
+        $stateLabel = $this->view->plain("syscheck_$state");
         return (object) compact('state', 'label', 'stateLabel');
     }
 
     private function checkPlibVersion(string $version): stdClass
     {
         $state = $this->systemChecker->checkPlugin("plib", $version) ? 'success' : 'fail';
-        $label = sprintf($this->lang['syscheck_plibversion'], $version);
-        $stateLabel = $this->lang["syscheck_$state"];
+        $label = $this->view->plain("syscheck_plibversion", $version);
+        $stateLabel = $this->view->plain("syscheck_$state");
         return (object) compact('state', 'label', 'stateLabel');
     }
 
     private function checkWritability(string $folder): stdClass
     {
         $state = $this->systemChecker->checkWritability($folder) ? 'success' : 'warning';
-        $label = sprintf($this->lang['syscheck_writable'], $folder);
-        $stateLabel = $this->lang["syscheck_$state"];
+        $label = $this->view->plain("syscheck_writable", $folder);
+        $stateLabel = $this->view->plain("syscheck_$state");
         return (object) compact('state', 'label', 'stateLabel');
     }
 }

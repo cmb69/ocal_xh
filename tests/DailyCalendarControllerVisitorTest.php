@@ -23,6 +23,7 @@ namespace Ocal;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use Plib\View;
 
 class DailyCalendarControllerVisitorTest extends TestCase
 {
@@ -32,8 +33,6 @@ class DailyCalendarControllerVisitorTest extends TestCase
         $_SERVER['QUERY_STRING'] = "";
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
         $config = $plugin_cf['ocal'];
-        $plugin_tx = XH_includeVar("./languages/en.php", 'plugin_tx');
-        $lang = $plugin_tx['ocal'];
         $now = new DateTimeImmutable("2023-09-02");
         $listService = $this->createStub(ListService::class);
         $db = $this->createStub(Db::class);
@@ -42,13 +41,18 @@ class DailyCalendarControllerVisitorTest extends TestCase
             "./",
             null,
             $config,
-            $lang,
             $now,
             $listService,
             $db,
+            $this->view(),
             false,
             "test-daily",
             1
         );
+    }
+
+    private function view(): View
+    {
+        return new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["ocal"]);
     }
 }

@@ -23,18 +23,19 @@ namespace Ocal;
 
 use DateTimeImmutable;
 use Plib\SystemChecker;
+use Plib\View;
 
 class Dic
 {
     public static function makeDefaultAdminController(): DefaultAdminController
     {
-        global $pth, $plugin_tx;
+        global $pth;
 
         return new DefaultAdminController(
             "{$pth['folder']['plugins']}ocal/",
             "{$pth['folder']['base']}content/ocal/",
-            $plugin_tx['ocal'],
-            new SystemChecker()
+            new SystemChecker(),
+            self::view()
         );
     }
 
@@ -47,10 +48,10 @@ class Dic
             "{$pth['folder']['plugins']}ocal/",
             $_XH_csrfProtection,
             $plugin_cf['ocal'],
-            $plugin_tx['ocal'],
             new DateTimeImmutable(),
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
             new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
+            self::view(),
             defined('XH_ADM') && XH_ADM
         );
     }
@@ -64,11 +65,18 @@ class Dic
             "{$pth['folder']['plugins']}ocal/",
             $_XH_csrfProtection,
             $plugin_cf['ocal'],
-            $plugin_tx['ocal'],
             new DateTimeImmutable(),
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
             new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
+            self::view(),
             defined('XH_ADM') && XH_ADM
         );
+    }
+
+    private static function view(): View
+    {
+        global $pth, $plugin_tx;
+
+        return new View($pth["folder"]["plugins"] . "ocal/views/", $plugin_tx["ocal"]);
     }
 }

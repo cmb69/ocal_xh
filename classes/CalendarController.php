@@ -37,9 +37,6 @@ abstract class CalendarController
     /** @var array<string,string> */
     protected $config;
 
-    /** @var array<string,string> */
-    protected $lang;
-
     /** @var string */
     protected $mode;
 
@@ -69,17 +66,16 @@ abstract class CalendarController
 
     /**
      * @param array<string,string> $config
-     * @param array<string,string> $lang
      */
     public function __construct(
         Url $url,
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
-        array $lang,
         DateTimeImmutable $now,
         ListService $listService,
         Db $db,
+        View $view,
         bool $isAdmin,
         string $type
     ) {
@@ -87,13 +83,12 @@ abstract class CalendarController
         $this->pluginFolder = $pluginFolder;
         $this->csrfProtector = $csrfProtector;
         $this->config = $config;
-        $this->lang = $lang;
         $this->now = $now;
         $this->listService = $listService;
         $this->db = $db;
+        $this->view = $view;
         $this->isAdmin = $isAdmin;
         $this->type = $type;
-        $this->view = new View("{$this->pluginFolder}views/", $this->lang);
     }
 
     public function defaultAction(string $name, int $count): Response
@@ -163,7 +158,7 @@ abstract class CalendarController
             return;
         }
         $config = array(
-            'message_unsaved_changes' => $this->lang['message_unsaved_changes'],
+            'message_unsaved_changes' => $this->view->plain("message_unsaved_changes"),
             'isAdmin' => $this->isAdmin
         );
         $bjs .= '<script>'

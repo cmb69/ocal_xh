@@ -24,6 +24,7 @@ namespace Ocal;
 use DateTimeImmutable;
 use ApprovalTests\Approvals;
 use PHPUnit\Framework\TestCase;
+use Plib\View;
 use XH\CSRFProtection as CsrfProtector;
 
 class DailyCalendarControllerTest extends TestCase
@@ -49,8 +50,6 @@ class DailyCalendarControllerTest extends TestCase
         );
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
         $config = $plugin_cf['ocal'];
-        $plugin_tx = XH_includeVar("./languages/en.php", 'plugin_tx');
-        $lang = $plugin_tx['ocal'];
         $now = new DateTimeImmutable("2023-07-02");
         $this->listService = $this->createStub(ListService::class);
         $this->db = $this->createStub(Db::class);
@@ -59,10 +58,10 @@ class DailyCalendarControllerTest extends TestCase
             "./",
             $this->csrfProtector,
             $config,
-            $lang,
             $now,
             $this->listService,
             $this->db,
+            $this->view(),
             true,
             "test-daily",
             1
@@ -187,5 +186,10 @@ class DailyCalendarControllerTest extends TestCase
         $this->db->method('saveOccupancy')->willReturn(false);
         $response = $this->sut->saveAction("test-daily", 1);
         $this->assertStringContainsString('Saving failed!', $response->output());
+    }
+
+    private function view(): View
+    {
+        return new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["ocal"]);
     }
 }
