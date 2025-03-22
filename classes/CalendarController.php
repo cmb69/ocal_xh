@@ -47,9 +47,6 @@ abstract class CalendarController
     /** @var string */
     protected $pluginFolder;
 
-    /** @var DateTimeImmutable */
-    protected $now;
-
     /** @var ListService */
     protected $listService;
 
@@ -70,7 +67,6 @@ abstract class CalendarController
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
-        DateTimeImmutable $now,
         ListService $listService,
         Db $db,
         View $view,
@@ -80,7 +76,6 @@ abstract class CalendarController
         $this->pluginFolder = $pluginFolder;
         $this->csrfProtector = $csrfProtector;
         $this->config = $config;
-        $this->now = $now;
         $this->listService = $listService;
         $this->db = $db;
         $this->view = $view;

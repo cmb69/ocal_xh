@@ -29,12 +29,6 @@ use XH\CSRFProtection as CsrfProtector;
 
 class HourlyCalendarController extends CalendarController
 {
-    /** @var int */
-    private $week;
-
-    /** @var int */
-    private $isoYear;
-
     /**
      * @param array<string,string> $config
      */
@@ -43,7 +37,6 @@ class HourlyCalendarController extends CalendarController
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
-        DateTimeImmutable $now,
         ListService $listService,
         Db $db,
         View $view
@@ -53,18 +46,11 @@ class HourlyCalendarController extends CalendarController
             $pluginFolder,
             $csrfProtector,
             $config,
-            $now,
             $listService,
             $db,
             $view,
             "hourly"
         );
-        $this->week = isset($_GET['ocal_week'])
-            ? max(1, min(53, (int) $_GET['ocal_week']))
-            : (int) $now->format('W');
-        $this->isoYear = isset($_GET['ocal_year'])
-            ? (int) $_GET['ocal_year']
-            : (int) $now->format('o');
     }
 
     protected function findOccupancy(string $name): ?Occupancy
@@ -85,8 +71,8 @@ class HourlyCalendarController extends CalendarController
             'isEditable' => $request->admin(),
             'toolbar' => $this->renderToolbarView(),
             'statusbar' => $this->renderStatusbarView(),
-            'weekPagination' => $this->renderPaginationView($count),
-            'weekCalendars' => $this->getWeekCalendars($occupancy, $count),
+            'weekPagination' => $this->renderPaginationView($request, $count),
+            'weekCalendars' => $this->getWeekCalendars($request, $occupancy, $count),
         ];
         if ($request->admin()) {
             assert($this->csrfProtector !== null);
@@ -96,19 +82,20 @@ class HourlyCalendarController extends CalendarController
     }
 
     /** @return list<string> */
-    private function getWeekCalendars(Occupancy $occupancy, int $count): array
+    private function getWeekCalendars(Request $request, Occupancy $occupancy, int $count): array
     {
         $weekCalendars = [];
-        foreach (Week::createRange($this->isoYear, $this->week, $count) as $week) {
-            $weekCalendars[] = $this->renderWeekCalendarView($occupancy, $week);
+        foreach (Week::createRange($this->isoYear($request), $this->week($request), $count) as $week) {
+            $weekCalendars[] = $this->renderWeekCalendarView($request, $occupancy, $week);
         }
         return $weekCalendars;
     }
 
-    private function renderWeekCalendarView(Occupancy $occupancy, Week $week): string
+    private function renderWeekCalendarView(Request $request, Occupancy $occupancy, Week $week): string
     {
-        $from = $this->now->setISODate($week->getYear(), $week->getWeek(), 1);
-        $to = $this->now->setISODate($week->getYear(), $week->getWeek(), 7);
+        $now = new DateTimeImmutable("@{$request->time()}");
+        $from = $now->setISODate($week->getYear(), $week->getWeek(), 1);
+        $to = $now->setISODate($week->getYear(), $week->getWeek(), 7);
         return $this->view->render('hourly-calendar', [
             'date' => $week->getIso(),
             'from' => $from->format($this->view->plain("date_format")),
@@ -147,25 +134,26 @@ class HourlyCalendarController extends CalendarController
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
             'statusbar' => $this->renderStatusbarView(),
-            'weekPagination' => $this->renderPaginationView($count),
-            'weekLists' => $this->getWeekLists($occupancy, $count),
+            'weekPagination' => $this->renderPaginationView($request, $count),
+            'weekLists' => $this->getWeekLists($request, $occupancy, $count),
         ]);
     }
 
     /** @return list<string> */
-    private function getWeekLists(Occupancy $occupancy, int $count): array
+    private function getWeekLists(Request $request, Occupancy $occupancy, int $count): array
     {
         $weekLists = [];
-        foreach (Week::createRange($this->isoYear, $this->week, $count) as $week) {
-            $weekLists[] = $this->renderWeekListView($occupancy, $week);
+        foreach (Week::createRange($this->isoYear($request), $this->week($request), $count) as $week) {
+            $weekLists[] = $this->renderWeekListView($request, $occupancy, $week);
         }
         return $weekLists;
     }
 
-    private function renderWeekListView(Occupancy $occupancy, Week $week): string
+    private function renderWeekListView(Request $request, Occupancy $occupancy, Week $week): string
     {
-        $from = $this->now->setISODate($week->getYear(), $week->getWeek(), 1);
-        $to = $this->now->setISODate($week->getYear(), $week->getWeek(), 7);
+        $now = new DateTimeImmutable("@{$request->time()}");
+        $from = $now->setISODate($week->getYear(), $week->getWeek(), 1);
+        $to = $now->setISODate($week->getYear(), $week->getWeek(), 7);
         return $this->view->render('hourly-list', [
             'from' => $from->format($this->view->plain("date_format")),
             'to' => $to->format($this->view->plain("date_format")),
@@ -184,20 +172,20 @@ class HourlyCalendarController extends CalendarController
         return $weekList;
     }
 
-    private function renderPaginationView(int $weekCount): string
+    private function renderPaginationView(Request $request, int $weekCount): string
     {
         return $this->view->render('pagination', [
-            'items' => $this->getPaginationItems($weekCount),
+            'items' => $this->getPaginationItems($request, $weekCount),
         ]);
     }
 
     /** @return list<stdClass> */
-    private function getPaginationItems(int $weekCount): array
+    private function getPaginationItems(Request $request, int $weekCount): array
     {
         $pagination = new HourlyPagination(
-            $this->isoYear,
-            $this->week,
-            $this->now,
+            $this->isoYear($request),
+            $this->week($request),
+            new DateTimeImmutable("@{$request->time()}"),
             (int) $this->config['pagination_past'],
             (int) $this->config['pagination_future']
         );
@@ -210,6 +198,20 @@ class HourlyCalendarController extends CalendarController
             ]);
         }
         return $items;
+    }
+
+    private function isoYear(Request $request): int
+    {
+        return isset($_GET['ocal_year'])
+            ? (int) $_GET['ocal_year']
+            : (int) (new DateTimeImmutable("@{$request->time()}"))->format('o');
+    }
+
+    private function week(Request $request): int
+    {
+        return isset($_GET['ocal_week'])
+            ? max(1, min(53, (int) $_GET['ocal_week']))
+            : (int) (new DateTimeImmutable("@{$request->time()}"))->format('W');
     }
 
     /**

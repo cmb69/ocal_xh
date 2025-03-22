@@ -51,7 +51,6 @@ class DailyCalendarControllerTest extends TestCase
         );
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
         $config = $plugin_cf['ocal'];
-        $now = new DateTimeImmutable("2023-07-02");
         $this->listService = $this->createStub(ListService::class);
         $this->db = $this->createStub(Db::class);
         $this->sut = new DailyCalendarController(
@@ -59,7 +58,6 @@ class DailyCalendarControllerTest extends TestCase
             "./",
             $this->csrfProtector,
             $config,
-            $now,
             $this->listService,
             $this->db,
             $this->view(),
@@ -72,7 +70,7 @@ class DailyCalendarControllerTest extends TestCase
     public function testDefaultActionRendersCalendar(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->defaultAction(new FakeRequest(["admin" => true]), "test-daily", 1);
+        $response = $this->sut->defaultAction(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -81,7 +79,7 @@ class DailyCalendarControllerTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $_GET = ['ocal_name' => "test-daily"];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->defaultAction(new FakeRequest(["admin" => true]), "test-daily", 1);
+        $response = $this->sut->defaultAction(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -104,7 +102,7 @@ class DailyCalendarControllerTest extends TestCase
     public function testListActionRendersListWithoutEntries(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction(new FakeRequest(), "test-daily", 1);
+        $response = $this->sut->listAction(new FakeRequest(["time" => 1688256000]), "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -114,7 +112,7 @@ class DailyCalendarControllerTest extends TestCase
             (object) ['range' => "9.", 'state' => "2", 'label' => "available"],
         ]);
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction(new FakeRequest(), "test-daily", 1);
+        $response = $this->sut->listAction(new FakeRequest(["time" => 1688256000]), "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -123,7 +121,7 @@ class DailyCalendarControllerTest extends TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $_GET = ['ocal_name' => "test-daily"];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction(new FakeRequest(), "test-daily", 1);
+        $response = $this->sut->listAction(new FakeRequest(["time" => 1688256000]), "test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }

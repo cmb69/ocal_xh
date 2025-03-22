@@ -29,12 +29,6 @@ use XH\CSRFProtection as CsrfProtector;
 
 class DailyCalendarController extends CalendarController
 {
-    /** @var int */
-    private $month;
-
-    /** @var int */
-    private $year;
-
     /**
      * @param array<string,string> $config
      */
@@ -43,7 +37,6 @@ class DailyCalendarController extends CalendarController
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
-        DateTimeImmutable $now,
         ListService $listService,
         Db $db,
         View $view
@@ -53,18 +46,11 @@ class DailyCalendarController extends CalendarController
             $pluginFolder,
             $csrfProtector,
             $config,
-            $now,
             $listService,
             $db,
             $view,
             "daily"
         );
-        $this->month = isset($_GET['ocal_month'])
-            ? max(1, min(12, (int) $_GET['ocal_month']))
-            : (int) $now->format('n');
-        $this->year = isset($_GET['ocal_year'])
-            ? (int) $_GET['ocal_year']
-            : (int) $now->format('Y');
     }
 
     protected function findOccupancy(string $name): ?Occupancy
@@ -85,8 +71,8 @@ class DailyCalendarController extends CalendarController
             'isEditable' => $request->admin(),
             'toolbar' => $this->renderToolbarView(),
             'statusbar' => $this->renderStatusbarView(),
-            'monthPagination' => $this->renderPaginationView(),
-            'monthCalendars' => $this->getMonthCalendars($occupancy, $count),
+            'monthPagination' => $this->renderPaginationView($request),
+            'monthCalendars' => $this->getMonthCalendars($request, $occupancy, $count),
         ];
         if ($request->admin()) {
             assert($this->csrfProtector !== null);
@@ -96,10 +82,10 @@ class DailyCalendarController extends CalendarController
     }
 
     /** @return list<string> */
-    private function getMonthCalendars(Occupancy $occupancy, int $count): array
+    private function getMonthCalendars(Request $request, Occupancy $occupancy, int $count): array
     {
         $monthCalendars = [];
-        foreach (Month::createRange($this->year, $this->month, $count) as $month) {
+        foreach (Month::createRange($this->year($request), $this->month($request), $count) as $month) {
             $monthCalendars[] = $this->renderMonthCalendarView($occupancy, $month);
         }
         return $monthCalendars;
@@ -163,16 +149,16 @@ class DailyCalendarController extends CalendarController
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
             'statusbar' => $this->renderStatusbarView(),
-            'monthLists' => $this->getMonthLists($occupancy, $count),
-            'monthPagination' => $this->renderPaginationView(),
+            'monthLists' => $this->getMonthLists($request, $occupancy, $count),
+            'monthPagination' => $this->renderPaginationView($request),
         ]);
     }
 
     /** @return list<string> */
-    private function getMonthLists(Occupancy $occupancy, int $count): array
+    private function getMonthLists(Request $request, Occupancy $occupancy, int $count): array
     {
         $monthLists = [];
-        foreach (Month::createRange($this->year, $this->month, $count) as $month) {
+        foreach (Month::createRange($this->year($request), $this->month($request), $count) as $month) {
             $monthLists[] = $this->renderMonthListView($occupancy, $month);
         }
         return $monthLists;
@@ -188,20 +174,20 @@ class DailyCalendarController extends CalendarController
         ]);
     }
 
-    private function renderPaginationView(): string
+    private function renderPaginationView(Request $request): string
     {
         return $this->view->render('pagination', [
-            'items' => $this->getPaginationItems(),
+            'items' => $this->getPaginationItems($request),
         ]);
     }
 
     /** @return list<stdClass> */
-    private function getPaginationItems(): array
+    private function getPaginationItems(Request $request): array
     {
         $pagination = new DailyPagination(
-            $this->year,
-            $this->month,
-            $this->now,
+            $this->year($request),
+            $this->month($request),
+            new DateTimeImmutable("@{$request->time()}"),
             (int) $this->config['pagination_past'],
             (int) $this->config['pagination_future']
         );
@@ -214,6 +200,20 @@ class DailyCalendarController extends CalendarController
             ]);
         }
         return $paginationItems;
+    }
+
+    private function year(Request $request): int
+    {
+        return isset($_GET['ocal_year'])
+            ? (int) $_GET['ocal_year']
+            : (int) (new DateTimeImmutable("@{$request->time()}"))->format('Y');
+    }
+
+    private function month(Request $request): int
+    {
+        return isset($_GET['ocal_month'])
+        ? max(1, min(12, (int) $_GET['ocal_month']))
+        : (int) (new DateTimeImmutable("@{$request->time()}"))->format('n');
     }
 
     /**

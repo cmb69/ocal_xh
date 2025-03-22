@@ -48,7 +48,6 @@ class Dic
             "{$pth['folder']['plugins']}ocal/",
             $_XH_csrfProtection,
             $plugin_cf['ocal'],
-            new DateTimeImmutable(),
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
             new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
             self::view()
@@ -64,7 +63,6 @@ class Dic
             "{$pth['folder']['plugins']}ocal/",
             $_XH_csrfProtection,
             $plugin_cf['ocal'],
-            new DateTimeImmutable(),
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
             new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
             self::view()
