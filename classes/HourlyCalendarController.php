@@ -79,7 +79,7 @@ class HourlyCalendarController extends CalendarController
     protected function renderCalendarView(Occupancy $occupancy, int $count): HtmlString
     {
         $this->emitScriptElements();
-        
+
         $data = [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),

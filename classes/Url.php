@@ -50,7 +50,7 @@ class Url
     {
         $rest = http_build_query($this->params, "", "&", PHP_QUERY_RFC3986);
         $rest = preg_replace('/=(?=&|$)/', '', $rest);
-        $query = $this->page . ($rest !== "" ? "&{$rest}": "");
+        $query = $this->page . ($rest !== "" ? "&{$rest}" : "");
         return $this->base . ($query !== "" ? "?{$query}" : "");
     }
 }

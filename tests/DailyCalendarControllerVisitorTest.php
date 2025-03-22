@@ -22,7 +22,6 @@
 namespace Ocal;
 
 use DateTimeImmutable;
-
 use PHPUnit\Framework\TestCase;
 
 class DailyCalendarControllerVisitorTest extends TestCase
