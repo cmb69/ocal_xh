@@ -94,7 +94,7 @@ abstract class CalendarController
         if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
             return Response::create($html);
         }
-        if (($_GET['ocal_name'] ?? null) === $name) {
+        if (($request->get("ocal_name") ?? null) === $name) {
             return Response::create($html)->withContentType("text/html");
         }
         return Response::create();
@@ -112,7 +112,7 @@ abstract class CalendarController
         if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
             return Response::create($html);
         }
-        if (($_GET['ocal_name'] ?? null) === $name) {
+        if (($request->get("ocal_name") ?? null) === $name) {
             return Response::create($html)->withContentType("text/html");
         }
         return Response::create();
@@ -127,7 +127,7 @@ abstract class CalendarController
     public function saveAction(Request $request, string $name): Response
     {
         $this->mode = 'calendar';
-        if (!$request->admin() || ($_GET['ocal_name'] ?? null) !== $name || $this->csrfProtector === null) {
+        if (!$request->admin() || ($request->get("ocal_name") ?? null) !== $name || $this->csrfProtector === null) {
             return Response::create();
         }
         $this->csrfProtector->check();

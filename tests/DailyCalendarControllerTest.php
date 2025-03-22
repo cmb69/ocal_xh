@@ -77,9 +77,13 @@ class DailyCalendarControllerTest extends TestCase
     public function testDefaultActionHandlesAjaxRequest(): void
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $_GET = ['ocal_name' => "test-daily"];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->defaultAction(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-daily", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-daily",
+            "admin" => true,
+            "time" => 1688256000,
+        ]);
+        $response = $this->sut->defaultAction($request, "test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -119,9 +123,12 @@ class DailyCalendarControllerTest extends TestCase
     public function testListActionHandlesAjaxRequest(): void
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $_GET = ['ocal_name' => "test-daily"];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction(new FakeRequest(["time" => 1688256000]), "test-daily", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-daily",
+            "time" => 1688256000,
+        ]);
+        $response = $this->sut->listAction($request, "test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -150,40 +157,52 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsSuccess(): void
     {
-        $_GET = ['ocal_name' => "test-daily"];
         $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->db->method('saveOccupancy')->willReturn(true);
-        $response = $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-daily", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-daily",
+            "admin" => true,
+        ]);
+        $response = $this->sut->saveAction($request, "test-daily", 1);
         $this->assertStringContainsString('Successfully saved.', $response->output());
     }
 
     public function testSaveActionPreventCsrf(): void
     {
-        $_GET = ['ocal_name' => "test-daily"];
         $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->csrfProtector->expects($this->once())->method('check');
-        $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-daily", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-daily",
+            "admin" => true,
+        ]);
+        $this->sut->saveAction($request, "test-daily", 1);
     }
 
     public function testSaveActionRejectsBadRequest(): void
     {
-        $_GET = ['ocal_name' => "test-daily"];
         $_POST = ['ocal_states' => ""];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-daily", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-daily",
+            "admin" => true,
+        ]);
+        $response = $this->sut->saveAction($request, "test-daily", 1);
         $this->assertEquals(400, $response->status());
         $this->assertEquals("", $response->output());
     }
 
     public function testSaveActionReportsFailureToSave(): void
     {
-        $_GET = ['ocal_name' => "test-daily"];
         $_POST = ['ocal_states' => json_encode(['2023-02' => array_fill(0, 27, "1")])];
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->db->method('saveOccupancy')->willReturn(false);
-        $response = $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-daily", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-daily",
+            "admin" => true,
+        ]);
+        $response = $this->sut->saveAction($request, "test-daily", 1);
         $this->assertStringContainsString('Saving failed!', $response->output());
     }
 

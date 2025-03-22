@@ -204,16 +204,15 @@ class DailyCalendarController extends CalendarController
 
     private function year(Request $request): int
     {
-        return isset($_GET['ocal_year'])
-            ? (int) $_GET['ocal_year']
-            : (int) (new DateTimeImmutable("@{$request->time()}"))->format('Y');
+        return (int) ($request->get("ocal_year") ?? (new DateTimeImmutable("@{$request->time()}"))->format('Y'));
     }
 
     private function month(Request $request): int
     {
-        return isset($_GET['ocal_month'])
-        ? max(1, min(12, (int) $_GET['ocal_month']))
-        : (int) (new DateTimeImmutable("@{$request->time()}"))->format('n');
+        $month = $request->get("ocal_month");
+        return $month !== null
+            ? max(1, min(12, (int) $month))
+            : (int) (new DateTimeImmutable("@{$request->time()}"))->format('n');
     }
 
     /**

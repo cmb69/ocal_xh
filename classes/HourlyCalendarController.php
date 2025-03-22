@@ -202,15 +202,14 @@ class HourlyCalendarController extends CalendarController
 
     private function isoYear(Request $request): int
     {
-        return isset($_GET['ocal_year'])
-            ? (int) $_GET['ocal_year']
-            : (int) (new DateTimeImmutable("@{$request->time()}"))->format('o');
+        return (int) ($request->get("ocal_year") ?? (new DateTimeImmutable("@{$request->time()}"))->format('o'));
     }
 
     private function week(Request $request): int
     {
-        return isset($_GET['ocal_week'])
-            ? max(1, min(53, (int) $_GET['ocal_week']))
+        $week = $request->get("ocal_week");
+        return $week !== null
+            ? max(1, min(53, (int) $week))
             : (int) (new DateTimeImmutable("@{$request->time()}"))->format('W');
     }
 

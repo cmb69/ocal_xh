@@ -77,9 +77,13 @@ class HourlyCalendarControllerTest extends TestCase
     public function testDefaultActionHandlesAjaxRequest(): void
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $_GET = ['ocal_name' => "test-hourly"];
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
-        $response = $this->sut->defaultAction(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-hourly", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-hourly",
+            "admin" => true,
+            "time" => 1688256000,
+        ]);
+        $response = $this->sut->defaultAction($request, "test-hourly", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -122,10 +126,13 @@ class HourlyCalendarControllerTest extends TestCase
     public function testListActionHandlesAjaxRequest(): void
     {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $_GET = ['ocal_name' => "test-hourly"];
         $this->listService->method('getHourlyList')->willReturn([]);
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
-        $response = $this->sut->listAction(new FakeRequest(["time" => 1688256000]), "test-hourly", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-hourly",
+            "time" => 1688256000,
+        ]);
+        $response = $this->sut->listAction($request, "test-hourly", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -155,7 +162,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsSuccess(): void
     {
-        $_GET = ['ocal_name' => "test-hourly"];
         $_POST = ['ocal_states' => json_encode(['2023-06' => array_fill(0, 90, "1")])];
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $this->db->method('saveOccupancy')->willReturn(true);
@@ -165,30 +171,39 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionPreventCsrf(): void
     {
-        $_GET = ['ocal_name' => "test-hourly"];
         $_POST = ['ocal_states' => json_encode(['2023-06' => array_fill(0, 90, "1")])];
         $this->csrfProtector->expects($this->once())->method('check');
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
-        $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-hourly", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-hourly",
+            "admin" => true,
+        ]);
+        $this->sut->saveAction($request, "test-hourly", 1);
     }
 
     public function testSaveActionRejectsBadRequest(): void
     {
-        $_GET = ['ocal_name' => "test-hourly"];
         $_POST = ['ocal_states' => ""];
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
-        $response = $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-hourly", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-hourly",
+            "admin" => true,
+        ]);
+        $response = $this->sut->saveAction($request, "test-hourly", 1);
         $this->assertEquals(400, $response->status());
         $this->assertEquals("", $response->output());
     }
 
     public function testSaveActionReportsFailureToSave(): void
     {
-        $_GET = ['ocal_name' => "test-hourly"];
         $_POST = ['ocal_states' => json_encode(['2023-06' => array_fill(0, 90, "1")])];
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $this->db->method('saveOccupancy')->willReturn(false);
-        $response = $this->sut->saveAction(new FakeRequest(["admin" => true]), "test-hourly", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-hourly",
+            "admin" => true,
+        ]);
+        $response = $this->sut->saveAction($request, "test-hourly", 1);
         $this->assertStringContainsString("Saving failed!", $response->output());
     }
 
