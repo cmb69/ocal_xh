@@ -33,7 +33,6 @@ class HourlyCalendarController extends CalendarController
      * @param array<string,string> $config
      */
     public function __construct(
-        Url $url,
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
@@ -42,7 +41,6 @@ class HourlyCalendarController extends CalendarController
         View $view
     ) {
         parent::__construct(
-            $url,
             $pluginFolder,
             $csrfProtector,
             $config,
@@ -67,7 +65,7 @@ class HourlyCalendarController extends CalendarController
 
         $data = [
             'occupancyName' => $occupancy->getName(),
-            'modeLink' => $this->renderModeLinkView(),
+            'modeLink' => $this->renderModeLinkView($request),
             'isEditable' => $request->admin(),
             'toolbar' => $this->renderToolbarView(),
             'statusbar' => $this->renderStatusbarView(),
@@ -132,7 +130,7 @@ class HourlyCalendarController extends CalendarController
         $this->emitScriptElements($request);
         return $this->view->render('hourly-lists', [
             'occupancyName' => $occupancy->getName(),
-            'modeLink' => $this->renderModeLinkView(),
+            'modeLink' => $this->renderModeLinkView($request),
             'statusbar' => $this->renderStatusbarView(),
             'weekPagination' => $this->renderPaginationView($request, $count),
             'weekLists' => $this->getWeekLists($request, $occupancy, $count),
@@ -191,11 +189,8 @@ class HourlyCalendarController extends CalendarController
         );
         $items = $pagination->getItems($weekCount);
         foreach ($items as $item) {
-            $item->url = $this->url->replace([
-                'ocal_year' => $item->year,
-                'ocal_week' => $item->monthOrWeek,
-                'ocal_action' => $this->mode
-            ]);
+            $item->url = $request->url()->with("ocal_year", $item->year)->with("ocal_week", $item->monthOrWeek)
+                ->with("ocal_action", $this->mode)->relative();
         }
         return $items;
     }

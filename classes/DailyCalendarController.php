@@ -33,7 +33,6 @@ class DailyCalendarController extends CalendarController
      * @param array<string,string> $config
      */
     public function __construct(
-        Url $url,
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
@@ -42,7 +41,6 @@ class DailyCalendarController extends CalendarController
         View $view
     ) {
         parent::__construct(
-            $url,
             $pluginFolder,
             $csrfProtector,
             $config,
@@ -67,7 +65,7 @@ class DailyCalendarController extends CalendarController
 
         $data = [
             'occupancyName' => $occupancy->getName(),
-            'modeLink' => $this->renderModeLinkView(),
+            'modeLink' => $this->renderModeLinkView($request),
             'isEditable' => $request->admin(),
             'toolbar' => $this->renderToolbarView(),
             'statusbar' => $this->renderStatusbarView(),
@@ -147,7 +145,7 @@ class DailyCalendarController extends CalendarController
         $this->emitScriptElements($request);
         return $this->view->render('daily-lists', [
             'occupancyName' => $occupancy->getName(),
-            'modeLink' => $this->renderModeLinkView(),
+            'modeLink' => $this->renderModeLinkView($request),
             'statusbar' => $this->renderStatusbarView(),
             'monthLists' => $this->getMonthLists($request, $occupancy, $count),
             'monthPagination' => $this->renderPaginationView($request),
@@ -193,11 +191,8 @@ class DailyCalendarController extends CalendarController
         );
         $paginationItems = $pagination->getItems();
         foreach ($paginationItems as $item) {
-            $item->url = $this->url->replace([
-                'ocal_year' => $item->year,
-                'ocal_month' => $item->monthOrWeek,
-                'ocal_action' => $this->mode
-            ]);
+            $item->url = $request->url()->with("ocal_year", $item->year)->with("ocal_month", $item->monthOrWeek)
+                ->with("ocal_action", $this->mode)->relative();
         }
         return $paginationItems;
     }

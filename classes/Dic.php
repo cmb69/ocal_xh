@@ -21,7 +21,6 @@
 
 namespace Ocal;
 
-use DateTimeImmutable;
 use Plib\SystemChecker;
 use Plib\View;
 
@@ -41,10 +40,9 @@ class Dic
 
     public static function makeDailyCalendarController(): DailyCalendarController
     {
-        global $sn, $su, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+        global $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
         return new DailyCalendarController(
-            new Url($sn, $su, ($su !== "" ? array_slice($_GET, 1) : $_GET)),
             "{$pth['folder']['plugins']}ocal/",
             $_XH_csrfProtection,
             $plugin_cf['ocal'],
@@ -56,10 +54,9 @@ class Dic
 
     public static function makeHourlyCalendarController(): HourlyCalendarController
     {
-        global $sn, $su, $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+        global $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
 
         return new HourlyCalendarController(
-            new Url($sn, $su, ($su !== "" ? array_slice($_GET, 1) : $_GET)),
             "{$pth['folder']['plugins']}ocal/",
             $_XH_csrfProtection,
             $plugin_cf['ocal'],

@@ -40,9 +40,6 @@ abstract class CalendarController
     /** @var string */
     protected $mode;
 
-    /** @var Url */
-    protected $url;
-
     /** @var string */
     protected $pluginFolder;
 
@@ -62,7 +59,6 @@ abstract class CalendarController
      * @param array<string,string> $config
      */
     public function __construct(
-        Url $url,
         string $pluginFolder,
         ?CsrfProtector $csrfProtector,
         array $config,
@@ -71,7 +67,6 @@ abstract class CalendarController
         View $view,
         string $type
     ) {
-        $this->url = $url;
         $this->pluginFolder = $pluginFolder;
         $this->csrfProtector = $csrfProtector;
         $this->config = $config;
@@ -159,11 +154,11 @@ abstract class CalendarController
         self::$isJavaScriptEmitted = true;
     }
 
-    protected function renderModeLinkView(): string
+    protected function renderModeLinkView(Request $request): string
     {
         return $this->view->render('mode-link', [
             'mode' => $mode = $this->mode === 'calendar' ? 'list' : 'calendar',
-            'url' => $this->url->replace(['ocal_action' => $mode]),
+            'url' => $request->url()->with("ocal_action", $mode)->relative(),
         ]);
     }
 

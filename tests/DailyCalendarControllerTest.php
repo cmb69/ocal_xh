@@ -53,7 +53,6 @@ class DailyCalendarControllerTest extends TestCase
         $this->listService = $this->createStub(ListService::class);
         $this->db = $this->createStub(Db::class);
         $this->sut = new DailyCalendarController(
-            new Url("/", "", []),
             "./",
             $this->csrfProtector,
             $config,

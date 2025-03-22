@@ -53,7 +53,6 @@ class HourlyCalendarControllerTest extends TestCase
         $this->listService = $this->createStub(ListService::class);
         $this->db = $this->createStub(Db::class);
         $this->sut = new HourlyCalendarController(
-            new Url("/", "", []),
             "./",
             $this->csrfProtector,
             $config,
