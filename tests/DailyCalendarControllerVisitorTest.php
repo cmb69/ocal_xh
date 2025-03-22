@@ -30,7 +30,6 @@ class DailyCalendarControllerVisitorTest extends TestCase
     /** @see <https://github.com/cmb69/ocal_xh/issues/33> */
     public function testContructorDoesNotCrash(): void
     {
-        $_SERVER['QUERY_STRING'] = "";
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
         $config = $plugin_cf['ocal'];
         $listService = $this->createStub(ListService::class);

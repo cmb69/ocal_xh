@@ -44,7 +44,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function setUp(): void
     {
-        $_SERVER['QUERY_STRING'] = "";
         $this->csrfProtector = $this->createStub(CsrfProtector::class);
         $this->csrfProtector->method('tokenInput')->willReturn(
             '<input type="hidden" name="xh_csrf_token" value="dcfff515ebf5bd421d5a0777afc6358b">'
@@ -76,10 +75,10 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testDefaultActionHandlesAjaxRequest(): void
     {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily",
+            "header" => ["X-Requested-With" => "XMLHttpRequest"],
             "admin" => true,
             "time" => 1688256000,
         ]);
@@ -90,9 +89,9 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testDefaultActionIgnoresUnrelatedAjaxRequest(): void
     {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->defaultAction(new FakeRequest(), "test-daily", 1);
+        $request = new FakeRequest(["header" => ["X-Requested-With" => "XMLHttpRequest"]]);
+        $response = $this->sut->defaultAction($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 
@@ -122,10 +121,10 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testListActionHandlesAjaxRequest(): void
     {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily",
+            "header" => ["X-Requested-With" => "XMLHttpRequest"],
             "time" => 1688256000,
         ]);
         $response = $this->sut->listAction($request, "test-daily", 1);
@@ -135,9 +134,9 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testListActionIgnoresUnrelatedAjaxRequest(): void
     {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction(new FakeRequest(), "test-daily", 1);
+        $request = new FakeRequest(["header" => ["X-Requested-With" => "XMLHttpRequest"]]);
+        $response = $this->sut->listAction($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 

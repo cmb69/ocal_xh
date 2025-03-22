@@ -44,7 +44,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function setUp(): void
     {
-        $_SERVER['QUERY_STRING'] = "";
         $this->csrfProtector = $this->createStub(CsrfProtector::class);
         $this->csrfProtector->method('tokenInput')->willReturn(
             '<input type="hidden" name="xh_csrf_token" value="dcfff515ebf5bd421d5a0777afc6358b">'
@@ -76,10 +75,10 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testDefaultActionHandlesAjaxRequest(): void
     {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-hourly",
+            "header" => ["X-Requested-With" => "XMLHttpRequest"],
             "admin" => true,
             "time" => 1688256000,
         ]);
@@ -90,9 +89,9 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testDefaultActionIgnoresUnrelatedAjaxRequest(): void
     {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
-        $response = $this->sut->defaultAction(new FakeRequest(), "test-hourly", 1);
+        $request = new FakeRequest(["header" => ["X-Requested-With" => "XMLHttpRequest"]]);
+        $response = $this->sut->defaultAction($request, "test-hourly", 1);
         $this->assertEquals("", $response->output());
     }
 
@@ -125,11 +124,11 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testListActionHandlesAjaxRequest(): void
     {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->listService->method('getHourlyList')->willReturn([]);
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-hourly",
+            "header" => ["X-Requested-With" => "XMLHttpRequest"],
             "time" => 1688256000,
         ]);
         $response = $this->sut->listAction($request, "test-hourly", 1);
@@ -139,10 +138,10 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testListActionIgnoresUnrelatedAjaxRequest(): void
     {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->listService->method('getHourlyList')->willReturn([]);
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
-        $response = $this->sut->listAction(new FakeRequest(), "test-hourly", 1);
+        $request = new FakeRequest(["header" => ["X-Requested-With" => "XMLHttpRequest"]]);
+        $response = $this->sut->listAction($request, "test-hourly", 1);
         $this->assertEquals("", $response->output());
     }
 

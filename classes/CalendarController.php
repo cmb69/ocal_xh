@@ -91,7 +91,7 @@ abstract class CalendarController
         } else {
             $html = $this->view->message("fail", "message_not_{$this->type}", $name);
         }
-        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
+        if ($request->header("X-Requested-With") !== 'XMLHttpRequest') {
             return Response::create($html);
         }
         if ($request->get("ocal_name") === $name) {
@@ -109,7 +109,7 @@ abstract class CalendarController
         } else {
             $html = $this->view->message("fail", "message_not_{$this->type}", $name);
         }
-        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
+        if ($request->header("X-Requested-With") !== 'XMLHttpRequest') {
             return Response::create($html);
         }
         if ($request->get("ocal_name") === $name) {
