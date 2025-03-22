@@ -19,14 +19,23 @@ jobs:
       - name: Checkout Ocal_XH
         uses: actions/checkout@v3
         with:
-          path: 'cmsimplexh/plugins/calendar'
+          path: 'cmsimplexh/plugins/ocal'
+      - name: Cache Phive tools
+        id: cache-tools
+        uses: actions/cache@v4
+        with:
+          path: cmsimplexh/plugins/calendar/tools
+          key: tools-${{hashFiles('cmsimplexh/plugins/ocal/.phive')}}
+      - if: ${{steps.cache-tools.outputs.cache-hit != 'true'}}
+        name: phive install
+        run: cd cmsimplexh/plugins/logman && phive --no-progress install --copy --force-accept-unsigned --trust-gpg-keys 51C67305FFC2E5C0,9093F8B32E4815AA,A978220305CD5C32,D5F0CB76E2DD74F8
       - name: composer install
-        run: cd cmsimplexh/plugins/calendar && composer install
+        run: cd cmsimplexh/plugins/ocal && composer install
       - name: phing sniff
-        run: cd cmsimplexh/plugins/calendar && PATH=vendor/bin:$PATH phing sniff
+        run: cd cmsimplexh/plugins/ocal && PATH=vendor/bin:$PATH phing sniff
       - name: phing stan
-        run: cd cmsimplexh/plugins/calendar && PATH=vendor/bin:$PATH phing stan
+        run: cd cmsimplexh/plugins/ocal && PATH=vendor/bin:$PATH phing stan
       - name: phing mess
-        run: cd cmsimplexh/plugins/calendar && PATH=vendor/bin:$PATH phing mess
+        run: cd cmsimplexh/plugins/ocal && PATH=vendor/bin:$PATH phing mess
       - name: phing unit-tests
-        run: cd cmsimplexh/plugins/calendar && PATH=vendor/bin:$PATH phing test
+        run: cd cmsimplexh/plugins/ocal && PATH=vendor/bin:$PATH phing test
