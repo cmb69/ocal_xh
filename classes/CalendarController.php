@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTimeImmutable;
+use Plib\Response;
 use Plib\View;
 use XH\CSRFProtection as CsrfProtector;
 
@@ -109,12 +110,12 @@ abstract class CalendarController
             );
         }
         if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
-            return new Response($html);
+            return Response::create($html);
         }
         if (($_GET['ocal_name'] ?? null) === $name) {
-            return new Response($html, "text/html");
+            return Response::create($html)->withContentType("text/html");
         }
-        return new Response("");
+        return Response::create();
     }
 
     public function listAction(string $name, int $count): Response
@@ -131,12 +132,12 @@ abstract class CalendarController
             );
         }
         if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
-            return new Response($html);
+            return Response::create($html);
         }
         if (($_GET['ocal_name'] ?? null) === $name) {
-            return new Response($html, "text/html");
+            return Response::create($html)->withContentType("text/html");
         }
-        return new Response("");
+        return Response::create();
     }
 
     abstract protected function findOccupancy(string $name): ?Occupancy;
@@ -149,14 +150,14 @@ abstract class CalendarController
     {
         $this->mode = 'calendar';
         if (!$this->isAdmin || ($_GET['ocal_name'] ?? null) !== $name || $this->csrfProtector === null) {
-            return new Response("");
+            return Response::create();
         }
         $this->csrfProtector->check();
         $message = $this->saveStates($name);
         if ($message === null) {
-            return new Response("", "text/plain", 400);
+            return Response::error(400);
         }
-        return new Response($message, "text/html");
+        return Response::create($message)->withContentType("text/html");
     }
 
     abstract protected function saveStates(string $name): ?string;

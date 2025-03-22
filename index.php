@@ -40,7 +40,7 @@ function ocal($name, $monthCount = 1)
     if (!is_callable([$controller, "{$action}Action"])) {
         $action = 'default';
     }
-    return $controller->{"{$action}Action"}($name, $monthCount)->trigger();
+    return $controller->{"{$action}Action"}($name, $monthCount)();
 }
 
 /**
@@ -60,7 +60,7 @@ function Ocal_hourly($name, $weekCount = 1)
     if (!is_callable([$controller, "{$action}Action"])) {
         $action = 'default';
     }
-    return $controller->{"{$action}Action"}($name, $weekCount)->trigger();
+    return $controller->{"{$action}Action"}($name, $weekCount)();
 }
 
 if (isset($_GET['ocal_week']) || isset($_GET['ocal_month']) || isset($_GET['ocal_year'])) {

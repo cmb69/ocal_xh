@@ -180,8 +180,7 @@ class HourlyCalendarControllerTest extends TestCase
         $_POST = ['ocal_states' => ""];
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $response = $this->sut->saveAction("test-hourly", 1);
-        $this->assertEquals(400, $response->statuscode());
-        $this->assertEquals("text/plain", $response->contentType());
+        $this->assertEquals(400, $response->status());
         $this->assertEquals("", $response->output());
     }
 
