@@ -1,22 +1,22 @@
 <?php
 
-use Ocal\HtmlString;
-use Ocal\View;
+use Plib\View;
 
 /**
  * @var View $this
  * @var string $occupancyName
- * @var HtmlString $modeLink
- * @var HtmlString $statusbar
- * @var list<HtmlString> $monthLists
- * @var HtmlString $monthPagination
+ * @var string $modeLink
+ * @var string $statusbar
+ * @var list<string> $monthLists
+ * @var string $monthPagination
  */
 ?>
+
 <div data-name="<?=$this->esc($occupancyName)?>">
-  <?=$this->esc($modeLink)?>
-  <?=$this->esc($statusbar)?>
+  <?=$this->raw($modeLink)?>
+  <?=$this->raw($statusbar)?>
 <?php foreach ($monthLists as $monthList):?>
-  <?=$this->esc($monthList)?>
+  <?=$this->raw($monthList)?>
 <?php endforeach?>
-  <?=$this->esc($monthPagination)?>
+  <?=$this->raw($monthPagination)?>
 </div>

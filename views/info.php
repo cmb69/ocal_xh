@@ -1,6 +1,6 @@
 <?php
 
-use Ocal\View;
+use Plib\View;
 
 /**
  * @var View $this
@@ -8,6 +8,7 @@ use Ocal\View;
  * @var list<stdClass> $checks
  */
 ?>
+
 <h1>Ocal <?=$this->esc($version)?></h1>
 <h2><?=$this->text('syscheck_title')?></h2>
 <ul class="ocal_syscheck">

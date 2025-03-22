@@ -1,29 +1,29 @@
 <?php
 
-use Ocal\HtmlString;
-use Ocal\View;
+use Plib\View;
 
 /**
  * @var View $this
  * @var string $occupancyName
  * @var bool $isEditable
- * @var HtmlString $modeLink
- * @var HtmlString $csrfTokenInput
- * @var HtmlString $toolbar
- * @var list<HtmlString> $weekCalendars
- * @var HtmlString $statusbar
- * @var HtmlString $weekPagination
+ * @var string $modeLink
+ * @var string $csrfTokenInput
+ * @var string $toolbar
+ * @var list<string> $weekCalendars
+ * @var string $statusbar
+ * @var string $weekPagination
  */
 ?>
+
 <div class="ocal_week_calendars" data-name="<?=$this->esc($occupancyName)?>">
-  <?=$this->esc($modeLink)?>
+  <?=$this->raw($modeLink)?>
 <?php if ($isEditable):?>
-  <?=$this->esc($csrfTokenInput)?>
-  <?=$this->esc($toolbar)?>
+  <?=$this->raw($csrfTokenInput)?>
+  <?=$this->raw($toolbar)?>
 <?php endif?>
-  <?=$this->esc($statusbar)?>
+  <?=$this->raw($statusbar)?>
 <?php foreach ($weekCalendars as $weekCalendar):?>
-  <?=$this->esc($weekCalendar)?>
+  <?=$this->raw($weekCalendar)?>
 <?php endforeach?>
-  <?=$this->esc($weekPagination)?>
+  <?=$this->raw($weekPagination)?>
 </div>

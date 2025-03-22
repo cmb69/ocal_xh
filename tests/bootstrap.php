@@ -8,6 +8,8 @@ require_once '../../cmsimple/classes/CSRFProtection.php';
 require_once '../../cmsimple/functions.php';
 require_once '../../cmsimple/adminfuncs.php';
 
+require_once "../plib/classes/View.php";
+
 require_once "./classes/CalendarController.php";
 require_once "./classes/Occupancy.php";
 require_once "./classes/Pagination.php";
@@ -20,11 +22,9 @@ require_once "./classes/DefaultAdminController.php";
 require_once "./classes/HourlyCalendarController.php";
 require_once "./classes/HourlyOccupancy.php";
 require_once "./classes/HourlyPagination.php";
-require_once "./classes/HtmlString.php";
 require_once "./classes/ListService.php";
 require_once "./classes/Month.php";
 require_once "./classes/Response.php";
 require_once "./classes/SystemChecker.php";
 require_once "./classes/Url.php";
 require_once "./classes/Week.php";
-require_once "./classes/View.php";

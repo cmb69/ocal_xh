@@ -1,6 +1,6 @@
 <?php
 
-use Ocal\View;
+use Plib\View;
 
 /**
  * @var View $this
@@ -11,6 +11,7 @@ use Ocal\View;
  * @var list<list<stdClass>> $hours
  */
 ?>
+
 <table class="ocal_calendar" data-ocal_date="<?=$this->esc($date)?>">
   <thead>
     <tr>

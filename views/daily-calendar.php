@@ -1,6 +1,6 @@
 <?php
 
-use Ocal\View;
+use Plib\View;
 
 /**
  * @var View $this
@@ -11,10 +11,11 @@ use Ocal\View;
  * @var list<list<stdClass|null>> $weeks
  */
 ?>
+
 <table class="ocal_calendar" data-ocal_date="<?=$this->esc($isoDate)?>">
   <thead>
     <tr>
-      <th colspan="7"><?=$this->esc($monthname)?> <?=$this->esc($year)?></th>
+      <th colspan="7"><?=$this->esc($monthname)?> <?=$year?></th>
     </tr>
     <tr>
 <?php foreach ($daynames as $dayname):?>

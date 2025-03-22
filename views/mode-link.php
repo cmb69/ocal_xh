@@ -1,7 +1,7 @@
 <?php
 
 use Ocal\Url;
-use Ocal\View;
+use Plib\View;
 
 /**
  * @var View $this
@@ -9,6 +9,7 @@ use Ocal\View;
  * @var Url $url
  */
 ?>
+
 <p class="ocal_mode">
   <a class="ocal_button" href="<?=$this->esc($url)?>"><?=$this->text("label_{$mode}_view")?></a>
 </p>

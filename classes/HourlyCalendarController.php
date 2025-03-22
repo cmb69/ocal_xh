@@ -76,7 +76,7 @@ class HourlyCalendarController extends CalendarController
         return $result;
     }
 
-    protected function renderCalendarView(Occupancy $occupancy, int $count): HtmlString
+    protected function renderCalendarView(Occupancy $occupancy, int $count): string
     {
         $this->emitScriptElements();
 
@@ -91,12 +91,12 @@ class HourlyCalendarController extends CalendarController
         ];
         if ($this->isAdmin) {
             assert($this->csrfProtector !== null);
-            $data['csrfTokenInput'] = new HtmlString($this->csrfProtector->tokenInput());
+            $data['csrfTokenInput'] = $this->csrfProtector->tokenInput();
         }
-        return new HtmlString($this->view->render('hourly-calendars', $data));
+        return $this->view->render('hourly-calendars', $data);
     }
 
-    /** @return list<HtmlString> */
+    /** @return list<string> */
     private function getWeekCalendars(Occupancy $occupancy, int $count): array
     {
         $weekCalendars = [];
@@ -106,17 +106,17 @@ class HourlyCalendarController extends CalendarController
         return $weekCalendars;
     }
 
-    private function renderWeekCalendarView(Occupancy $occupancy, Week $week): HtmlString
+    private function renderWeekCalendarView(Occupancy $occupancy, Week $week): string
     {
         $from = $this->now->setISODate($week->getYear(), $week->getWeek(), 1);
         $to = $this->now->setISODate($week->getYear(), $week->getWeek(), 7);
-        return new HtmlString($this->view->render('hourly-calendar', [
+        return $this->view->render('hourly-calendar', [
             'date' => $week->getIso(),
             'from' => $from->format($this->lang['date_format']),
             'to' => $to->format($this->lang['date_format']),
             'daynames' => array_map('trim', explode(',', $this->lang['date_days'])),
             'hours' => $this->getDaysOfHours($occupancy, $week),
-        ]));
+        ]);
     }
 
     /** @return list<list<stdClass>> */
@@ -141,19 +141,19 @@ class HourlyCalendarController extends CalendarController
         return $daysOfHours;
     }
 
-    protected function renderListView(Occupancy $occupancy, int $count): HtmlString
+    protected function renderListView(Occupancy $occupancy, int $count): string
     {
         $this->emitScriptElements();
-        return new HtmlString($this->view->render('hourly-lists', [
+        return $this->view->render('hourly-lists', [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView(),
             'statusbar' => $this->renderStatusbarView(),
             'weekPagination' => $this->renderPaginationView($count),
             'weekLists' => $this->getWeekLists($occupancy, $count),
-        ]));
+        ]);
     }
 
-    /** @return list<HtmlString> */
+    /** @return list<string> */
     private function getWeekLists(Occupancy $occupancy, int $count): array
     {
         $weekLists = [];
@@ -163,15 +163,15 @@ class HourlyCalendarController extends CalendarController
         return $weekLists;
     }
 
-    private function renderWeekListView(Occupancy $occupancy, Week $week): HtmlString
+    private function renderWeekListView(Occupancy $occupancy, Week $week): string
     {
         $from = $this->now->setISODate($week->getYear(), $week->getWeek(), 1);
         $to = $this->now->setISODate($week->getYear(), $week->getWeek(), 7);
-        return new HtmlString($this->view->render('hourly-list', [
+        return $this->view->render('hourly-list', [
             'from' => $from->format($this->lang['date_format']),
             'to' => $to->format($this->lang['date_format']),
             'weekList' => $this->getWeekList($occupancy, $week),
-        ]));
+        ]);
     }
 
     /** @return list<stdClass> */
@@ -185,11 +185,11 @@ class HourlyCalendarController extends CalendarController
         return $weekList;
     }
 
-    private function renderPaginationView(int $weekCount): HtmlString
+    private function renderPaginationView(int $weekCount): string
     {
-        return new HtmlString($this->view->render('pagination', [
+        return $this->view->render('pagination', [
             'items' => $this->getPaginationItems($weekCount),
-        ]));
+        ]);
     }
 
     /** @return list<stdClass> */

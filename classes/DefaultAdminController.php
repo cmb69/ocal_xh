@@ -21,6 +21,7 @@
 
 namespace Ocal;
 
+use Plib\View;
 use stdClass;
 
 class DefaultAdminController

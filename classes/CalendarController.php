@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTimeImmutable;
+use Plib\View;
 use XH\CSRFProtection as CsrfProtector;
 
 abstract class CalendarController
@@ -140,9 +141,9 @@ abstract class CalendarController
 
     abstract protected function findOccupancy(string $name): ?Occupancy;
 
-    abstract protected function renderCalendarView(Occupancy $occupancy, int $count): HtmlString;
+    abstract protected function renderCalendarView(Occupancy $occupancy, int $count): string;
 
-    abstract protected function renderListView(Occupancy $occupancy, int $count): HtmlString;
+    abstract protected function renderListView(Occupancy $occupancy, int $count): string;
 
     public function saveAction(string $name): Response
     {
@@ -180,25 +181,25 @@ abstract class CalendarController
         self::$isJavaScriptEmitted = true;
     }
 
-    protected function renderModeLinkView(): HtmlString
+    protected function renderModeLinkView(): string
     {
-        return new HtmlString($this->view->render('mode-link', [
+        return $this->view->render('mode-link', [
             'mode' => $mode = $this->mode === 'calendar' ? 'list' : 'calendar',
             'url' => $this->url->replace(['ocal_action' => $mode]),
-        ]));
+        ]);
     }
 
-    protected function renderStatusbarView(): HtmlString
+    protected function renderStatusbarView(): string
     {
-        return new HtmlString($this->view->render('statusbar', [
+        return $this->view->render('statusbar', [
             'image' => "{$this->pluginFolder}images/ajax-loader-bar.gif",
-        ]));
+        ]);
     }
 
-    protected function renderToolbarView(): HtmlString
+    protected function renderToolbarView(): string
     {
-        return new HtmlString($this->view->render('toolbar', [
+        return $this->view->render('toolbar', [
             'states' => range(0, $this->config['state_max']),
-        ]));
+        ]);
     }
 }

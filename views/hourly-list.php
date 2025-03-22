@@ -1,6 +1,6 @@
 <?php
 
-use Ocal\View;
+use Plib\View;
 
 /**
  * @var View $this
@@ -8,6 +8,7 @@ use Ocal\View;
  * @var string $to
  */
 ?>
+
 <dl class="ocal_list">
 <?php if (empty($weekList)):?>
   <dt><?=$this->esc($from)?>–<?=$this->esc($to)?></dt>
