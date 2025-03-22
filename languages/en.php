@@ -33,6 +33,7 @@ $plugin_tx['ocal']['syscheck_title']="System check";
 $plugin_tx['ocal']['syscheck_warning']="warning";
 $plugin_tx['ocal']['syscheck_writable']="'%s' is writable";
 $plugin_tx['ocal']['syscheck_xhversion']="CMSimple_XH version ≥ %s";
+$plugin_tx['ocal']['syscheck_plibversion']="Plib_XH version ≥ %s";
 
 $plugin_tx['ocal']['cf_state_max']="The maximum state that is supported. See the manual section about \"States\" for details.";
 $plugin_tx['ocal']['cf_hour_first']="The first hour that shall be displayed in the hourly occupancy calendars.";

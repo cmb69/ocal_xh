@@ -23,6 +23,7 @@ namespace Ocal;
 
 use ApprovalTests\Approvals;
 use PHPUnit\Framework\TestCase;
+use Plib\FakeSystemChecker;
 
 class DefaultAdminControllerTest extends TestCase
 {
@@ -30,11 +31,7 @@ class DefaultAdminControllerTest extends TestCase
     {
         $plugin_tx = XH_includeVar("./languages/en.php", 'plugin_tx');
         $lang = $plugin_tx['ocal'];
-        $systemChecker = $this->createStub(SystemChecker::class);
-        $systemChecker->method('checkVersion')->willReturn(false);
-        $systemChecker->method('checkExtension')->willReturn(false);
-        $systemChecker->method('checkWritability')->willReturn(false);
-        $sut = new DefaultAdminController("./", "", $lang, $systemChecker);
+        $sut = new DefaultAdminController("./", "", $lang, new FakeSystemChecker());
         $response = $sut->defaultAction();
         Approvals::verifyHtml($response);
     }

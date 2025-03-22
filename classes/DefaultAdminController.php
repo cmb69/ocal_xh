@@ -21,6 +21,7 @@
 
 namespace Ocal;
 
+use Plib\SystemChecker;
 use Plib\View;
 use stdClass;
 
@@ -64,6 +65,7 @@ class DefaultAdminController
             $this->checkExtension('filter'),
             $this->checkExtension('json'),
             $this->checkXhVersion('1.7.0'),
+            $this->checkPlibVersion('1.3'),
             $this->checkWritability($this->contentFolder),
             $this->checkWritability("{$this->pluginFolder}config/"),
             $this->checkWritability("{$this->pluginFolder}css/"),
@@ -91,6 +93,14 @@ class DefaultAdminController
     {
         $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version") ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_xhversion'], $version);
+        $stateLabel = $this->lang["syscheck_$state"];
+        return (object) compact('state', 'label', 'stateLabel');
+    }
+
+    private function checkPlibVersion(string $version): stdClass
+    {
+        $state = $this->systemChecker->checkPlugin("plib", $version) ? 'success' : 'fail';
+        $label = sprintf($this->lang['syscheck_plibversion'], $version);
         $stateLabel = $this->lang["syscheck_$state"];
         return (object) compact('state', 'label', 'stateLabel');
     }
