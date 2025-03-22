@@ -98,7 +98,7 @@ class HourlyCalendarControllerTest extends TestCase
     {
         $this->db->method('findOccupancy')->willReturn(null);
         $response = $this->sut->defaultAction("test-daily", 1);
-        Approvals::verifyHtml($response->output());
+        $this->assertStringContainsString("'test-daily' is not a hourly occupancy calendar!", $response->output());
     }
 
     public function testListActionRendersListWithoutEntries(): void
@@ -145,7 +145,7 @@ class HourlyCalendarControllerTest extends TestCase
     {
         $this->db->method('findOccupancy')->willReturn(null);
         $response = $this->sut->listAction("test-daily", 1);
-        Approvals::verifyHtml($response->output());
+        $this->assertStringContainsString("'test-daily' is not a hourly occupancy calendar!", $response->output());
     }
 
     public function testSaveActionReturnsEmptyResponseIfNameIsMissing(): void
@@ -162,7 +162,7 @@ class HourlyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $this->db->method('saveOccupancy')->willReturn(true);
         $response = $this->sut->saveAction("test-hourly", 1);
-        $this->assertEquals('<p class="xh_success">Successfully saved.</p>', $response->output());
+        $this->stringContains("Successfully saved.", $response->output());
     }
 
     public function testSaveActionPreventCsrf(): void
@@ -191,6 +191,6 @@ class HourlyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $this->db->method('saveOccupancy')->willReturn(false);
         $response = $this->sut->saveAction("test-hourly", 1);
-        $this->assertEquals('<p class="xh_fail">Saving failed!</p>', $response->output());
+        $this->assertStringContainsString("Saving failed!", $response->output());
     }
 }

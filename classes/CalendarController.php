@@ -103,11 +103,7 @@ abstract class CalendarController
         if ($occupancy !== null) {
             $html = $this->renderCalendarView($occupancy, $count);
         } else {
-            $html = XH_message(
-                'fail',
-                $this->lang["message_not_{$this->type}"],
-                $name
-            );
+            $html = $this->view->message("fail", "message_not_{$this->type}", $name);
         }
         if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
             return Response::create($html);
@@ -125,11 +121,7 @@ abstract class CalendarController
         if ($occupancy !== null) {
             $html = $this->renderListView($occupancy, $count);
         } else {
-            $html = XH_message(
-                'fail',
-                $this->lang["message_not_{$this->type}"],
-                $name
-            );
+            $html = $this->view->message("fail", "message_not_{$this->type}", $name);
         }
         if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) !== 'XMLHttpRequest') {
             return Response::create($html);

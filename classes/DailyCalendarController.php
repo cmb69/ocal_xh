@@ -240,8 +240,8 @@ class DailyCalendarController extends CalendarController
         $res = $this->db->saveOccupancy($occupancy);
         $this->db->unlock();
         if (!$res) {
-            return XH_message('fail', $this->lang['message_not_saved']);
+            return $this->view->message("fail", "message_not_saved");
         }
-        return XH_message('success', $this->lang['message_saved']);
+        return $this->view->message("success", "message_saved");
     }
 }
