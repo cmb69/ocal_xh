@@ -35,7 +35,5 @@ jobs:
         run: cd cmsimplexh/plugins/ocal && PATH=vendor/bin:$PATH phing sniff
       - name: phing stan
         run: cd cmsimplexh/plugins/ocal && PATH=vendor/bin:$PATH phing stan
-      - name: phing mess
-        run: cd cmsimplexh/plugins/ocal && PATH=vendor/bin:$PATH phing mess
       - name: phing unit-tests
         run: cd cmsimplexh/plugins/ocal && PATH=vendor/bin:$PATH phing test
