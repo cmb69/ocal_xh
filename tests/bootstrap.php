@@ -22,6 +22,7 @@ require_once "./classes/model/DailyOccupancy.php";
 require_once "./classes/model/HourlyOccupancy.php";
 
 require_once "./classes/CalendarController.php";
+require_once "./classes/Dic.php";
 require_once "./classes/Pagination.php";
 require_once "./classes/DailyCalendarController.php";
 require_once "./classes/DailyPagination.php";
