@@ -18,8 +18,8 @@ use Plib\View;
 <div class="ocal_lists" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
   <?=$this->raw($modeLink)?>
   <?=$this->raw($statusbar)?>
-<?php foreach ($monthLists as $monthList):?>
+<?foreach ($monthLists as $monthList):?>
   <?=$this->raw($monthList)?>
-<?php endforeach?>
+<?endforeach?>
   <?=$this->raw($monthPagination)?>
 </div>

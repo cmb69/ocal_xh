@@ -18,8 +18,8 @@ use Plib\View;
 <div class="ocal_week_lists" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
   <?=$this->raw($modeLink)?>
   <?=$this->raw($statusbar)?>
-<?php foreach ($weekLists as $weekList):?>
+<?foreach ($weekLists as $weekList):?>
   <?=$this->raw($weekList)?>
-<?php endforeach?>
+<?endforeach?>
   <?=$this->raw($weekPagination)?>
 </div>

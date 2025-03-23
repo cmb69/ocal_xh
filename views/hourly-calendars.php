@@ -20,13 +20,13 @@ use Plib\View;
 <script type="module" src="<?=$this->esc($js_script)?>"></script>
 <div class="ocal_week_calendars" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
   <?=$this->raw($modeLink)?>
-<?php if ($isEditable):?>
+<?if ($isEditable):?>
   <?=$this->raw($csrfTokenInput)?>
   <?=$this->raw($toolbar)?>
-<?php endif?>
+<?endif?>
   <?=$this->raw($statusbar)?>
-<?php foreach ($weekCalendars as $weekCalendar):?>
+<?foreach ($weekCalendars as $weekCalendar):?>
   <?=$this->raw($weekCalendar)?>
-<?php endforeach?>
+<?endforeach?>
   <?=$this->raw($weekPagination)?>
 </div>

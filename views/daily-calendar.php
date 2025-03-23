@@ -18,22 +18,22 @@ use Plib\View;
       <th colspan="7"><?=$this->esc($monthname)?> <?=$year?></th>
     </tr>
     <tr>
-<?php foreach ($daynames as $dayname):?>
+<?foreach ($daynames as $dayname):?>
       <th><?=$this->esc($dayname)?></th>
-<?php endforeach?>
+<?endforeach?>
     </tr>
   </thead>
   <tbody>
-<?php foreach ($weeks as $week):?>
+<?foreach ($weeks as $week):?>
     <tr>
-<?php   foreach ($week as $day):?>
-<?php       if (empty($day)):?>
+<?  foreach ($week as $day):?>
+<?    if (empty($day)):?>
       <td>&nbsp;</td>
-<?php       else:?>
+<?    else:?>
       <td class="ocal_state <?=$this->esc($day->todayClass)?>" data-ocal_state="<?=$this->esc($day->state)?>" title="<?=$this->text($day->titleKey)?>"><?=$this->esc($day->day)?></td>
-<?php       endif?>
-<?php   endforeach?>
+<?    endif?>
+<?  endforeach?>
     </tr>
-<?php endforeach?>
+<?endforeach?>
   </tbody>
 </table>

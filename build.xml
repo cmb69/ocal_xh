@@ -70,6 +70,16 @@
     </exec>
     <move todir="dist">
       <fileset dir="export">
+        <include name="views/*.php"/>
+      </fileset>
+      <filterchain>
+        <replaceregexp>
+          <regexp pattern="&lt;\?(?!=|php)" replace="&lt;?php "/>
+        </replaceregexp>
+      </filterchain>
+    </move>
+    <move todir="dist">
+      <fileset dir="export">
         <exclude name=".github/**"/>
         <exclude name=".phive/**"/>
         <exclude name="help/template.htm"/>
