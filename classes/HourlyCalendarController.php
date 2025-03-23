@@ -63,8 +63,6 @@ class HourlyCalendarController extends CalendarController
 
     protected function renderCalendarView(Request $request, Occupancy $occupancy, int $count): string
     {
-        $this->emitScriptElements();
-
         $data = [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView($request),
@@ -74,6 +72,7 @@ class HourlyCalendarController extends CalendarController
             'weekPagination' => $this->renderPaginationView($request, $count),
             'weekCalendars' => $this->getWeekCalendars($request, $occupancy, $count),
             'js_config' => $this->getJsConfig($request),
+            'js_script' => $this->pluginFolder . "ocal.min.js",
         ];
         if ($request->admin()) {
             assert($this->csrfProtector !== null);
@@ -130,7 +129,6 @@ class HourlyCalendarController extends CalendarController
 
     protected function renderListView(Request $request, Occupancy $occupancy, int $count): string
     {
-        $this->emitScriptElements();
         return $this->view->render('hourly-lists', [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView($request),
@@ -138,6 +136,7 @@ class HourlyCalendarController extends CalendarController
             'weekPagination' => $this->renderPaginationView($request, $count),
             'weekLists' => $this->getWeekLists($request, $occupancy, $count),
             'js_config' => $this->getJsConfig($request),
+            'js_script' => $this->pluginFolder . "ocal.min.js",
         ]);
     }
 

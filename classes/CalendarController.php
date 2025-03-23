@@ -30,9 +30,6 @@ use XH\CSRFProtection as CsrfProtector;
 
 abstract class CalendarController
 {
-    /** @var bool */
-    protected static $isJavaScriptEmitted = false;
-
     /** @var ?CsrfProtector */
     protected $csrfProtector;
 
@@ -135,19 +132,6 @@ abstract class CalendarController
     }
 
     abstract protected function saveStates(Request $request, string $name): ?string;
-
-    /** @return void */
-    protected function emitScriptElements()
-    {
-        global $bjs;
-
-        if (self::$isJavaScriptEmitted) {
-            return;
-        }
-        $bjs .= '<script src="'
-            . $this->pluginFolder . 'ocal.min.js"></script>';
-        self::$isJavaScriptEmitted = true;
-    }
 
     /** @return array<string,mixed> */
     protected function getJsConfig(Request $request): array

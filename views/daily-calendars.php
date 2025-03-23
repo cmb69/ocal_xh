@@ -13,9 +13,11 @@ use Plib\View;
  * @var list<string> $monthCalendars
  * @var string $monthPagination
  * @var array<string,mixed> $js_config
+ * @var string $js_script
  */
 ?>
 
+<script type="module" src="<?=$this->esc($js_script)?>"></script>
 <div class="ocal_calendars" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
   <?=$this->raw($modeLink)?>
 <?php if ($isEditable):?>
