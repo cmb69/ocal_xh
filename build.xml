@@ -42,7 +42,7 @@
       <arg line="ocal.min.js"/>
     </exec>
     <exec executable="tsc" passthru="true" checkreturn="true">
-      <arg line="--checkJs --lib ES6,DOM --noEmit ocal.min.js"/>
+      <arg line="--checkJs --strictNullChecks --lib ES6,DOM --noEmit ocal.min.js"/>
     </exec>
   </target>
 
