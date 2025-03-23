@@ -20,6 +20,7 @@
  */
 
 use Ocal\Dic;
+use Plib\Request;
 
 const OCAL_VERSION = "1.3-dev";
 
@@ -40,7 +41,7 @@ function ocal($name, $monthCount = 1)
     if (!is_callable([$controller, "{$action}Action"])) {
         $action = 'default';
     }
-    return $controller->{"{$action}Action"}($name, $monthCount)();
+    return $controller->{"{$action}Action"}(Request::current(), $name, $monthCount)();
 }
 
 /**
@@ -60,7 +61,7 @@ function Ocal_hourly($name, $weekCount = 1)
     if (!is_callable([$controller, "{$action}Action"])) {
         $action = 'default';
     }
-    return $controller->{"{$action}Action"}($name, $weekCount)();
+    return $controller->{"{$action}Action"}(Request::current(), $name, $weekCount)();
 }
 
 if (isset($_GET['ocal_week']) || isset($_GET['ocal_month']) || isset($_GET['ocal_year'])) {
