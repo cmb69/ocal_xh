@@ -16,17 +16,17 @@ require_once "../plib/classes/View.php";
 require_once "../plib/classes/FakeRequest.php";
 require_once "../plib/classes/FakeSystemChecker.php";
 
-require_once "./classes/CalendarController.php";
-require_once "./classes/Occupancy.php";
-require_once "./classes/Pagination.php";
+require_once "./classes/model/Db.php";
+require_once "./classes/model/Occupancy.php";
+require_once "./classes/model/DailyOccupancy.php";
+require_once "./classes/model/HourlyOccupancy.php";
 
+require_once "./classes/CalendarController.php";
+require_once "./classes/Pagination.php";
 require_once "./classes/DailyCalendarController.php";
-require_once "./classes/DailyOccupancy.php";
 require_once "./classes/DailyPagination.php";
-require_once "./classes/Db.php";
 require_once "./classes/DefaultAdminController.php";
 require_once "./classes/HourlyCalendarController.php";
-require_once "./classes/HourlyOccupancy.php";
 require_once "./classes/HourlyPagination.php";
 require_once "./classes/ListService.php";
 require_once "./classes/Month.php";

@@ -23,6 +23,8 @@ namespace Ocal;
 
 use PHPUnit\Framework\TestCase;
 use DateTimeImmutable;
+use Ocal\Model\DailyOccupancy;
+use Ocal\Model\HourlyOccupancy;
 
 class ListServiceTest extends TestCase
 {

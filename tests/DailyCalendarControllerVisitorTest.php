@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-use DateTimeImmutable;
+use Ocal\Model\Db;
 use PHPUnit\Framework\TestCase;
 use Plib\View;
 

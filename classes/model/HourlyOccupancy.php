@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017-2023 Christoph M. Becker
+ * Copyright 2014-2023 Christoph M. Becker
  *
  * This file is part of Ocal_XH.
  *
@@ -19,25 +19,25 @@
  * along with Ocal_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Ocal;
+namespace Ocal\Model;
 
-use PHPUnit\Framework\TestCase;
+use LogicException;
 
-class HourlyOccupancyTest extends TestCase
+class HourlyOccupancy extends Occupancy
 {
-    /**
-     * @var HourlyOccupancy
-     */
-    private $subject;
-
-    public function setUp(): void
+    public function getHourlyState(int $year, int $week, int $day, int $hour): int
     {
-        $this->subject = new HourlyOccupancy('bar', 3);
+        $date = sprintf('%04d-%02d-%02d-%02d', $year, $week, $day, $hour);
+        return $this->getState($date);
     }
 
-    public function testSetAndGetState()
+    public function getDailyState(int $year, int $month, int $day): int
     {
-        $this->subject->setState('2017-09-01-12', 3);
-        $this->assertSame(3, $this->subject->getHourlyState(2017, 9, 1, 12));
+        throw new LogicException("not implemented in subclass");
+    }
+
+    public function toJson(): string
+    {
+        return (string) json_encode(['type' => 'hourly', 'states' => $this->states]);
     }
 }

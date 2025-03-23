@@ -21,6 +21,7 @@
 
 namespace Ocal;
 
+use Ocal\Model\Occupancy;
 use stdClass;
 
 class ListService

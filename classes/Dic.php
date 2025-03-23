@@ -21,6 +21,7 @@
 
 namespace Ocal;
 
+use Ocal\Model\Db;
 use Plib\SystemChecker;
 use Plib\View;
 

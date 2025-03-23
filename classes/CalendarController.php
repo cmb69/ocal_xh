@@ -21,6 +21,8 @@
 
 namespace Ocal;
 
+use Ocal\Model\Db;
+use Ocal\Model\Occupancy;
 use Plib\Request;
 use Plib\Response;
 use Plib\View;

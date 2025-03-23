@@ -23,6 +23,8 @@ namespace Ocal;
 
 use DateTimeImmutable;
 use ApprovalTests\Approvals;
+use Ocal\Model\DailyOccupancy;
+use Ocal\Model\Db;
 use PHPUnit\Framework\TestCase;
 use Plib\FakeRequest;
 use Plib\View;

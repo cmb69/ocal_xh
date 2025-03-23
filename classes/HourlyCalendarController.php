@@ -22,6 +22,8 @@
 namespace Ocal;
 
 use DateTimeImmutable;
+use Ocal\Model\Db;
+use Ocal\Model\Occupancy;
 use Plib\Request;
 use Plib\View;
 use stdClass;

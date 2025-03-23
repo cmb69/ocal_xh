@@ -19,7 +19,7 @@
  * along with Ocal_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Ocal;
+namespace Ocal\Model;
 
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStreamWrapper;
