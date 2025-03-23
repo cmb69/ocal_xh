@@ -27,7 +27,7 @@ use Plib\Response;
 
 trait CalendarController
 {
-    public function defaultAction(Request $request, string $name, int $count): Response
+    private function defaultAction(Request $request, string $name, int $count): Response
     {
         $this->mode = 'calendar';
         $occupancy = $this->findOccupancy($name);
@@ -45,7 +45,7 @@ trait CalendarController
         return Response::create();
     }
 
-    public function listAction(Request $request, string $name, int $count): Response
+    private function listAction(Request $request, string $name, int $count): Response
     {
         $this->mode = 'list';
         $occupancy = $this->findOccupancy($name);
@@ -69,7 +69,7 @@ trait CalendarController
 
     abstract protected function renderListView(Request $request, Occupancy $occupancy, int $count): string;
 
-    public function saveAction(Request $request, string $name): Response
+    private function saveAction(Request $request, string $name): Response
     {
         $this->mode = 'calendar';
         if (!$request->admin() || $request->get("ocal_name") !== $name || $this->csrfProtector === null) {

@@ -36,12 +36,7 @@ function ocal($name, $monthCount = 1)
     if (!preg_match('/^[a-z0-9-]+$/', $name)) {
         return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
     }
-    $controller = Dic::makeDailyCalendarController();
-    $action = $_GET['ocal_action'] ?? 'default';
-    if (!is_callable([$controller, "{$action}Action"])) {
-        $action = 'default';
-    }
-    return $controller->{"{$action}Action"}(Request::current(), $name, $monthCount)();
+    return Dic::makeDailyCalendarController()(Request::current(), $name, $monthCount)();
 }
 
 /**
@@ -56,12 +51,7 @@ function Ocal_hourly($name, $weekCount = 1)
     if (!preg_match('/^[a-z0-9-]+$/', $name)) {
         return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
     }
-    $controller = Dic::makeHourlyCalendarController();
-    $action = $_GET['ocal_action'] ?? 'default';
-    if (!is_callable([$controller, "{$action}Action"])) {
-        $action = 'default';
-    }
-    return $controller->{"{$action}Action"}(Request::current(), $name, $weekCount)();
+    return Dic::makeHourlyCalendarController()(Request::current(), $name, $weekCount)();
 }
 
 if (isset($_GET['ocal_week']) || isset($_GET['ocal_month']) || isset($_GET['ocal_year'])) {

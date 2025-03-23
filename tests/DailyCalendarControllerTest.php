@@ -50,7 +50,7 @@ class DailyCalendarControllerTest extends TestCase
     public function testDefaultActionRendersCalendar(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->defaultAction(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-daily", 1);
+        $response = ($this->sut)(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -63,7 +63,7 @@ class DailyCalendarControllerTest extends TestCase
             "admin" => true,
             "time" => 1688256000,
         ]);
-        $response = $this->sut->defaultAction($request, "test-daily", 1);
+        $response = ($this->sut)($request, "test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -72,21 +72,25 @@ class DailyCalendarControllerTest extends TestCase
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest(["header" => ["X-Requested-With" => "XMLHttpRequest"]]);
-        $response = $this->sut->defaultAction($request, "test-daily", 1);
+        $response = ($this->sut)($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 
     public function testDefaultActionReportsWrongCalendarType(): void
     {
         $this->db->method('findOccupancy')->willReturn(null);
-        $response = $this->sut->defaultAction(new FakeRequest(), "test-hourly", 1);
+        $response = ($this->sut)(new FakeRequest(), "test-hourly", 1);
         $this->assertStringContainsString("'test-hourly' is not a daily occupancy calendar!", $response->output());
     }
 
     public function testListActionRendersListWithoutEntries(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction(new FakeRequest(["time" => 1688256000]), "test-daily", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_action=list",
+            "time" => 1688256000,
+        ]);
+        $response = ($this->sut)($request, "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -96,7 +100,11 @@ class DailyCalendarControllerTest extends TestCase
             (object) ['range' => "9.", 'state' => "2", 'label' => "available"],
         ]);
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->listAction(new FakeRequest(["time" => 1688256000]), "test-daily", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_action=list",
+            "time" => 1688256000,
+        ]);
+        $response = ($this->sut)($request, "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -104,11 +112,11 @@ class DailyCalendarControllerTest extends TestCase
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
-            "url" => "http://example.com/?&ocal_name=test-daily",
+            "url" => "http://example.com/?&ocal_action=list&ocal_name=test-daily",
             "header" => ["X-Requested-With" => "XMLHttpRequest"],
             "time" => 1688256000,
         ]);
-        $response = $this->sut->listAction($request, "test-daily", 1);
+        $response = ($this->sut)($request, "test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -116,22 +124,27 @@ class DailyCalendarControllerTest extends TestCase
     public function testListActionIgnoresUnrelatedAjaxRequest(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $request = new FakeRequest(["header" => ["X-Requested-With" => "XMLHttpRequest"]]);
-        $response = $this->sut->listAction($request, "test-daily", 1);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_action=list",
+            "header" => ["X-Requested-With" => "XMLHttpRequest"],
+        ]);
+        $response = ($this->sut)($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 
     public function testListActionReportsWrongCalendarType(): void
     {
         $this->db->method('findOccupancy')->willReturn(null);
-        $response = $this->sut->listAction(new FakeRequest(), "test-hourly", 1);
+        $request = new FakeRequest(["url" => "http://example.com/?&ocal_action=list"]);
+        $response = ($this->sut)($request, "test-hourly", 1);
         $this->assertStringContainsString("'test-hourly' is not a daily occupancy calendar!", $response->output());
     }
 
     public function testSaveActionReturnsEmptyResponseIfNameIsMissing(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $response = $this->sut->saveAction(new FakeRequest(), "test-daily", 1);
+        $request = new FakeRequest(["url" => "http://example.com/?&ocal_action=save"]);
+        $response = ($this->sut)($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 
@@ -140,11 +153,11 @@ class DailyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->db->method('saveOccupancy')->willReturn(true);
         $request = new FakeRequest([
-            "url" => "http://example.com/?&ocal_name=test-daily",
+            "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
             "post" => ["ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")])],
         ]);
-        $response = $this->sut->saveAction($request, "test-daily", 1);
+        $response = ($this->sut)($request, "test-daily", 1);
         $this->assertStringContainsString('Successfully saved.', $response->output());
     }
 
@@ -153,20 +166,20 @@ class DailyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->csrfProtector->expects($this->once())->method('check');
         $request = new FakeRequest([
-            "url" => "http://example.com/?&ocal_name=test-daily",
+            "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
         ]);
-        $this->sut->saveAction($request, "test-daily", 1);
+        ($this->sut)($request, "test-daily", 1);
     }
 
     public function testSaveActionRejectsBadRequest(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
-            "url" => "http://example.com/?&ocal_name=test-daily",
+            "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
         ]);
-        $response = $this->sut->saveAction($request, "test-daily", 1);
+        $response = ($this->sut)($request, "test-daily", 1);
         $this->assertEquals(400, $response->status());
         $this->assertEquals("", $response->output());
     }
@@ -176,11 +189,11 @@ class DailyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->db->method('saveOccupancy')->willReturn(false);
         $request = new FakeRequest([
-            "url" => "http://example.com/?&ocal_name=test-daily",
+            "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
             "post" => ["ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")])]
         ]);
-        $response = $this->sut->saveAction($request, "test-daily", 1);
+        $response = ($this->sut)($request, "test-daily", 1);
         $this->assertStringContainsString('Saving failed!', $response->output());
     }
 

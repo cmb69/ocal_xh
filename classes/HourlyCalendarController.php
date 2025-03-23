@@ -25,6 +25,7 @@ use DateTimeImmutable;
 use Ocal\Model\Db;
 use Ocal\Model\Occupancy;
 use Plib\Request;
+use Plib\Response;
 use Plib\View;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
@@ -75,6 +76,18 @@ class HourlyCalendarController
         $this->db = $db;
         $this->view = $view;
         $this->type = "hourly";
+    }
+
+    public function __invoke(Request $request, string $name, int $count): Response
+    {
+        switch ($request->get("ocal_action") ?? "") {
+            default:
+                return $this->defaultAction($request, $name, $count);
+            case "list":
+                return $this->listAction($request, $name, $count);
+            case "save":
+                return $this->saveAction($request, $name);
+        }
     }
 
     protected function findOccupancy(string $name): ?Occupancy
