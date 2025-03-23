@@ -27,6 +27,21 @@ use Plib\Response;
 
 trait CalendarController
 {
+    public function __invoke(Request $request, string $name, int $count): Response
+    {
+        if (!preg_match('/^[a-z0-9-]+$/', $name)) {
+            return Response::create($this->view->message("fail", "error_occupancy_name"));
+        }
+        switch ($request->get("ocal_action") ?? "") {
+            default:
+                return $this->defaultAction($request, $name, $count);
+            case "list":
+                return $this->listAction($request, $name, $count);
+            case "save":
+                return $this->saveAction($request, $name);
+        }
+    }
+
     private function defaultAction(Request $request, string $name, int $count): Response
     {
         $this->mode = 'calendar';
