@@ -137,23 +137,25 @@ abstract class CalendarController
     abstract protected function saveStates(Request $request, string $name): ?string;
 
     /** @return void */
-    protected function emitScriptElements(Request $request)
+    protected function emitScriptElements()
     {
         global $bjs;
 
         if (self::$isJavaScriptEmitted) {
             return;
         }
-        $config = array(
-            'message_unsaved_changes' => $this->view->plain("message_unsaved_changes"),
-            'isAdmin' => $request->admin(),
-        );
-        $bjs .= '<script>'
-            . 'var OCAL = ' . json_encode($config) . ';'
-            . '</script>'
-            . '<script src="'
+        $bjs .= '<script src="'
             . $this->pluginFolder . 'ocal.min.js"></script>';
         self::$isJavaScriptEmitted = true;
+    }
+
+    /** @return array<string,mixed> */
+    protected function getJsConfig(Request $request): array
+    {
+        return [
+            'message_unsaved_changes' => $this->view->plain("message_unsaved_changes"),
+            'isAdmin' => $request->admin(),
+        ];
     }
 
     protected function renderModeLinkView(Request $request): string

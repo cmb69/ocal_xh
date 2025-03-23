@@ -63,7 +63,7 @@ class DailyCalendarController extends CalendarController
 
     protected function renderCalendarView(Request $request, Occupancy $occupancy, int $count): string
     {
-        $this->emitScriptElements($request);
+        $this->emitScriptElements();
 
         $data = [
             'occupancyName' => $occupancy->getName(),
@@ -73,6 +73,7 @@ class DailyCalendarController extends CalendarController
             'statusbar' => $this->renderStatusbarView(),
             'monthPagination' => $this->renderPaginationView($request),
             'monthCalendars' => $this->getMonthCalendars($request, $occupancy, $count),
+            'js_config' => $this->getJsConfig($request),
         ];
         if ($request->admin()) {
             assert($this->csrfProtector !== null);
@@ -144,13 +145,14 @@ class DailyCalendarController extends CalendarController
 
     protected function renderListView(Request $request, Occupancy $occupancy, int $count): string
     {
-        $this->emitScriptElements($request);
+        $this->emitScriptElements();
         return $this->view->render('daily-lists', [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView($request),
             'statusbar' => $this->renderStatusbarView(),
             'monthLists' => $this->getMonthLists($request, $occupancy, $count),
             'monthPagination' => $this->renderPaginationView($request),
+            'js_config' => $this->getJsConfig($request),
         ]);
     }
 

@@ -12,10 +12,11 @@ use Plib\View;
  * @var list<string> $weekCalendars
  * @var string $statusbar
  * @var string $weekPagination
+ * @var array<string,mixed> $js_config
  */
 ?>
 
-<div class="ocal_week_calendars" data-name="<?=$this->esc($occupancyName)?>">
+<div class="ocal_week_calendars" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
   <?=$this->raw($modeLink)?>
 <?php if ($isEditable):?>
   <?=$this->raw($csrfTokenInput)?>

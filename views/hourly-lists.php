@@ -9,10 +9,11 @@ use Plib\View;
  * @var string $statusbar
  * @var list<string> $weekLists
  * @var string $weekPagination
+ * @var array<string,mixed> $js_config
  */
 ?>
 
-<div data-name="<?=$this->esc($occupancyName)?>">
+<div class="ocal_week_lists" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
   <?=$this->raw($modeLink)?>
   <?=$this->raw($statusbar)?>
 <?php foreach ($weekLists as $weekList):?>
