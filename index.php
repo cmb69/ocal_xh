@@ -24,33 +24,13 @@ use Plib\Request;
 
 const OCAL_VERSION = "1.3-dev";
 
-/**
- * @param string $name
- * @param int $monthCount
- * @return string
- */
-function ocal($name, $monthCount = 1)
+function ocal(string $name, int $monthCount = 1): string
 {
-    global $plugin_tx;
-
-    if (!preg_match('/^[a-z0-9-]+$/', $name)) {
-        return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
-    }
     return Dic::makeDailyCalendarController()(Request::current(), $name, $monthCount)();
 }
 
-/**
- * @param string $name
- * @param int $weekCount
- * @return string
- */
-function Ocal_hourly($name, $weekCount = 1)
+function ocal_hourly(string $name, int $weekCount = 1): string
 {
-    global $plugin_tx;
-
-    if (!preg_match('/^[a-z0-9-]+$/', $name)) {
-        return XH_message('fail', $plugin_tx['ocal']['error_occupancy_name']);
-    }
     return Dic::makeHourlyCalendarController()(Request::current(), $name, $weekCount)();
 }
 

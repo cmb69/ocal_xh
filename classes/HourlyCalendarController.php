@@ -80,6 +80,9 @@ class HourlyCalendarController
 
     public function __invoke(Request $request, string $name, int $count): Response
     {
+        if (!preg_match('/^[a-z0-9-]+$/', $name)) {
+            return Response::create($this->view->message("fail", "error_occupancy_name"));
+        }
         switch ($request->get("ocal_action") ?? "") {
             default:
                 return $this->defaultAction($request, $name, $count);

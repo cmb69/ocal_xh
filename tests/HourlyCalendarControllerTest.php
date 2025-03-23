@@ -48,6 +48,15 @@ class HourlyCalendarControllerTest extends TestCase
         );
     }
 
+    public function testReportsInvalidCalendarName(): void
+    {
+        $response = ($this->sut)(new FakeRequest(), "in valid", 1);
+        $this->assertStringContainsString(
+            "An occupancy name may only contain the letters a-z, the digits 0-9 and minus signs!",
+            $response->output()
+        );
+    }
+
     public function testDefaultActionRendersCalendar(): void
     {
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
