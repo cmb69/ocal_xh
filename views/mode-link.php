@@ -1,12 +1,11 @@
 <?php
 
-use Ocal\Url;
 use Plib\View;
 
 /**
  * @var View $this
  * @var string $mode
- * @var Url $url
+ * @var string $url
  */
 ?>
 
