@@ -29,8 +29,34 @@ use Plib\View;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
 
-class HourlyCalendarController extends CalendarController
+class HourlyCalendarController
 {
+    use CalendarController;
+
+    /** @var ?CsrfProtector */
+    private $csrfProtector;
+
+    /** @var array<string,string> */
+    private $config;
+
+    /** @var string */
+    private $mode;
+
+    /** @var string */
+    private $pluginFolder;
+
+    /** @var ListService */
+    private $listService;
+
+    /** @var Db */
+    private $db;
+
+    /** @var View */
+    private $view;
+
+    /** @var string */
+    private $type;
+
     /**
      * @param array<string,string> $config
      */
@@ -42,15 +68,13 @@ class HourlyCalendarController extends CalendarController
         Db $db,
         View $view
     ) {
-        parent::__construct(
-            $pluginFolder,
-            $csrfProtector,
-            $config,
-            $listService,
-            $db,
-            $view,
-            "hourly"
-        );
+        $this->pluginFolder = $pluginFolder;
+        $this->csrfProtector = $csrfProtector;
+        $this->config = $config;
+        $this->listService = $listService;
+        $this->db = $db;
+        $this->view = $view;
+        $this->type = "hourly";
     }
 
     protected function findOccupancy(string $name): ?Occupancy

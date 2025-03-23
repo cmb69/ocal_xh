@@ -21,60 +21,12 @@
 
 namespace Ocal;
 
-use Ocal\Model\Db;
 use Ocal\Model\Occupancy;
 use Plib\Request;
 use Plib\Response;
-use Plib\View;
-use XH\CSRFProtection as CsrfProtector;
 
-abstract class CalendarController
+trait CalendarController
 {
-    /** @var ?CsrfProtector */
-    protected $csrfProtector;
-
-    /** @var array<string,string> */
-    protected $config;
-
-    /** @var string */
-    protected $mode;
-
-    /** @var string */
-    protected $pluginFolder;
-
-    /** @var ListService */
-    protected $listService;
-
-    /** @var Db */
-    protected $db;
-
-    /** @var View */
-    protected $view;
-
-    /** @var string */
-    protected $type;
-
-    /**
-     * @param array<string,string> $config
-     */
-    public function __construct(
-        string $pluginFolder,
-        ?CsrfProtector $csrfProtector,
-        array $config,
-        ListService $listService,
-        Db $db,
-        View $view,
-        string $type
-    ) {
-        $this->pluginFolder = $pluginFolder;
-        $this->csrfProtector = $csrfProtector;
-        $this->config = $config;
-        $this->listService = $listService;
-        $this->db = $db;
-        $this->view = $view;
-        $this->type = $type;
-    }
-
     public function defaultAction(Request $request, string $name, int $count): Response
     {
         $this->mode = 'calendar';
@@ -134,7 +86,7 @@ abstract class CalendarController
     abstract protected function saveStates(Request $request, string $name): ?string;
 
     /** @return array<string,mixed> */
-    protected function getJsConfig(Request $request): array
+    private function getJsConfig(Request $request): array
     {
         return [
             'message_unsaved_changes' => $this->view->plain("message_unsaved_changes"),
@@ -142,7 +94,7 @@ abstract class CalendarController
         ];
     }
 
-    protected function renderModeLinkView(Request $request): string
+    private function renderModeLinkView(Request $request): string
     {
         return $this->view->render('mode-link', [
             'mode' => $mode = $this->mode === 'calendar' ? 'list' : 'calendar',
@@ -150,14 +102,14 @@ abstract class CalendarController
         ]);
     }
 
-    protected function renderStatusbarView(): string
+    private function renderStatusbarView(): string
     {
         return $this->view->render('statusbar', [
             'image' => "{$this->pluginFolder}images/ajax-loader-bar.gif",
         ]);
     }
 
-    protected function renderToolbarView(): string
+    private function renderToolbarView(): string
     {
         return $this->view->render('toolbar', [
             'states' => range(0, $this->config['state_max']),
