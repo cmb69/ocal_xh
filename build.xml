@@ -37,6 +37,15 @@
     </exec>
   </target>
 
+  <target name="js" description="run jshint and tsc">
+    <exec executable="jshint" passthru="true" checkreturn="true">
+      <arg line="ocal.min.js"/>
+    </exec>
+    <exec executable="tsc" passthru="true" checkreturn="true">
+      <arg line="--checkJs --lib ES6,DOM --noEmit ocal.min.js"/>
+    </exec>
+  </target>
+
   <target name="gen-help" description="builds help.htm from README.md">
     <exec executable="pandoc" passthru="true" checkreturn="true">
       <arg line="-s --eol=lf --template=help/template.htm -Vlang=en -Vpagetitle=&quot;User Manual&quot; -o help/help.htm README.md -t html"/>
