@@ -64,8 +64,6 @@ class DefaultAdminController
     {
         return array(
             $this->checkPhpVersion('7.1.0'),
-            $this->checkExtension('filter'),
-            $this->checkExtension('json'),
             $this->checkXhVersion('1.7.0'),
             $this->checkPlibVersion('1.3'),
             $this->checkWritability($this->contentFolder),
@@ -79,14 +77,6 @@ class DefaultAdminController
     {
         $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? 'success' : 'fail';
         $label = $this->view->plain("syscheck_phpversion", $version);
-        $stateLabel = $this->view->plain("syscheck_$state");
-        return (object) compact('state', 'label', 'stateLabel');
-    }
-
-    private function checkExtension(string $extension): stdClass
-    {
-        $state = $this->systemChecker->checkExtension($extension) ? 'success' : 'fail';
-        $label = $this->view->plain("syscheck_extension", $extension);
         $stateLabel = $this->view->plain("syscheck_$state");
         return (object) compact('state', 'label', 'stateLabel');
     }
