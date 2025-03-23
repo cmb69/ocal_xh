@@ -51,7 +51,7 @@ trait CalendarController
         } else {
             $html = $this->view->message("fail", "message_not_{$this->type}", $name);
         }
-        if ($request->header("X-Requested-With") !== 'XMLHttpRequest') {
+        if ($request->header("X-CMSimple-XH-Request") !== 'ocal') {
             return Response::create($html);
         }
         if ($request->get("ocal_name") === $name) {
@@ -69,7 +69,7 @@ trait CalendarController
         } else {
             $html = $this->view->message("fail", "message_not_{$this->type}", $name);
         }
-        if ($request->header("X-Requested-With") !== 'XMLHttpRequest') {
+        if ($request->header("X-CMSimple-XH-Request") !== 'ocal') {
             return Response::create($html);
         }
         if ($request->get("ocal_name") === $name) {

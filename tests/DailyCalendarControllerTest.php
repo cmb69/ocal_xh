@@ -68,7 +68,7 @@ class DailyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily",
-            "header" => ["X-Requested-With" => "XMLHttpRequest"],
+            "header" => ["X-CMSimple-XH-Request" => "ocal"],
             "admin" => true,
             "time" => 1688256000,
         ]);
@@ -80,7 +80,7 @@ class DailyCalendarControllerTest extends TestCase
     public function testDefaultActionIgnoresUnrelatedAjaxRequest(): void
     {
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $request = new FakeRequest(["header" => ["X-Requested-With" => "XMLHttpRequest"]]);
+        $request = new FakeRequest(["header" => ["X-CMSimple-XH-Request" => "ocal"]]);
         $response = ($this->sut)($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
@@ -122,7 +122,7 @@ class DailyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list&ocal_name=test-daily",
-            "header" => ["X-Requested-With" => "XMLHttpRequest"],
+            "header" => ["X-CMSimple-XH-Request" => "ocal"],
             "time" => 1688256000,
         ]);
         $response = ($this->sut)($request, "test-daily", 1);
@@ -135,7 +135,7 @@ class DailyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
-            "header" => ["X-Requested-With" => "XMLHttpRequest"],
+            "header" => ["X-CMSimple-XH-Request" => "ocal"],
         ]);
         $response = ($this->sut)($request, "test-daily", 1);
         $this->assertEquals("", $response->output());

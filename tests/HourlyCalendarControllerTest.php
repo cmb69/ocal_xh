@@ -69,7 +69,7 @@ class HourlyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-hourly",
-            "header" => ["X-Requested-With" => "XMLHttpRequest"],
+            "header" => ["X-CMSimple-XH-Request" => "ocal"],
             "admin" => true,
             "time" => 1688256000,
         ]);
@@ -81,7 +81,7 @@ class HourlyCalendarControllerTest extends TestCase
     public function testDefaultActionIgnoresUnrelatedAjaxRequest(): void
     {
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
-        $request = new FakeRequest(["header" => ["X-Requested-With" => "XMLHttpRequest"]]);
+        $request = new FakeRequest(["header" => ["X-CMSimple-XH-Request" => "ocal"]]);
         $response = ($this->sut)($request, "test-hourly", 1);
         $this->assertEquals("", $response->output());
     }
@@ -127,7 +127,7 @@ class HourlyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list&ocal_name=test-hourly",
-            "header" => ["X-Requested-With" => "XMLHttpRequest"],
+            "header" => ["X-CMSimple-XH-Request" => "ocal"],
             "time" => 1688256000,
         ]);
         $response = ($this->sut)($request, "test-hourly", 1);
@@ -141,7 +141,7 @@ class HourlyCalendarControllerTest extends TestCase
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
-            "header" => ["X-Requested-With" => "XMLHttpRequest"],
+            "header" => ["X-CMSimple-XH-Request" => "ocal"],
         ]);
         $response = ($this->sut)($request, "test-hourly", 1);
         $this->assertEquals("", $response->output());
