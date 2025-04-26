@@ -13,11 +13,11 @@ use XH\CSRFProtection as CsrfProtector;
 
 class DailyCalendarControllerTest extends TestCase
 {
-    /** @var DailyCalendarController */
-    private $sut;
-
     /** @var CsrfProtector&MockObject */
     private $csrfProtector;
+
+    /** @var array<string,string> */
+    private $config;
 
     /** @var ListService&MockObject */
     private $listService;
@@ -33,13 +33,17 @@ class DailyCalendarControllerTest extends TestCase
             '<input type="hidden" name="xh_csrf_token" value="dcfff515ebf5bd421d5a0777afc6358b">'
         );
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
-        $config = $plugin_cf['ocal'];
+        $this->config = $plugin_cf['ocal'];
         $this->listService = $this->createStub(ListService::class);
         $this->store = new DocumentStore(vfsStream::url("root/"));
-        $this->sut = new DailyCalendarController(
+    }
+
+    private function sut(): DailyCalendarController
+    {
+        return new DailyCalendarController(
             "./",
             $this->csrfProtector,
-            $config,
+            $this->config,
             $this->listService,
             $this->store,
             $this->view(),
@@ -51,7 +55,7 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testReportsInvalidCalendarName(): void
     {
-        $response = ($this->sut)(new FakeRequest(), "in valid", 1);
+        $response = $this->sut()(new FakeRequest(), "in valid", 1);
         $this->assertStringContainsString(
             "An occupancy name may only contain the letters a-z, the digits 0-9 and minus signs!",
             $response->output()
@@ -60,7 +64,7 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testDefaultActionRendersCalendar(): void
     {
-        $response = ($this->sut)(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-daily", 1);
+        $response = $this->sut()(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -72,7 +76,7 @@ class DailyCalendarControllerTest extends TestCase
             "admin" => true,
             "time" => 1688256000,
         ]);
-        $response = ($this->sut)($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -80,7 +84,7 @@ class DailyCalendarControllerTest extends TestCase
     public function testDefaultActionIgnoresUnrelatedAjaxRequest(): void
     {
         $request = new FakeRequest(["header" => ["X-CMSimple-XH-Request" => "ocal"]]);
-        $response = ($this->sut)($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 
@@ -88,7 +92,7 @@ class DailyCalendarControllerTest extends TestCase
     {
         HourlyOccupancy::update("test-hourly", $this->store);
         $this->store->commit();
-        $response = ($this->sut)(new FakeRequest(), "test-hourly", 1);
+        $response = $this->sut()(new FakeRequest(), "test-hourly", 1);
         $this->assertStringContainsString("'test-hourly' is not a daily occupancy calendar!", $response->output());
     }
 
@@ -98,7 +102,7 @@ class DailyCalendarControllerTest extends TestCase
             "url" => "http://example.com/?&ocal_action=list",
             "time" => 1688256000,
         ]);
-        $response = ($this->sut)($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -111,7 +115,7 @@ class DailyCalendarControllerTest extends TestCase
             "url" => "http://example.com/?&ocal_action=list",
             "time" => 1688256000,
         ]);
-        $response = ($this->sut)($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
@@ -122,7 +126,7 @@ class DailyCalendarControllerTest extends TestCase
             "header" => ["X-CMSimple-XH-Request" => "ocal"],
             "time" => 1688256000,
         ]);
-        $response = ($this->sut)($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
         $this->assertEquals("text/html", $response->contentType());
         Approvals::verifyHtml($response->output());
     }
@@ -133,7 +137,7 @@ class DailyCalendarControllerTest extends TestCase
             "url" => "http://example.com/?&ocal_action=list",
             "header" => ["X-CMSimple-XH-Request" => "ocal"],
         ]);
-        $response = ($this->sut)($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 
@@ -142,14 +146,14 @@ class DailyCalendarControllerTest extends TestCase
         HourlyOccupancy::update("test-hourly", $this->store);
         $this->store->commit();
         $request = new FakeRequest(["url" => "http://example.com/?&ocal_action=list"]);
-        $response = ($this->sut)($request, "test-hourly", 1);
+        $response = $this->sut()($request, "test-hourly", 1);
         $this->assertStringContainsString("'test-hourly' is not a daily occupancy calendar!", $response->output());
     }
 
     public function testSaveActionReturnsEmptyResponseIfNameIsMissing(): void
     {
         $request = new FakeRequest(["url" => "http://example.com/?&ocal_action=save"]);
-        $response = ($this->sut)($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
     }
 
@@ -160,7 +164,7 @@ class DailyCalendarControllerTest extends TestCase
             "admin" => true,
             "post" => ["ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")])],
         ]);
-        $response = ($this->sut)($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
         $this->assertStringContainsString('Successfully saved.', $response->output());
     }
 
@@ -171,7 +175,7 @@ class DailyCalendarControllerTest extends TestCase
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
         ]);
-        ($this->sut)($request, "test-daily", 1);
+        $this->sut()($request, "test-daily", 1);
     }
 
     public function testSaveActionRejectsBadRequest(): void
@@ -180,7 +184,7 @@ class DailyCalendarControllerTest extends TestCase
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
         ]);
-        $response = ($this->sut)($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
         $this->assertEquals(400, $response->status());
         $this->assertEquals("", $response->output());
     }
@@ -193,7 +197,7 @@ class DailyCalendarControllerTest extends TestCase
             "admin" => true,
             "post" => ["ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")])]
         ]);
-        $response = ($this->sut)($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
         $this->assertStringContainsString('Saving failed!', $response->output());
     }
 
