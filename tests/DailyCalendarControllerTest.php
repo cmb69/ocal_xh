@@ -5,7 +5,9 @@ namespace Ocal;
 use ApprovalTests\Approvals;
 use Ocal\Model\DailyOccupancy;
 use Ocal\Model\Db;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Plib\DocumentStore;
 use Plib\FakeRequest;
 use Plib\View;
 use XH\CSRFProtection as CsrfProtector;
@@ -24,8 +26,12 @@ class DailyCalendarControllerTest extends TestCase
     /** @var Db&MockObject */
     private $db;
 
+    /** @var DocumentStore */
+    private $store;
+
     public function setUp(): void
     {
+        vfsStream::setup("root");
         $this->csrfProtector = $this->createStub(CsrfProtector::class);
         $this->csrfProtector->method('tokenInput')->willReturn(
             '<input type="hidden" name="xh_csrf_token" value="dcfff515ebf5bd421d5a0777afc6358b">'
@@ -34,12 +40,14 @@ class DailyCalendarControllerTest extends TestCase
         $config = $plugin_cf['ocal'];
         $this->listService = $this->createStub(ListService::class);
         $this->db = $this->createStub(Db::class);
+        $this->store = new DocumentStore(vfsStream::url("root/"));
         $this->sut = new DailyCalendarController(
             "./",
             $this->csrfProtector,
             $config,
             $this->listService,
             $this->db,
+            $this->store,
             $this->view(),
             true,
             "test-daily",
@@ -195,6 +203,7 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsFailureToSave(): void
     {
+        vfsStream::setQuota(0);
         $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->db->method('saveOccupancy')->willReturn(false);
         $request = new FakeRequest([

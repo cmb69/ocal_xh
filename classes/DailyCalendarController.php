@@ -22,9 +22,11 @@
 namespace Ocal;
 
 use DateTimeImmutable;
+use Ocal\Model\DailyOccupancy;
 use Ocal\Model\Db;
 use Ocal\Model\Month;
 use Ocal\Model\Occupancy;
+use Plib\DocumentStore;
 use Plib\Request;
 use Plib\View;
 use stdClass;
@@ -52,6 +54,9 @@ class DailyCalendarController
     /** @var Db */
     private $db;
 
+    /** @var DocumentStore */
+    private $store;
+
     /** @var View */
     private $view;
 
@@ -67,6 +72,7 @@ class DailyCalendarController
         array $config,
         ListService $listService,
         Db $db,
+        DocumentStore $store,
         View $view
     ) {
         $this->pluginFolder = $pluginFolder;
@@ -74,6 +80,7 @@ class DailyCalendarController
         $this->config = $config;
         $this->listService = $listService;
         $this->db = $db;
+        $this->store = $store;
         $this->view = $view;
         $this->type = "daily";
     }
@@ -247,8 +254,7 @@ class DailyCalendarController
         if (!is_array($states)) {
             return null;
         }
-        $this->db->lock(true);
-        $occupancy = $this->db->findOccupancy($name);
+        $occupancy = DailyOccupancy::update($name, $this->store);
         if ($occupancy === null) {
             return null;
         }
@@ -258,9 +264,7 @@ class DailyCalendarController
                 $occupancy->setState($date, $state, (int) $this->config["state_max"]);
             }
         }
-        $res = $this->db->saveOccupancy($occupancy);
-        $this->db->unlock();
-        if (!$res) {
+        if (!$this->store->commit()) {
             return $this->view->message("fail", "message_not_saved");
         }
         return $this->view->message("success", "message_saved");
