@@ -31,13 +31,13 @@ final class HourlyOccupancy extends Occupancy implements Document
     {
         $array = json_decode($contents, true);
         if ($contents === "") {
-            return new self($key);
+            return new self(basename($key, ".json"));
         }
         assert(is_array($array)); // TODO: proper validation
         if ($array["type"] !== "hourly") {
             return null;
         }
-        $result = new self($key);
+        $result = new self(basename($key, ".json"));
         foreach ($array["states"] as $date => $state) {
             $result->setState($date, $state, PHP_INT_MAX);
         }

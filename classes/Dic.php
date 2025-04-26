@@ -49,7 +49,6 @@ class Dic
             $_XH_csrfProtection,
             $plugin_cf['ocal'],
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
-            new Db("{$pth['folder']['base']}content/ocal/"),
             new DocumentStore($pth["folder"]["base"] . "content/ocal/"),
             self::view()
         );

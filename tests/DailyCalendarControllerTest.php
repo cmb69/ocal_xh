@@ -5,6 +5,7 @@ namespace Ocal;
 use ApprovalTests\Approvals;
 use Ocal\Model\DailyOccupancy;
 use Ocal\Model\Db;
+use Ocal\Model\HourlyOccupancy;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Plib\DocumentStore;
@@ -46,7 +47,6 @@ class DailyCalendarControllerTest extends TestCase
             $this->csrfProtector,
             $config,
             $this->listService,
-            $this->db,
             $this->store,
             $this->view(),
             true,
@@ -95,7 +95,8 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testDefaultActionReportsWrongCalendarType(): void
     {
-        $this->db->method('findOccupancy')->willReturn(null);
+        HourlyOccupancy::update("test-hourly", $this->store);
+        $this->store->commit();
         $response = ($this->sut)(new FakeRequest(), "test-hourly", 1);
         $this->assertStringContainsString("'test-hourly' is not a daily occupancy calendar!", $response->output());
     }
@@ -127,7 +128,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testListActionHandlesAjaxRequest(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list&ocal_name=test-daily",
             "header" => ["X-CMSimple-XH-Request" => "ocal"],
@@ -151,7 +151,8 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testListActionReportsWrongCalendarType(): void
     {
-        $this->db->method('findOccupancy')->willReturn(null);
+        HourlyOccupancy::update("test-hourly", $this->store);
+        $this->store->commit();
         $request = new FakeRequest(["url" => "http://example.com/?&ocal_action=list"]);
         $response = ($this->sut)($request, "test-hourly", 1);
         $this->assertStringContainsString("'test-hourly' is not a daily occupancy calendar!", $response->output());

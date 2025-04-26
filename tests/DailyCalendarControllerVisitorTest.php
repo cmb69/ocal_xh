@@ -2,7 +2,6 @@
 
 namespace Ocal;
 
-use Ocal\Model\Db;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Plib\DocumentStore;
@@ -17,14 +16,12 @@ class DailyCalendarControllerVisitorTest extends TestCase
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
         $config = $plugin_cf['ocal'];
         $listService = $this->createStub(ListService::class);
-        $db = $this->createStub(Db::class);
         $store = new DocumentStore(vfsStream::url("root/"));
         new DailyCalendarController(
             "./",
             null,
             $config,
             $listService,
-            $db,
             $store,
             $this->view(),
             false,
