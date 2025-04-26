@@ -255,7 +255,7 @@ class DailyCalendarController
         foreach ($states as $month => $states) {
             foreach ($states as $i => $state) {
                 $date = sprintf('%s-%02d', $month, $i + 1);
-                $occupancy->setState($date, $state);
+                $occupancy->setState($date, $state, (int) $this->config["state_max"]);
             }
         }
         $res = $this->db->saveOccupancy($occupancy);

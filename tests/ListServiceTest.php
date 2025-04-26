@@ -23,10 +23,10 @@ class ListServiceTest extends TestCase
 
     public function testGetDailyList()
     {
-        $occupancy = new DailyOccupancy('daily', 3);
-        $occupancy->setState('2017-03-01', 1);
-        $occupancy->setState('2017-03-02', 1);
-        $occupancy->setState('2017-03-04', 2);
+        $occupancy = new DailyOccupancy('daily');
+        $occupancy->setState('2017-03-01', 1, 3);
+        $occupancy->setState('2017-03-02', 1, 3);
+        $occupancy->setState('2017-03-04', 2, 3);
         $month = new Month(3, 2017);
         $expected = array(
             (object) ['range' => '1.–2.', 'state' => 1 , 'label' => 'available'],
@@ -38,12 +38,12 @@ class ListServiceTest extends TestCase
     public function testGetHourlyList()
     {
         $occupancy = new HourlyOccupancy('hourly', 3);
-        $occupancy->setState('2017-09-01-08', 1);
-        $occupancy->setState('2017-09-01-09', 1);
-        $occupancy->setState('2017-09-01-10', 1);
-        $occupancy->setState('2017-09-01-11', 1);
-        $occupancy->setState('2017-09-01-14', 2);
-        $occupancy->setState('2017-09-01-15', 2);
+        $occupancy->setState('2017-09-01-08', 1, 3);
+        $occupancy->setState('2017-09-01-09', 1, 3);
+        $occupancy->setState('2017-09-01-10', 1, 3);
+        $occupancy->setState('2017-09-01-11', 1, 3);
+        $occupancy->setState('2017-09-01-14', 2, 3);
+        $occupancy->setState('2017-09-01-15', 2, 3);
         $week = new Week(9, 2017);
         $expected = array(
             (object) array(

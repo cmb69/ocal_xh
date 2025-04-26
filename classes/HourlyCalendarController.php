@@ -256,7 +256,7 @@ class HourlyCalendarController
                 $day = $i % 7 + 1;
                 $hour = (int) $this->config['hour_interval'] * (int) ($i / 7) + (int) $this->config['hour_first'];
                 $date = sprintf('%s-%02d-%02d', $week, $day, $hour);
-                $occupancy->setState($date, $state);
+                $occupancy->setState($date, $state, (int) $this->config["state_max"]);
             }
         }
         $res = $this->db->saveOccupancy($occupancy);

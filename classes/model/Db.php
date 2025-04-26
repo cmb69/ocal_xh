@@ -26,16 +26,12 @@ class Db
     /** @var string */
     private $foldername;
 
-    /** @var int */
-    private $stateMax;
-
     /** @var resource */
     private $lockFile;
 
-    public function __construct(string $foldername, int $stateMax)
+    public function __construct(string $foldername)
     {
         $this->foldername = $foldername;
-        $this->stateMax = $stateMax;
     }
 
     /** @return void */
@@ -62,7 +58,7 @@ class Db
         } else {
             $contents = $this->migrateContents($name, $hourly);
         }
-        if ($contents && ($occupancy = Occupancy::createFromJson($name, $contents, $this->stateMax))) {
+        if ($contents && ($occupancy = Occupancy::createFromJson($name, $contents))) {
             if (
                 (!$hourly && $occupancy instanceof HourlyOccupancy)
                 || ($hourly && $occupancy instanceof DailyOccupancy)
@@ -72,9 +68,9 @@ class Db
             return $occupancy;
         }
         if ($hourly) {
-            return new HourlyOccupancy($name, $this->stateMax);
+            return new HourlyOccupancy($name);
         }
-        return new DailyOccupancy($name, $this->stateMax);
+        return new DailyOccupancy($name);
     }
 
     private function migrateContents(string $name, bool $hourly): ?string

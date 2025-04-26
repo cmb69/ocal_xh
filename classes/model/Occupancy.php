@@ -29,39 +29,35 @@ abstract class Occupancy
     /** @var array<string,int> */
     protected $states;
 
-    /** @var int */
-    private $maxState;
-
-    public static function createFromJson(string $name, string $json, int $stateMax): ?self
+    public static function createFromJson(string $name, string $json): ?self
     {
         $array = json_decode($json, true);
         assert(is_array($array)); // TODO: proper validation
-        if (!($result = self::instantiateType($array['type'], $name, $stateMax))) {
+        if (!($result = self::instantiateType($array['type'], $name))) {
             return null;
         }
         foreach ($array['states'] as $date => $state) {
-            $result->setState($date, $state);
+            $result->setState($date, $state, PHP_INT_MAX);
         }
         return $result;
     }
 
-    private static function instantiateType(string $type, string $name, int $stateMax): ?self
+    private static function instantiateType(string $type, string $name): ?self
     {
         switch ($type) {
             case 'daily':
-                return new DailyOccupancy($name, $stateMax);
+                return new DailyOccupancy($name);
             case 'hourly':
-                return new HourlyOccupancy($name, $stateMax);
+                return new HourlyOccupancy($name);
             default:
                 return null;
         }
     }
 
-    public function __construct(string $name, int $stateMax)
+    public function __construct(string $name)
     {
         $this->name = (string) $name;
         $this->states = array();
-        $this->maxState = $stateMax;
     }
 
     abstract public function getDailyState(int $year, int $month, int $day): int;
@@ -88,9 +84,9 @@ abstract class Occupancy
     }
 
     /** @return void */
-    public function setState(string $date, int $state)
+    public function setState(string $date, int $state, int $max)
     {
-        if ($state > 0 && $state <= $this->maxState) {
+        if ($state > 0 && $state <= $max) {
             $this->states[$date] = $state;
         } else {
             unset($this->states[$date]);
