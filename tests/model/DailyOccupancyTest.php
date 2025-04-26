@@ -16,11 +16,6 @@ class DailyOccupancyTest extends TestCase
         $this->subject = new DailyOccupancy('foo');
     }
 
-    public function testCreateFromJsonWithInvalidType()
-    {
-        $this->assertNull(Occupancy::createFromJson('foo', '{"type": "invalid", "states": {}}', 3));
-    }
-
     public function testGetName()
     {
         $this->assertSame('foo', $this->subject->getName());

@@ -87,9 +87,4 @@ final class HourlyOccupancy extends Occupancy implements Document
     {
         return (string) json_encode(["type" => "hourly", "states" => $this->states]);
     }
-
-    public function toJson(): string
-    {
-        return (string) json_encode(['type' => 'hourly', 'states' => $this->states]);
-    }
 }

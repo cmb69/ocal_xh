@@ -87,9 +87,4 @@ final class DailyOccupancy extends Occupancy implements Document
     {
         return (string) json_encode(["type" => "daily", "states" => $this->states]);
     }
-
-    public function toJson(): string
-    {
-        return (string) json_encode(['type' => 'daily', 'states' => $this->states]);
-    }
 }

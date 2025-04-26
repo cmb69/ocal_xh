@@ -29,31 +29,6 @@ abstract class Occupancy
     /** @var array<string,int> */
     protected $states;
 
-    public static function createFromJson(string $name, string $json): ?self
-    {
-        $array = json_decode($json, true);
-        assert(is_array($array)); // TODO: proper validation
-        if (!($result = self::instantiateType($array['type'], $name))) {
-            return null;
-        }
-        foreach ($array['states'] as $date => $state) {
-            $result->setState($date, $state, PHP_INT_MAX);
-        }
-        return $result;
-    }
-
-    private static function instantiateType(string $type, string $name): ?self
-    {
-        switch ($type) {
-            case 'daily':
-                return new DailyOccupancy($name);
-            case 'hourly':
-                return new HourlyOccupancy($name);
-            default:
-                return null;
-        }
-    }
-
     public function __construct(string $name)
     {
         $this->name = (string) $name;
@@ -92,6 +67,4 @@ abstract class Occupancy
             unset($this->states[$date]);
         }
     }
-
-    abstract public function toJson(): string;
 }
