@@ -3,8 +3,6 @@
 namespace Ocal;
 
 use ApprovalTests\Approvals;
-use Ocal\Model\DailyOccupancy;
-use Ocal\Model\Db;
 use Ocal\Model\HourlyOccupancy;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -24,9 +22,6 @@ class DailyCalendarControllerTest extends TestCase
     /** @var ListService&MockObject */
     private $listService;
 
-    /** @var Db&MockObject */
-    private $db;
-
     /** @var DocumentStore */
     private $store;
 
@@ -40,7 +35,6 @@ class DailyCalendarControllerTest extends TestCase
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
         $config = $plugin_cf['ocal'];
         $this->listService = $this->createStub(ListService::class);
-        $this->db = $this->createStub(Db::class);
         $this->store = new DocumentStore(vfsStream::url("root/"));
         $this->sut = new DailyCalendarController(
             "./",
@@ -66,14 +60,12 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testDefaultActionRendersCalendar(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $response = ($this->sut)(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-daily", 1);
         Approvals::verifyHtml($response->output());
     }
 
     public function testDefaultActionHandlesAjaxRequest(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily",
             "header" => ["X-CMSimple-XH-Request" => "ocal"],
@@ -87,7 +79,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testDefaultActionIgnoresUnrelatedAjaxRequest(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest(["header" => ["X-CMSimple-XH-Request" => "ocal"]]);
         $response = ($this->sut)($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
@@ -103,7 +94,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testListActionRendersListWithoutEntries(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
             "time" => 1688256000,
@@ -117,7 +107,6 @@ class DailyCalendarControllerTest extends TestCase
         $this->listService->method('getDailyList')->willReturn([
             (object) ['range' => "9.", 'state' => "2", 'label' => "available"],
         ]);
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
             "time" => 1688256000,
@@ -140,7 +129,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testListActionIgnoresUnrelatedAjaxRequest(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
             "header" => ["X-CMSimple-XH-Request" => "ocal"],
@@ -160,7 +148,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionReturnsEmptyResponseIfNameIsMissing(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest(["url" => "http://example.com/?&ocal_action=save"]);
         $response = ($this->sut)($request, "test-daily", 1);
         $this->assertEquals("", $response->output());
@@ -168,8 +155,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsSuccess(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $this->db->method('saveOccupancy')->willReturn(true);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
@@ -181,7 +166,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionPreventCsrf(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $this->csrfProtector->expects($this->once())->method('check');
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
@@ -192,7 +176,6 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionRejectsBadRequest(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
@@ -205,8 +188,6 @@ class DailyCalendarControllerTest extends TestCase
     public function testSaveActionReportsFailureToSave(): void
     {
         vfsStream::setQuota(0);
-        $this->db->method('findOccupancy')->willReturn(new DailyOccupancy("test-daily", 3));
-        $this->db->method('saveOccupancy')->willReturn(false);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,

@@ -23,7 +23,6 @@ namespace Ocal;
 
 use DateTimeImmutable;
 use Ocal\Model\DailyOccupancy;
-use Ocal\Model\Db;
 use Ocal\Model\Month;
 use Ocal\Model\Occupancy;
 use Plib\DocumentStore;

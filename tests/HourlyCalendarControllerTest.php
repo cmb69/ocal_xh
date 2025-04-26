@@ -5,8 +5,6 @@ namespace Ocal;
 use DateTimeImmutable;
 use ApprovalTests\Approvals;
 use Ocal\Model\DailyOccupancy;
-use Ocal\Model\Db;
-use Ocal\Model\HourlyOccupancy;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Plib\DocumentStore;
@@ -25,9 +23,6 @@ class HourlyCalendarControllerTest extends TestCase
     /** @var ListService&MockObject */
     private $listService;
 
-    /** @var Db&MockObject */
-    private $db;
-
     /** @var DocumentStore */
     private $store;
 
@@ -41,7 +36,6 @@ class HourlyCalendarControllerTest extends TestCase
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
         $config = $plugin_cf['ocal'];
         $this->listService = $this->createStub(ListService::class);
-        $this->db = $this->createStub(Db::class);
         $this->store = new DocumentStore(vfsStream::url("root/"));
         $this->sut = new HourlyCalendarController(
             "./",
@@ -67,14 +61,12 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testDefaultActionRendersCalendar(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $response = ($this->sut)(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-hourly", 1);
         Approvals::verifyHtml($response->output());
     }
 
     public function testDefaultActionHandlesAjaxRequest(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-hourly",
             "header" => ["X-CMSimple-XH-Request" => "ocal"],
@@ -88,7 +80,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testDefaultActionIgnoresUnrelatedAjaxRequest(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest(["header" => ["X-CMSimple-XH-Request" => "ocal"]]);
         $response = ($this->sut)($request, "test-hourly", 1);
         $this->assertEquals("", $response->output());
@@ -105,7 +96,6 @@ class HourlyCalendarControllerTest extends TestCase
     public function testListActionRendersListWithoutEntries(): void
     {
         $this->listService->method('getHourlyList')->willReturn([]);
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
             "time" => 1688256000,
@@ -121,7 +111,6 @@ class HourlyCalendarControllerTest extends TestCase
                 (object) ['range' => "12:00-13:00", 'state' => "1", 'label' => "reserved"],
             ]],
         ]);
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
             "time" => 1688256000,
@@ -133,7 +122,6 @@ class HourlyCalendarControllerTest extends TestCase
     public function testListActionHandlesAjaxRequest(): void
     {
         $this->listService->method('getHourlyList')->willReturn([]);
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list&ocal_name=test-hourly",
             "header" => ["X-CMSimple-XH-Request" => "ocal"],
@@ -147,7 +135,6 @@ class HourlyCalendarControllerTest extends TestCase
     public function testListActionIgnoresUnrelatedAjaxRequest(): void
     {
         $this->listService->method('getHourlyList')->willReturn([]);
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
             "header" => ["X-CMSimple-XH-Request" => "ocal"],
@@ -167,7 +154,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionReturnsEmptyResponseIfNameIsMissing(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest(["url" => "http://example.com/?&ocal_action=save"]);
         $response = ($this->sut)($request, "test-hourly", 1);
         $this->assertEquals("", $response->output());
@@ -175,8 +161,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsSuccess(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
-        $this->db->method('saveOccupancy')->willReturn(true);
         $request = new FakeRequest(["url" => "http://example.com/?&ocal_name=save"]);
         $response = ($this->sut)($request, "test-hourly", 1);
         $this->stringContains("Successfully saved.", $response->output());
@@ -185,7 +169,6 @@ class HourlyCalendarControllerTest extends TestCase
     public function testSaveActionPreventCsrf(): void
     {
         $this->csrfProtector->expects($this->once())->method('check');
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-hourly&ocal_action=save",
             "admin" => true,
@@ -195,7 +178,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionRejectsBadRequest(): void
     {
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-hourly&ocal_action=save",
             "admin" => true,
@@ -208,8 +190,6 @@ class HourlyCalendarControllerTest extends TestCase
     public function testSaveActionReportsFailureToSave(): void
     {
         vfsStream::setQuota(0);
-        $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
-        $this->db->method('saveOccupancy')->willReturn(false);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=save&ocal_name=test-hourly",
             "admin" => true,

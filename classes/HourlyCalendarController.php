@@ -22,13 +22,11 @@
 namespace Ocal;
 
 use DateTimeImmutable;
-use Ocal\Model\Db;
 use Ocal\Model\HourlyOccupancy;
 use Ocal\Model\Occupancy;
 use Ocal\Model\Week;
 use Plib\DocumentStore;
 use Plib\Request;
-use Plib\Response;
 use Plib\View;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
