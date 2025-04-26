@@ -52,9 +52,6 @@ class HourlyCalendarController
     /** @var ListService */
     private $listService;
 
-    /** @var Db */
-    private $db;
-
     /** @var DocumentStore */
     private $store;
 
@@ -72,7 +69,6 @@ class HourlyCalendarController
         ?CsrfProtector $csrfProtector,
         array $config,
         ListService $listService,
-        Db $db,
         DocumentStore $store,
         View $view
     ) {
@@ -80,7 +76,6 @@ class HourlyCalendarController
         $this->csrfProtector = $csrfProtector;
         $this->config = $config;
         $this->listService = $listService;
-        $this->db = $db;
         $this->store = $store;
         $this->view = $view;
         $this->type = "hourly";
@@ -88,10 +83,7 @@ class HourlyCalendarController
 
     protected function findOccupancy(string $name): ?Occupancy
     {
-        $this->db->lock(false);
-        $result = $this->db->findOccupancy($name, true);
-        $this->db->unlock();
-        return $result;
+        return HourlyOccupancy::retrieve($name, $this->store);
     }
 
     protected function renderCalendarView(Request $request, Occupancy $occupancy, int $count): string

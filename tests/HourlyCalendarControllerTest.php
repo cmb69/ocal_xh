@@ -4,6 +4,7 @@ namespace Ocal;
 
 use DateTimeImmutable;
 use ApprovalTests\Approvals;
+use Ocal\Model\DailyOccupancy;
 use Ocal\Model\Db;
 use Ocal\Model\HourlyOccupancy;
 use org\bovigo\vfs\vfsStream;
@@ -47,7 +48,6 @@ class HourlyCalendarControllerTest extends TestCase
             $this->csrfProtector,
             $config,
             $this->listService,
-            $this->db,
             $this->store,
             $this->view(),
             true,
@@ -96,7 +96,8 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testDefaultActionReportsWrongCalendarType(): void
     {
-        $this->db->method('findOccupancy')->willReturn(null);
+        DailyOccupancy::update("test-daily", $this->store);
+        $this->store->commit();
         $response = ($this->sut)(new FakeRequest(), "test-daily", 1);
         $this->assertStringContainsString("'test-daily' is not a hourly occupancy calendar!", $response->output());
     }
@@ -157,7 +158,8 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testListActionReportsWrongCalendarType(): void
     {
-        $this->db->method('findOccupancy')->willReturn(null);
+        DailyOccupancy::update("test-daily", $this->store);
+        $this->store->commit();
         $request = new FakeRequest(["url" => "http://example.com/?&ocal_action=list"]);
         $response = ($this->sut)($request, "test-daily", 1);
         $this->assertStringContainsString("'test-daily' is not a hourly occupancy calendar!", $response->output());
