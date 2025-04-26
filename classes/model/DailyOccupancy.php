@@ -22,9 +22,24 @@
 namespace Ocal\Model;
 
 use LogicException;
+use Plib\Document;
 
-class DailyOccupancy extends Occupancy
+final class DailyOccupancy extends Occupancy implements Document
 {
+    public static function fromString(string $contents, string $key): ?self
+    {
+        $array = json_decode($contents, true);
+        assert(is_array($array)); // TODO: proper validation
+        if ($array["type"] !== "daily") {
+            return null;
+        }
+        $result = new self($key);
+        foreach ($array["states"] as $date => $state) {
+            $result->setState($date, $state, PHP_INT_MAX);
+        }
+        return $result;
+    }
+
     public function getDailyState(int $year, int $month, int $day): int
     {
         $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
@@ -34,6 +49,11 @@ class DailyOccupancy extends Occupancy
     public function getHourlyState(int $year, int $week, int $day, int $hour): int
     {
         throw new LogicException("not implemented in subclass");
+    }
+
+    public function toString(): string
+    {
+        return (string) json_encode(["type" => "daily", "states" => $this->states]);
     }
 
     public function toJson(): string
