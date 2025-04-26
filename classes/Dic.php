@@ -21,7 +21,7 @@
 
 namespace Ocal;
 
-use Ocal\Model\Db;
+use Plib\DocumentStore;
 use Plib\SystemChecker;
 use Plib\View;
 
@@ -48,7 +48,7 @@ class Dic
             $_XH_csrfProtection,
             $plugin_cf['ocal'],
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
-            new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
+            new DocumentStore($pth["folder"]["base"] . "content/ocal/"),
             self::view()
         );
     }
@@ -62,7 +62,7 @@ class Dic
             $_XH_csrfProtection,
             $plugin_cf['ocal'],
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
-            new Db("{$pth['folder']['base']}content/ocal/", (int) $plugin_cf['ocal']['state_max']),
+            new DocumentStore($pth["folder"]["base"] . "content/ocal/"),
             self::view()
         );
     }

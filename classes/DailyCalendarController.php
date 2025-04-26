@@ -22,9 +22,10 @@
 namespace Ocal;
 
 use DateTimeImmutable;
-use Ocal\Model\Db;
+use Ocal\Model\DailyOccupancy;
 use Ocal\Model\Month;
 use Ocal\Model\Occupancy;
+use Plib\DocumentStore;
 use Plib\Request;
 use Plib\View;
 use stdClass;
@@ -49,8 +50,8 @@ class DailyCalendarController
     /** @var ListService */
     private $listService;
 
-    /** @var Db */
-    private $db;
+    /** @var DocumentStore */
+    private $store;
 
     /** @var View */
     private $view;
@@ -66,24 +67,21 @@ class DailyCalendarController
         ?CsrfProtector $csrfProtector,
         array $config,
         ListService $listService,
-        Db $db,
+        DocumentStore $store,
         View $view
     ) {
         $this->pluginFolder = $pluginFolder;
         $this->csrfProtector = $csrfProtector;
         $this->config = $config;
         $this->listService = $listService;
-        $this->db = $db;
+        $this->store = $store;
         $this->view = $view;
         $this->type = "daily";
     }
 
     protected function findOccupancy(string $name): ?Occupancy
     {
-        $this->db->lock(false);
-        $result = $this->db->findOccupancy($name);
-        $this->db->unlock();
-        return $result;
+        return DailyOccupancy::retrieve($name, $this->store);
     }
 
     protected function renderCalendarView(Request $request, Occupancy $occupancy, int $count): string
@@ -247,20 +245,17 @@ class DailyCalendarController
         if (!is_array($states)) {
             return null;
         }
-        $this->db->lock(true);
-        $occupancy = $this->db->findOccupancy($name);
+        $occupancy = DailyOccupancy::update($name, $this->store);
         if ($occupancy === null) {
             return null;
         }
         foreach ($states as $month => $states) {
             foreach ($states as $i => $state) {
                 $date = sprintf('%s-%02d', $month, $i + 1);
-                $occupancy->setState($date, $state);
+                $occupancy->setState($date, $state, (int) $this->config["state_max"]);
             }
         }
-        $res = $this->db->saveOccupancy($occupancy);
-        $this->db->unlock();
-        if (!$res) {
+        if (!$this->store->commit()) {
             return $this->view->message("fail", "message_not_saved");
         }
         return $this->view->message("success", "message_saved");

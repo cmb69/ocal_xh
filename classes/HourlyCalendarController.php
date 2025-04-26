@@ -22,11 +22,11 @@
 namespace Ocal;
 
 use DateTimeImmutable;
-use Ocal\Model\Db;
+use Ocal\Model\HourlyOccupancy;
 use Ocal\Model\Occupancy;
 use Ocal\Model\Week;
+use Plib\DocumentStore;
 use Plib\Request;
-use Plib\Response;
 use Plib\View;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
@@ -50,8 +50,8 @@ class HourlyCalendarController
     /** @var ListService */
     private $listService;
 
-    /** @var Db */
-    private $db;
+    /** @var DocumentStore */
+    private $store;
 
     /** @var View */
     private $view;
@@ -67,24 +67,21 @@ class HourlyCalendarController
         ?CsrfProtector $csrfProtector,
         array $config,
         ListService $listService,
-        Db $db,
+        DocumentStore $store,
         View $view
     ) {
         $this->pluginFolder = $pluginFolder;
         $this->csrfProtector = $csrfProtector;
         $this->config = $config;
         $this->listService = $listService;
-        $this->db = $db;
+        $this->store = $store;
         $this->view = $view;
         $this->type = "hourly";
     }
 
     protected function findOccupancy(string $name): ?Occupancy
     {
-        $this->db->lock(false);
-        $result = $this->db->findOccupancy($name, true);
-        $this->db->unlock();
-        return $result;
+        return HourlyOccupancy::retrieve($name, $this->store);
     }
 
     protected function renderCalendarView(Request $request, Occupancy $occupancy, int $count): string
@@ -246,8 +243,7 @@ class HourlyCalendarController
         if (!is_array($states)) {
             return null;
         }
-        $this->db->lock(true);
-        $occupancy = $this->db->findOccupancy($name, true);
+        $occupancy = HourlyOccupancy::update($name, $this->store);
         if ($occupancy === null) {
             return null;
         }
@@ -256,12 +252,10 @@ class HourlyCalendarController
                 $day = $i % 7 + 1;
                 $hour = (int) $this->config['hour_interval'] * (int) ($i / 7) + (int) $this->config['hour_first'];
                 $date = sprintf('%s-%02d-%02d', $week, $day, $hour);
-                $occupancy->setState($date, $state);
+                $occupancy->setState($date, $state, (int) $this->config["state_max"]);
             }
         }
-        $res = $this->db->saveOccupancy($occupancy);
-        $this->db->unlock();
-        if (!$res) {
+        if (!$this->store->commit()) {
             return $this->view->message("fail", "message_not_saved");
         }
         return $this->view->message("success", "message_saved");

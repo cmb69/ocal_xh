@@ -8,6 +8,8 @@ require_once '../../cmsimple/classes/CSRFProtection.php';
 require_once '../../cmsimple/functions.php';
 require_once '../../cmsimple/adminfuncs.php';
 
+require_once "../plib/classes/Document.php";
+require_once "../plib/classes/DocumentStore.php";
 require_once "../plib/classes/Request.php";
 require_once "../plib/classes/Response.php";
 require_once "../plib/classes/SystemChecker.php";
@@ -16,7 +18,6 @@ require_once "../plib/classes/View.php";
 require_once "../plib/classes/FakeRequest.php";
 require_once "../plib/classes/FakeSystemChecker.php";
 
-require_once "./classes/model/Db.php";
 require_once "./classes/model/Month.php";
 require_once "./classes/model/Week.php";
 require_once "./classes/model/Occupancy.php";

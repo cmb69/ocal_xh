@@ -22,9 +22,56 @@
 namespace Ocal\Model;
 
 use LogicException;
+use Plib\Document;
+use Plib\DocumentStore;
 
-class DailyOccupancy extends Occupancy
+final class DailyOccupancy extends Occupancy implements Document
 {
+    public static function fromString(string $contents, string $key): ?self
+    {
+        if (preg_match('/\.dat$/', $key)) {
+            if (!preg_match('/{(.+)}$/s', $contents, $matches)) {
+                return null;
+            }
+            $states = unserialize($matches[1]);
+            assert(is_array($states)); // TODO: proper validation
+            $that = new self(basename($key, ".dat"));
+            $that->states = $states;
+            return $that;
+        }
+        $array = json_decode($contents, true);
+        if ($contents === "") {
+            return new self(basename($key, ".json"));
+        }
+        assert(is_array($array)); // TODO: proper validation
+        if ($array["type"] !== "daily") {
+            return null;
+        }
+        $result = new self(basename($key, ".json"));
+        foreach ($array["states"] as $date => $state) {
+            $result->setState($date, $state, PHP_INT_MAX);
+        }
+        return $result;
+    }
+
+    public static function retrieve(string $name, DocumentStore $store): ?self
+    {
+        $keys = $store->find("/$name\\.(?:json|dat)$/");
+        if (!in_array("$name.json", $keys, true) && in_array("$name.dat", $keys, true)) {
+            return $store->retrieve("$name.dat", self::class);
+        }
+        return $store->retrieve("$name.json", self::class);
+    }
+
+    public static function update(string $name, DocumentStore $store): ?self
+    {
+        $keys = $store->find("/$name\\.(?:json|dat)$/");
+        if (!in_array("$name.json", $keys, true) && in_array("$name.dat", $keys, true)) {
+            return $store->update("$name.dat", self::class);
+        }
+        return $store->update($name . ".json", self::class);
+    }
+
     public function getDailyState(int $year, int $month, int $day): int
     {
         $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
@@ -36,8 +83,8 @@ class DailyOccupancy extends Occupancy
         throw new LogicException("not implemented in subclass");
     }
 
-    public function toJson(): string
+    public function toString(): string
     {
-        return (string) json_encode(['type' => 'daily', 'states' => $this->states]);
+        return (string) json_encode(["type" => "daily", "states" => $this->states]);
     }
 }

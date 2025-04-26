@@ -29,39 +29,10 @@ abstract class Occupancy
     /** @var array<string,int> */
     protected $states;
 
-    /** @var int */
-    private $maxState;
-
-    public static function createFromJson(string $name, string $json, int $stateMax): ?self
-    {
-        $array = json_decode($json, true);
-        assert(is_array($array)); // TODO: proper validation
-        if (!($result = self::instantiateType($array['type'], $name, $stateMax))) {
-            return null;
-        }
-        foreach ($array['states'] as $date => $state) {
-            $result->setState($date, $state);
-        }
-        return $result;
-    }
-
-    private static function instantiateType(string $type, string $name, int $stateMax): ?self
-    {
-        switch ($type) {
-            case 'daily':
-                return new DailyOccupancy($name, $stateMax);
-            case 'hourly':
-                return new HourlyOccupancy($name, $stateMax);
-            default:
-                return null;
-        }
-    }
-
-    public function __construct(string $name, int $stateMax)
+    public function __construct(string $name)
     {
         $this->name = (string) $name;
         $this->states = array();
-        $this->maxState = $stateMax;
     }
 
     abstract public function getDailyState(int $year, int $month, int $day): int;
@@ -88,14 +59,12 @@ abstract class Occupancy
     }
 
     /** @return void */
-    public function setState(string $date, int $state)
+    public function setState(string $date, int $state, int $max)
     {
-        if ($state > 0 && $state <= $this->maxState) {
+        if ($state > 0 && $state <= $max) {
             $this->states[$date] = $state;
         } else {
             unset($this->states[$date]);
         }
     }
-
-    abstract public function toJson(): string;
 }

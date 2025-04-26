@@ -13,12 +13,7 @@ class DailyOccupancyTest extends TestCase
 
     public function setUp(): void
     {
-        $this->subject = new DailyOccupancy('foo', 3);
-    }
-
-    public function testCreateFromJsonWithInvalidType()
-    {
-        $this->assertNull(Occupancy::createFromJson('foo', '{"type": "invalid", "states": {}}', 3));
+        $this->subject = new DailyOccupancy('foo');
     }
 
     public function testGetName()
@@ -39,13 +34,13 @@ class DailyOccupancyTest extends TestCase
 
     public function testSetAndGetState()
     {
-        $this->subject->setState('2017-02-27', 3);
+        $this->subject->setState('2017-02-27', 3, 3);
         $this->assertSame(3, $this->subject->getDailyState(2017, 2, 27));
     }
 
     public function testSetStateToZeroUnsetsIt()
     {
-        $this->subject->setState('2017-02-28', 0);
+        $this->subject->setState('2017-02-28', 0, 3);
         $this->assertSame(0, $this->subject->getDailyState(2017, 2, 28));
     }
 

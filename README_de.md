@@ -29,7 +29,7 @@ noch kann es als Veranstaltungskalender, wie
 
 Ocal_XH ist ein Plugin für [CMSimple_XH](https://cmsimple-xh.org/de/).
 Es benötigt CMSimple_XH ≥ 1.7.0 und PHP ≥ 7.1.0.
-Ocal_XH benötigt weiterhin [Plib_XH](https://github.com/cmb69/plib_xh) ≥ 1.3;
+Ocal_XH benötigt weiterhin [Plib_XH](https://github.com/cmb69/plib_xh) ≥ 1.6;
 ist dieses noch nicht installiert (siehe `Einstellungen` → `Info`),
 laden Sie das [aktuelle Release](https://github.com/cmb69/plib_xh/releases/latest)
 herunter, und installieren Sie es.
