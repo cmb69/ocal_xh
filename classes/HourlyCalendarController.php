@@ -23,8 +23,10 @@ namespace Ocal;
 
 use DateTimeImmutable;
 use Ocal\Model\Db;
+use Ocal\Model\HourlyOccupancy;
 use Ocal\Model\Occupancy;
 use Ocal\Model\Week;
+use Plib\DocumentStore;
 use Plib\Request;
 use Plib\Response;
 use Plib\View;
@@ -53,6 +55,9 @@ class HourlyCalendarController
     /** @var Db */
     private $db;
 
+    /** @var DocumentStore */
+    private $store;
+
     /** @var View */
     private $view;
 
@@ -68,6 +73,7 @@ class HourlyCalendarController
         array $config,
         ListService $listService,
         Db $db,
+        DocumentStore $store,
         View $view
     ) {
         $this->pluginFolder = $pluginFolder;
@@ -75,6 +81,7 @@ class HourlyCalendarController
         $this->config = $config;
         $this->listService = $listService;
         $this->db = $db;
+        $this->store = $store;
         $this->view = $view;
         $this->type = "hourly";
     }
@@ -246,8 +253,7 @@ class HourlyCalendarController
         if (!is_array($states)) {
             return null;
         }
-        $this->db->lock(true);
-        $occupancy = $this->db->findOccupancy($name, true);
+        $occupancy = HourlyOccupancy::update($name, $this->store);
         if ($occupancy === null) {
             return null;
         }
@@ -259,9 +265,7 @@ class HourlyCalendarController
                 $occupancy->setState($date, $state, (int) $this->config["state_max"]);
             }
         }
-        $res = $this->db->saveOccupancy($occupancy);
-        $this->db->unlock();
-        if (!$res) {
+        if (!$this->store->commit()) {
             return $this->view->message("fail", "message_not_saved");
         }
         return $this->view->message("success", "message_saved");

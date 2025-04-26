@@ -6,7 +6,9 @@ use DateTimeImmutable;
 use ApprovalTests\Approvals;
 use Ocal\Model\Db;
 use Ocal\Model\HourlyOccupancy;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Plib\DocumentStore;
 use Plib\FakeRequest;
 use Plib\View;
 use XH\CSRFProtection as CsrfProtector;
@@ -25,8 +27,12 @@ class HourlyCalendarControllerTest extends TestCase
     /** @var Db&MockObject */
     private $db;
 
+    /** @var DocumentStore */
+    private $store;
+
     public function setUp(): void
     {
+        vfsStream::setup("root");
         $this->csrfProtector = $this->createStub(CsrfProtector::class);
         $this->csrfProtector->method('tokenInput')->willReturn(
             '<input type="hidden" name="xh_csrf_token" value="dcfff515ebf5bd421d5a0777afc6358b">'
@@ -35,12 +41,14 @@ class HourlyCalendarControllerTest extends TestCase
         $config = $plugin_cf['ocal'];
         $this->listService = $this->createStub(ListService::class);
         $this->db = $this->createStub(Db::class);
+        $this->store = new DocumentStore(vfsStream::url("root/"));
         $this->sut = new HourlyCalendarController(
             "./",
             $this->csrfProtector,
             $config,
             $this->listService,
             $this->db,
+            $this->store,
             $this->view(),
             true,
             "test-hourly",
@@ -197,6 +205,7 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsFailureToSave(): void
     {
+        vfsStream::setQuota(0);
         $this->db->method('findOccupancy')->willReturn(new HourlyOccupancy("test-hourly", 3));
         $this->db->method('saveOccupancy')->willReturn(false);
         $request = new FakeRequest([
