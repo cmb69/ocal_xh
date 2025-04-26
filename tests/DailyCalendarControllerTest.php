@@ -3,6 +3,7 @@
 namespace Ocal;
 
 use ApprovalTests\Approvals;
+use Ocal\Model\DailyOccupancy;
 use Ocal\Model\HourlyOccupancy;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -19,11 +20,17 @@ class DailyCalendarControllerTest extends TestCase
     /** @var array<string,string> */
     private $config;
 
+    /** @var array<string,string> */
+    private $lang;
+
     /** @var ListService&MockObject */
     private $listService;
 
     /** @var DocumentStore */
     private $store;
+
+    /** @var View */
+    private $view;
 
     public function setUp(): void
     {
@@ -34,8 +41,10 @@ class DailyCalendarControllerTest extends TestCase
         );
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
         $this->config = $plugin_cf['ocal'];
-        $this->listService = $this->createStub(ListService::class);
+        $this->lang = XH_includeVar("./languages/en.php", "plugin_tx")["ocal"];
+        $this->listService = new ListService($this->config, $this->lang);
         $this->store = new DocumentStore(vfsStream::url("root/"));
+        $this->view = new View("./views/", $this->lang);
     }
 
     private function sut(): DailyCalendarController
@@ -46,7 +55,7 @@ class DailyCalendarControllerTest extends TestCase
             $this->config,
             $this->listService,
             $this->store,
-            $this->view(),
+            $this->view,
             true,
             "test-daily",
             1
@@ -108,12 +117,12 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testListActionRendersListWithAnEntry(): void
     {
-        $this->listService->method('getDailyList')->willReturn([
-            (object) ['range' => "9.", 'state' => "2", 'label' => "available"],
-        ]);
+        $occupancy = DailyOccupancy::update("test-daily", $this->store);
+        $occupancy->setState("2023-07-09", 1, 3);
+        $this->store->commit();
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
-            "time" => 1688256000,
+            "time" => strtotime("2023-07-02T00:00:00+00:00"),
         ]);
         $response = $this->sut()($request, "test-daily", 1);
         Approvals::verifyHtml($response->output());
@@ -199,10 +208,5 @@ class DailyCalendarControllerTest extends TestCase
         ]);
         $response = $this->sut()($request, "test-daily", 1);
         $this->assertStringContainsString('Saving failed!', $response->output());
-    }
-
-    private function view(): View
-    {
-        return new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["ocal"]);
     }
 }

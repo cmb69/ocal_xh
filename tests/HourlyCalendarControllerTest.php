@@ -5,6 +5,7 @@ namespace Ocal;
 use DateTimeImmutable;
 use ApprovalTests\Approvals;
 use Ocal\Model\DailyOccupancy;
+use Ocal\Model\HourlyOccupancy;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Plib\DocumentStore;
@@ -20,11 +21,17 @@ class HourlyCalendarControllerTest extends TestCase
     /** @var array<string,string> */
     private $config;
 
-    /** @var ListService&MockObject */
+    /** @var array<string,string> */
+    private $lang;
+
+    /** @var ListService */
     private $listService;
 
     /** @var DocumentStore */
     private $store;
+
+    /** @var View */
+    private $view;
 
     public function setUp(): void
     {
@@ -33,10 +40,11 @@ class HourlyCalendarControllerTest extends TestCase
         $this->csrfProtector->method('tokenInput')->willReturn(
             '<input type="hidden" name="xh_csrf_token" value="dcfff515ebf5bd421d5a0777afc6358b">'
         );
-        $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
-        $this->config = $plugin_cf['ocal'];
-        $this->listService = $this->createStub(ListService::class);
+        $this->config = XH_includeVar("./config/config.php", "plugin_cf")["ocal"];
+        $this->lang = XH_includeVar("./languages/en.php", "plugin_tx")["ocal"];
+        $this->listService = new ListService($this->config, $this->lang);
         $this->store = new DocumentStore(vfsStream::url("root/"));
+        $this->view = new View("./views/", $this->lang);
     }
 
     private function sut(): HourlyCalendarController
@@ -47,7 +55,7 @@ class HourlyCalendarControllerTest extends TestCase
             $this->config,
             $this->listService,
             $this->store,
-            $this->view(),
+            $this->view,
             true,
             "test-hourly",
             1
@@ -99,7 +107,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testListActionRendersListWithoutEntries(): void
     {
-        $this->listService->method('getHourlyList')->willReturn([]);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
             "time" => 1688256000,
@@ -110,14 +117,12 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testListActionRendersListWithAnEntry(): void
     {
-        $this->listService->method('getHourlyList')->willReturn([
-            (object) ['date' => new DateTimeImmutable("2023-02-10T11:00"), 'list' => [
-                (object) ['range' => "12:00-13:00", 'state' => "1", 'label' => "reserved"],
-            ]],
-        ]);
+        $occupancy = HourlyOccupancy::update("test-hourly", $this->store);
+        $occupancy->setState("2023-26-07-12", 2, 3);
+        $this->store->commit();
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
-            "time" => 1688256000,
+            "time" => strtotime("2023-07-02T00:00:00+00:00"),
         ]);
         $response = $this->sut()($request, "test-hourly", 1);
         Approvals::verifyHtml($response->output());
@@ -125,7 +130,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testListActionHandlesAjaxRequest(): void
     {
-        $this->listService->method('getHourlyList')->willReturn([]);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list&ocal_name=test-hourly",
             "header" => ["X-CMSimple-XH-Request" => "ocal"],
@@ -138,7 +142,6 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testListActionIgnoresUnrelatedAjaxRequest(): void
     {
-        $this->listService->method('getHourlyList')->willReturn([]);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
             "header" => ["X-CMSimple-XH-Request" => "ocal"],
@@ -201,10 +204,5 @@ class HourlyCalendarControllerTest extends TestCase
         ]);
         $response = $this->sut()($request, "test-hourly", 1);
         $this->assertStringContainsString("Saving failed!", $response->output());
-    }
-
-    private function view(): View
-    {
-        return new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["ocal"]);
     }
 }
