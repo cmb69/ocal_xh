@@ -17,6 +17,8 @@ require_once "../plib/classes/FakeRequest.php";
 require_once "../plib/classes/FakeSystemChecker.php";
 
 require_once "./classes/model/Db.php";
+require_once "./classes/model/Month.php";
+require_once "./classes/model/Week.php";
 require_once "./classes/model/Occupancy.php";
 require_once "./classes/model/DailyOccupancy.php";
 require_once "./classes/model/HourlyOccupancy.php";
@@ -30,5 +32,3 @@ require_once "./classes/DefaultAdminController.php";
 require_once "./classes/HourlyCalendarController.php";
 require_once "./classes/HourlyPagination.php";
 require_once "./classes/ListService.php";
-require_once "./classes/Month.php";
-require_once "./classes/Week.php";

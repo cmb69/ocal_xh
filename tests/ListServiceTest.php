@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 use DateTimeImmutable;
 use Ocal\Model\DailyOccupancy;
 use Ocal\Model\HourlyOccupancy;
+use Ocal\Model\Month;
+use Ocal\Model\Week;
 
 class ListServiceTest extends TestCase
 {

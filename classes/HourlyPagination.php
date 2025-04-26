@@ -23,6 +23,7 @@ namespace Ocal;
 
 use stdClass;
 use DateTimeImmutable;
+use Ocal\Model\Week;
 
 class HourlyPagination extends Pagination
 {

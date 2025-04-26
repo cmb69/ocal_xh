@@ -21,7 +21,9 @@
 
 namespace Ocal;
 
+use Ocal\Model\Month;
 use Ocal\Model\Occupancy;
+use Ocal\Model\Week;
 use stdClass;
 
 class ListService

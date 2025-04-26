@@ -24,6 +24,7 @@ namespace Ocal;
 use DateTimeImmutable;
 use Ocal\Model\Db;
 use Ocal\Model\Occupancy;
+use Ocal\Model\Week;
 use Plib\Request;
 use Plib\Response;
 use Plib\View;

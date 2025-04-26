@@ -1,6 +1,6 @@
 <?php
 
-namespace Ocal;
+namespace Ocal\Model;
 
 use PHPUnit\Framework\TestCase;
 
