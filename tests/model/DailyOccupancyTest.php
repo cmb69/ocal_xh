@@ -52,4 +52,13 @@ class DailyOccupancyTest extends TestCase
         $actual = DailyOccupancy::retrieve("foo", $this->store);
         $this->assertEquals($expected, $actual);
     }
+
+    public function testReadsLegacyFormat(): void
+    {
+        file_put_contents(vfsStream::url("root/foo.dat"), '{a:1:{s:10:"2017-02-03";s:1:"1";}}');
+        $actual = DailyOccupancy::retrieve("foo", $this->store);
+        $expected = new DailyOccupancy("foo");
+        $expected->setState("2017-02-03", 1, 3);
+        $this->assertEquals($expected, $actual);
+    }
 }

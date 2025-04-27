@@ -52,4 +52,13 @@ class HourlyOccupancyTest extends TestCase
         $actual = HourlyOccupancy::retrieve("bar", $this->store);
         $this->assertEquals($expected, $actual);
     }
+
+    public function testReadsLegacyFormat(): void
+    {
+        file_put_contents(vfsStream::url("root/bar.dat"), '{a:1:{s:13:"2017-09-01-12";s:1:"1";}}');
+        $actual = HourlyOccupancy::retrieve("bar", $this->store);
+        $expected = new HourlyOccupancy("bar");
+        $expected->setState("2017-09-01-12", 1, 3);
+        $this->assertEquals($expected, $actual);
+    }
 }
