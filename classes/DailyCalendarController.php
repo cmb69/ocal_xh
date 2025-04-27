@@ -27,6 +27,7 @@ use Ocal\Model\Month;
 use Ocal\Model\Occupancy;
 use Plib\DocumentStore;
 use Plib\Request;
+use Plib\Response;
 use Plib\View;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
@@ -236,15 +237,15 @@ class DailyCalendarController
             : (int) idate("n", $request->time());
     }
 
-    protected function saveStates(Request $request, string $name): ?string
+    protected function saveStates(Request $request, string $name): Response
     {
         $states = json_decode($request->post("ocal_states") ?? "", true);
         if (!is_array($states)) {
-            return null;
+            return Response::error(400);
         }
         $occupancy = DailyOccupancy::update($name, $this->store);
         if ($occupancy === null) {
-            return null;
+            return Response::error(500);
         }
         foreach ($states as $month => $states) {
             if (preg_match('/\d{4}-\d{2}/', $month) && is_array($states)) {
@@ -257,8 +258,8 @@ class DailyCalendarController
             }
         }
         if (!$this->store->commit()) {
-            return $this->view->message("fail", "message_not_saved");
+            return Response::create($this->view->message("fail", "message_not_saved"));
         }
-        return $this->view->message("success", "message_saved");
+        return Response::create($this->view->message("success", "message_saved"));
     }
 }

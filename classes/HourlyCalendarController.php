@@ -27,6 +27,7 @@ use Ocal\Model\Occupancy;
 use Ocal\Model\Week;
 use Plib\DocumentStore;
 use Plib\Request;
+use Plib\Response;
 use Plib\View;
 use stdClass;
 use XH\CSRFProtection as CsrfProtector;
@@ -234,15 +235,15 @@ class HourlyCalendarController
             : (int) idate("W", $request->time());
     }
 
-    protected function saveStates(Request $request, string $name): ?string
+    protected function saveStates(Request $request, string $name): Response
     {
         $states = json_decode($request->post("ocal_states") ?? "", true);
         if (!is_array($states)) {
-            return null;
+            return Response::error(400);
         }
         $occupancy = HourlyOccupancy::update($name, $this->store);
         if ($occupancy === null) {
-            return null;
+            return Response::error(500);
         }
         $interval = (int) $this->config['hour_interval'];
         $first = (int) $this->config['hour_first'];
@@ -259,8 +260,8 @@ class HourlyCalendarController
             }
         }
         if (!$this->store->commit()) {
-            return $this->view->message("fail", "message_not_saved");
+            return Response::create($this->view->message("fail", "message_not_saved"));
         }
-        return $this->view->message("success", "message_saved");
+        return Response::create($this->view->message("success", "message_saved"));
     }
 }

@@ -91,14 +91,10 @@ trait CalendarController
             return Response::create();
         }
         $this->csrfProtector->check();
-        $message = $this->saveStates($request, $name);
-        if ($message === null) {
-            return Response::error(400);
-        }
-        return Response::create($message)->withContentType("text/html");
+        return $this->saveStates($request, $name)->withContentType("text/html");
     }
 
-    abstract protected function saveStates(Request $request, string $name): ?string;
+    abstract protected function saveStates(Request $request, string $name): Response;
 
     /** @return array<string,mixed> */
     private function getJsConfig(Request $request): array
