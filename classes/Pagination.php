@@ -22,7 +22,7 @@
 namespace Ocal;
 
 use DateTimeImmutable;
-use stdClass;
+use Ocal\Dto\PaginationItem;
 
 abstract class Pagination
 {
@@ -42,8 +42,8 @@ abstract class Pagination
         $this->future = $future;
     }
 
-    /** @return list<stdClass> */
-    protected function filterAndSortItems(stdClass $today, ?stdClass ...$items): array
+    /** @return list<PaginationItem> */
+    protected function filterAndSortItems(PaginationItem $today, ?PaginationItem ...$items): array
     {
         $result = [$today];
         foreach ($items as $item) {

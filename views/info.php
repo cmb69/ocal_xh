@@ -7,7 +7,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
 /**
  * @var View $this
  * @var string $version
- * @var list<stdClass> $checks
+ * @var list<object{state:string,label:string,stateLabel:string}> $checks
  */
 ?>
 

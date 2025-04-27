@@ -10,7 +10,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
  * @var string $monthname
  * @var int $year
  * @var list<string> $daynames
- * @var list<list<stdClass|null>> $weeks
+ * @var list<list<?object{day:?int,state:int,todayClass:string,titleKey:string}>> $weeks
  */
 ?>
 
@@ -32,7 +32,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
 <?    if (empty($day)):?>
       <td>&nbsp;</td>
 <?    else:?>
-      <td class="ocal_state <?=$this->esc($day->todayClass)?>" data-ocal_state="<?=$this->esc($day->state)?>" title="<?=$this->text($day->titleKey)?>"><?=$this->esc($day->day)?></td>
+      <td class="ocal_state <?=$this->esc($day->todayClass)?>" data-ocal_state="<?=$day->state?>" title="<?=$this->text($day->titleKey)?>"><?=$day->day?></td>
 <?    endif?>
 <?  endforeach?>
     </tr>

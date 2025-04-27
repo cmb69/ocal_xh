@@ -1,5 +1,6 @@
 <?php
 
+use Ocal\Dto\ListItem;
 use Plib\View;
 
 if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
@@ -7,6 +8,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
 /**
  * @var View $this
  * @var string $heading
+ * @var list<ListItem> $monthList
  */
 ?>
 
@@ -19,7 +21,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
     <dl>
 <?  foreach ($monthList as $item):?>
       <dt><?=$this->esc($item->range)?></dt>
-      <dd><span data-ocal_state="<?=$this->esc($item->state)?>"><?=$this->esc($item->label)?></span></dd>
+      <dd><span data-ocal_state="<?=$item->state?>"><?=$this->esc($item->label)?></span></dd>
 <?  endforeach?>
     </dl>
   </dd>

@@ -21,8 +21,8 @@
 
 namespace Ocal;
 
-use stdClass;
 use DateTimeImmutable;
+use Ocal\Dto\PaginationItem;
 
 class DailyPagination extends Pagination
 {
@@ -39,11 +39,11 @@ class DailyPagination extends Pagination
         $this->month = (int) $month;
     }
 
-    /** @return list<stdClass> */
+    /** @return list<PaginationItem> */
     public function getItems(): array
     {
         return $this->filterAndSortItems(
-            $this->getItem(false, false, 'today'),
+            $this->getItem(null, null, 'today'),
             $this->getItem(0, -1, 'prev_year'),
             $this->getItem(-1, 0, 'prev_month'),
             $this->getItem(1, 0, 'next_month'),
@@ -51,14 +51,10 @@ class DailyPagination extends Pagination
         );
     }
 
-    /**
-     * @param int|false $month
-     * @param int|false $year
-     * @return ($month is false ? ($year is false ? stdClass : stdClass|null) : stdClass|null)
-     */
-    private function getItem($month, $year, string $label): ?stdClass
+    /** @return ($month is null ? ($year is null ? PaginationItem : ?PaginationItem) : ?PaginationItem) */
+    private function getItem(?int $month, ?int $year, string $label): ?PaginationItem
     {
-        if ($month === false && $year === false) {
+        if ($month === null || $year === null) {
             $year = (int) $this->now->format('Y');
             $month = (int) $this->now->format('n');
         } else {
@@ -78,7 +74,7 @@ class DailyPagination extends Pagination
         }
         $monthOrWeek = $month;
         $label = "label_$label";
-        return (object) compact('year', 'monthOrWeek', 'label');
+        return new PaginationItem($year, $monthOrWeek, $label);
     }
 
     private function isValid(int $month): bool

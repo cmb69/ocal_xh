@@ -10,7 +10,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
  * @var string $from
  * @var string $to
  * @var list<string> $daynames
- * @var list<list<stdClass>> $hours
+ * @var list<list<object{hour:int,state:int}>> $hours
  */
 ?>
 
@@ -29,7 +29,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
 <?foreach ($hours as $hour):?>
     <tr>
 <?  foreach ($hour as $day):?>
-      <td class="ocal_state" data-ocal_state="<?=$this->esc($day->state)?>" title="<?=$this->text("label_state_{$day->state}")?>"><?=$this->esc($day->hour)?></td>
+      <td class="ocal_state" data-ocal_state="<?=$day->state?>" title="<?=$this->text("label_state_{$day->state}")?>"><?=$day->hour?></td>
 <?  endforeach?>
     </tr>
 <?endforeach?>

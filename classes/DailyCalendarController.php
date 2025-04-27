@@ -22,6 +22,7 @@
 namespace Ocal;
 
 use DateTimeImmutable;
+use Ocal\Dto\PaginationItem;
 use Ocal\Model\DailyOccupancy;
 use Ocal\Model\Month;
 use Ocal\Model\Occupancy;
@@ -30,7 +31,6 @@ use Plib\DocumentStore;
 use Plib\Request;
 use Plib\Response;
 use Plib\View;
-use stdClass;
 
 class DailyCalendarController
 {
@@ -130,7 +130,7 @@ class DailyCalendarController
         return $monthnames[$month - 1];
     }
 
-    /** @return list<list<stdClass|null>> */
+    /** @return list<list<?object{day:?int,state:int,todayClass:string,titleKey:string}>> */
     private function getWeeks(Occupancy $occupancy, Month $month): array
     {
         $weeks = [];
@@ -141,8 +141,8 @@ class DailyCalendarController
     }
 
     /**
-     * @param list<int|null> $week
-     * @return list<stdClass|null>
+     * @param list<?int> $week
+     * @return list<?object{day:?int,state:int,todayClass:string,titleKey:string}>
      */
     private function getWeekDays(Occupancy $occupancy, Month $month, array $week): array
     {
@@ -204,7 +204,7 @@ class DailyCalendarController
         ]);
     }
 
-    /** @return list<stdClass> */
+    /** @return list<PaginationItem> */
     private function getPaginationItems(Request $request): array
     {
         $pagination = new DailyPagination(
@@ -216,8 +216,10 @@ class DailyCalendarController
         );
         $paginationItems = $pagination->getItems();
         foreach ($paginationItems as $item) {
-            $item->url = $request->url()->with("ocal_year", $item->year)->with("ocal_month", $item->monthOrWeek)
-                ->with("ocal_action", $this->mode)->relative();
+            $item->url = $request->url()->with("ocal_year", (string) $item->year)
+                ->with("ocal_month", (string) $item->monthOrWeek)
+                ->with("ocal_action", $this->mode)
+                ->relative();
         }
         return $paginationItems;
     }

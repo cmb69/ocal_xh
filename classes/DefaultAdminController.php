@@ -23,7 +23,6 @@ namespace Ocal;
 
 use Plib\SystemChecker;
 use Plib\View;
-use stdClass;
 
 class DefaultAdminController
 {
@@ -59,10 +58,10 @@ class DefaultAdminController
         ]);
     }
 
-    /** @return list<stdClass> */
+    /** @return list<object{state:string,label:string,stateLabel:string}> */
     private function getChecks(): array
     {
-        return array(
+        return [
             $this->checkPhpVersion('7.1.0'),
             $this->checkXhVersion('1.7.0'),
             $this->checkPlibVersion('1.6'),
@@ -70,10 +69,11 @@ class DefaultAdminController
             $this->checkWritability("{$this->pluginFolder}config/"),
             $this->checkWritability("{$this->pluginFolder}css/"),
             $this->checkWritability("{$this->pluginFolder}languages/")
-        );
+        ];
     }
 
-    private function checkPhpVersion(string $version): stdClass
+    /** @return object{state:string,label:string,stateLabel:string} */
+    private function checkPhpVersion(string $version)
     {
         $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? 'success' : 'fail';
         $label = $this->view->plain("syscheck_phpversion", $version);
@@ -81,7 +81,8 @@ class DefaultAdminController
         return (object) compact('state', 'label', 'stateLabel');
     }
 
-    private function checkXhVersion(string $version): stdClass
+    /** @return object{state:string,label:string,stateLabel:string} */
+    private function checkXhVersion(string $version)
     {
         $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version") ? 'success' : 'fail';
         $label = $this->view->plain("syscheck_xhversion", $version);
@@ -89,7 +90,8 @@ class DefaultAdminController
         return (object) compact('state', 'label', 'stateLabel');
     }
 
-    private function checkPlibVersion(string $version): stdClass
+    /** @return object{state:string,label:string,stateLabel:string} */
+    private function checkPlibVersion(string $version)
     {
         $state = $this->systemChecker->checkPlugin("plib", $version) ? 'success' : 'fail';
         $label = $this->view->plain("syscheck_plibversion", $version);
@@ -97,7 +99,8 @@ class DefaultAdminController
         return (object) compact('state', 'label', 'stateLabel');
     }
 
-    private function checkWritability(string $folder): stdClass
+    /** @return object{state:string,label:string,stateLabel:string} */
+    private function checkWritability(string $folder)
     {
         $state = $this->systemChecker->checkWritability($folder) ? 'success' : 'warning';
         $label = $this->view->plain("syscheck_writable", $folder);

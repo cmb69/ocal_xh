@@ -18,6 +18,10 @@ require_once "../plib/classes/View.php";
 require_once "../plib/classes/FakeRequest.php";
 require_once "../plib/classes/FakeSystemChecker.php";
 
+require_once "./classes/dto/ListItem.php";
+require_once "./classes/dto/PaginationItem.php";
+require_once "./classes/dto/WeekListItem.php";
+
 require_once "./classes/model/Month.php";
 require_once "./classes/model/Week.php";
 require_once "./classes/model/Occupancy.php";

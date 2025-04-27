@@ -21,8 +21,8 @@
 
 namespace Ocal;
 
-use stdClass;
 use DateTimeImmutable;
+use Ocal\Dto\PaginationItem;
 use Ocal\Model\Week;
 
 class HourlyPagination extends Pagination
@@ -40,23 +40,20 @@ class HourlyPagination extends Pagination
         $this->week = (int) $week;
     }
 
-    /** @return list<stdClass> */
+    /** @return list<PaginationItem> */
     public function getItems(int $weekCount): array
     {
         return $this->filterAndSortItems(
-            $this->getItem(false, 'today'),
+            $this->getItem(null, 'today'),
             $this->getItem(-$weekCount, 'prev_interval'),
             $this->getItem($weekCount, 'next_interval')
         );
     }
 
-    /**
-     * @param int|false $offset
-     * @return ($offset is false ? stdClass : stdClass|null)
-     */
-    private function getItem($offset, string $label)
+    /** @return ($offset is null ? PaginationItem : ?PaginationItem) */
+    private function getItem(?int $offset, string $label)
     {
-        if ($offset) {
+        if ($offset !== null) {
             $week = new Week($this->week, $this->year);
             $week = $week->getNextWeek($offset);
             if (!$this->isWeekPaginationValid($week)) {
@@ -70,7 +67,7 @@ class HourlyPagination extends Pagination
         }
         $monthOrWeek = $weekNum;
         $label = "label_$label";
-        return (object) compact('year', 'monthOrWeek', 'label');
+        return new PaginationItem($year, $monthOrWeek, $label);
     }
 
     private function isWeekPaginationValid(Week $week): bool

@@ -21,10 +21,11 @@
 
 namespace Ocal;
 
+use Ocal\Dto\ListItem;
+use Ocal\Dto\WeekListItem;
 use Ocal\Model\Month;
 use Ocal\Model\Occupancy;
 use Ocal\Model\Week;
-use stdClass;
 
 class ListService
 {
@@ -44,7 +45,7 @@ class ListService
         $this->lang = $lang;
     }
 
-    /** @return list<stdClass> */
+    /** @return list<ListItem> */
     public function getDailyList(Occupancy $occupancy, Month $month): array
     {
         $list = array();
@@ -74,20 +75,20 @@ class ListService
         return $string;
     }
 
-    /** @return list<stdClass> */
+    /** @return list<WeekListItem> */
     public function getHourlyList(Occupancy $occupancy, Week $week): array
     {
         $result = [];
         foreach ($week->getDatesOfWeek() as $weekday => $date) {
             $list = $this->getHourlyListForDay($occupancy, $week, $weekday);
             if (!empty($list)) {
-                $result[] = (object) ['date' => $date, 'list' => $list];
+                $result[] = new WeekListItem($date, $list);
             }
         }
         return $result;
     }
 
-    /** @return list<stdClass> */
+    /** @return list<ListItem> */
     private function getHourlyListForDay(Occupancy $occupancy, Week $week, int $weekday): array
     {
         $list = array();
@@ -127,7 +128,7 @@ class ListService
 
     /**
      * @param array<string,int> $list
-     * @return list<stdClass>
+     * @return list<ListItem>
      */
     private function mapFilteredList(array $list): array
     {
@@ -135,7 +136,7 @@ class ListService
         foreach ($list as $range => $state) {
             if ($state) {
                 $label = $this->lang["label_state_$state"];
-                $result[] = (object) compact('range', 'state', 'label');
+                $result[] = new ListItem($range, $state, $label);
             }
         }
         return $result;

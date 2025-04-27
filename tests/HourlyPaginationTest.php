@@ -4,6 +4,7 @@ namespace Ocal;
 
 use PHPUnit\Framework\TestCase;
 use DateTimeImmutable;
+use Ocal\Dto\PaginationItem;
 
 class HourlyPaginationTest extends TestCase
 {
@@ -25,13 +26,13 @@ class HourlyPaginationTest extends TestCase
     {
         return array(
             [2017, 9, new DateTimeImmutable('2017-03-01'), 1, [
-                (object) ['year' => 2017, 'monthOrWeek' => 9, 'label' => 'label_today'],
-                (object) ['year' => 2017, 'monthOrWeek' => 10, 'label' => 'label_next_interval']
+                new PaginationItem(2017, 9, "label_today"),
+                new PaginationItem(2017, 10, "label_next_interval"),
             ]],
             [2017, 9, new DateTimeImmutable('2017-01-01'), 2, [
-                (object) ['year' => 2016, 'monthOrWeek' => 52, 'label' => 'label_today'],
-                (object) ['year' => 2017, 'monthOrWeek' => 7, 'label' => 'label_prev_interval'],
-                (object) ['year' => 2017, 'monthOrWeek' => 11, 'label' => 'label_next_interval']
+                new PaginationItem(2016, 52, "label_today"),
+                new PaginationItem(2017, 7, "label_prev_interval"),
+                new PaginationItem(2017, 11, "label_next_interval"),
             ]],
         );
     }
