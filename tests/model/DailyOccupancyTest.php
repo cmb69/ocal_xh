@@ -82,4 +82,14 @@ class DailyOccupancyTest extends TestCase
         $actual = DailyOccupancy::retrieve("foo", $this->store);
         $this->assertNull($actual);
     }
+
+    public function testMigration(): void
+    {
+        file_put_contents(vfsStream::url("root/foo.dat"), '{a:1:{s:10:"2017-02-03";s:1:"1";}}');
+        $expected = DailyOccupancy::update("foo", $this->store);
+        $this->store->commit();
+        $this->assertFileExists(vfsStream::url("root/foo.json"));
+        $actual = DailyOccupancy::retrieve("foo", $this->store);
+        $this->assertEquals($expected, $actual);
+    }
 }

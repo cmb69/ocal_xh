@@ -78,7 +78,16 @@ final class HourlyOccupancy extends Occupancy implements Document
     {
         $keys = $store->find("/$name\\.(?:json|dat)$/");
         if (!in_array("$name.json", $keys, true) && in_array("$name.dat", $keys, true)) {
-            return $store->update("$name.dat", self::class);
+            $old = $store->update("$name.dat", self::class);
+            if ($old === null) {
+                return null;
+            }
+            assert($old instanceof self);
+            $new = $store->update("$name.json", self::class);
+            assert($new instanceof self);
+            $new->states = $old->states;
+            $store->commit();
+            return self::update($name, $store);
         }
         return $store->update($name . ".json", self::class);
     }
