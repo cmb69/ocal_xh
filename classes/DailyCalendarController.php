@@ -96,7 +96,8 @@ class DailyCalendarController
             'monthPagination' => $this->renderPaginationView($request),
             'monthCalendars' => $this->getMonthCalendars($request, $occupancy, $count),
             'js_config' => $this->getJsConfig($request),
-            'js_script' => $this->pluginFolder . "ocal.min.js",
+            'js_script' => $request->url()->path($this->pluginFolder . "ocal.min.js")->with("v", OCAL_VERSION)
+                ->relative(),
             'csrf_token' => $this->csrfProtector->token(),
             'checksum' => $occupancy->checksum(),
         ];
@@ -173,7 +174,8 @@ class DailyCalendarController
             'monthLists' => $this->getMonthLists($request, $occupancy, $count),
             'monthPagination' => $this->renderPaginationView($request),
             'js_config' => $this->getJsConfig($request),
-            'js_script' => $this->pluginFolder . "ocal.min.js",
+            'js_script' => $request->url()->path($this->pluginFolder . "ocal.min.js")->with("v", OCAL_VERSION)
+                ->relative(),
         ]);
     }
 
