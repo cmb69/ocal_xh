@@ -30,20 +30,7 @@ final class HourlyOccupancy extends Occupancy implements Document
     public static function fromString(string $contents, string $key): ?self
     {
         if (preg_match('/\.dat$/', $key)) {
-            if (!preg_match('/{(.+)}$/s', $contents, $matches)) {
-                return null;
-            }
-            $states = @unserialize($matches[1]);
-            if (!is_array($states)) {
-                return null;
-            }
-            $that = new self(basename($key, ".dat"));
-            foreach ($states as $date => $state) {
-                if (is_string($date) && is_numeric($state)) {
-                    $that->setState($date, $state, PHP_INT_MAX);
-                }
-            }
-            return $that;
+            return self::fromLegacyString($contents, basename($key, ".dat"));
         }
         if ($contents === "") {
             return new self(basename($key, ".json"));
@@ -65,6 +52,24 @@ final class HourlyOccupancy extends Occupancy implements Document
         return $result;
     }
 
+    private static function fromLegacyString(string $contents, string $name): ?self
+    {
+        if (!preg_match('/{(.+)}$/s', $contents, $matches)) {
+            return null;
+        }
+        $states = @unserialize($matches[1]);
+        if (!is_array($states)) {
+            return null;
+        }
+        $that = new self($name);
+        foreach ($states as $date => $state) {
+            if (is_string($date) && is_numeric($state)) {
+                $that->setState($date, (int) $state, PHP_INT_MAX);
+            }
+        }
+        return $that;
+    }
+
     public static function retrieve(string $name, DocumentStore $store): ?self
     {
         $keys = $store->find("/$name\\.(?:json|dat)$/");
@@ -78,18 +83,23 @@ final class HourlyOccupancy extends Occupancy implements Document
     {
         $keys = $store->find("/$name\\.(?:json|dat)$/");
         if (!in_array("$name.json", $keys, true) && in_array("$name.dat", $keys, true)) {
-            $old = $store->update("$name.dat", self::class);
-            if ($old === null) {
-                return null;
-            }
-            assert($old instanceof self);
-            $new = $store->update("$name.json", self::class);
-            assert($new instanceof self);
-            $new->states = $old->states;
-            $store->commit();
-            return self::update($name, $store);
+            return self::migrate($name, $store);
         }
         return $store->update($name . ".json", self::class);
+    }
+
+    private static function migrate(string $name, DocumentStore $store): ?self
+    {
+        $old = $store->update("$name.dat", self::class);
+        if ($old === null) {
+            return null;
+        }
+        assert($old instanceof self);
+        $new = $store->update("$name.json", self::class);
+        assert($new instanceof self);
+        $new->states = $old->states;
+        $store->commit();
+        return self::update($name, $store);
     }
 
     public function getHourlyState(int $year, int $week, int $day, int $hour): int
