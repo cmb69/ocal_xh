@@ -18,22 +18,18 @@ require_once "../plib/classes/View.php";
 require_once "../plib/classes/FakeRequest.php";
 require_once "../plib/classes/FakeSystemChecker.php";
 
-require_once "./classes/dto/ListItem.php";
-require_once "./classes/dto/PaginationItem.php";
-require_once "./classes/dto/WeekListItem.php";
-
-require_once "./classes/model/Month.php";
-require_once "./classes/model/Week.php";
-require_once "./classes/model/Occupancy.php";
-require_once "./classes/model/DailyOccupancy.php";
-require_once "./classes/model/HourlyOccupancy.php";
-
-require_once "./classes/CalendarController.php";
-require_once "./classes/Dic.php";
-require_once "./classes/Pagination.php";
-require_once "./classes/DailyCalendarController.php";
-require_once "./classes/DailyPagination.php";
-require_once "./classes/DefaultAdminController.php";
-require_once "./classes/HourlyCalendarController.php";
-require_once "./classes/HourlyPagination.php";
-require_once "./classes/ListService.php";
+spl_autoload_register(function (string $className) {
+    $parts = explode("\\", $className);
+    if ($parts[0] !== "Ocal") {
+        return;
+    }
+    if (count($parts) === 3) {
+        $parts[1] = strtolower($parts[1]);
+    }
+    $filename = implode("/", array_slice($parts, 1)) . ".php";
+    if (is_readable("./classes/$filename")) {
+        include_once "./classes/$filename";
+    } elseif (is_readable("./tests/$filename")) {
+        include_once "./tests/$filename";
+    }
+});
