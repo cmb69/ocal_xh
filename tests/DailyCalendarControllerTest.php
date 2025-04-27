@@ -6,15 +6,16 @@ use ApprovalTests\Approvals;
 use Ocal\Model\DailyOccupancy;
 use Ocal\Model\HourlyOccupancy;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use Plib\CsrfProtector;
 use Plib\DocumentStore;
 use Plib\FakeRequest;
 use Plib\View;
-use XH\CSRFProtection as CsrfProtector;
 
 class DailyCalendarControllerTest extends TestCase
 {
-    /** @var (CsrfProtector&MockObject)|null */
+    /** @var CsrfProtector&Stub */
     private $csrfProtector;
 
     /** @var array<string,string> */
@@ -23,7 +24,7 @@ class DailyCalendarControllerTest extends TestCase
     /** @var array<string,string> */
     private $lang;
 
-    /** @var ListService&MockObject */
+    /** @var ListService*/
     private $listService;
 
     /** @var DocumentStore */
@@ -36,9 +37,7 @@ class DailyCalendarControllerTest extends TestCase
     {
         vfsStream::setup("root");
         $this->csrfProtector = $this->createStub(CsrfProtector::class);
-        $this->csrfProtector->method('tokenInput')->willReturn(
-            '<input type="hidden" name="xh_csrf_token" value="dcfff515ebf5bd421d5a0777afc6358b">'
-        );
+        $this->csrfProtector->method('token')->willReturn("dcfff515ebf5bd421d5a0777afc6358b");
         $plugin_cf = XH_includeVar("./config/config.php", 'plugin_cf');
         $this->config = $plugin_cf['ocal'];
         $this->lang = XH_includeVar("./languages/en.php", "plugin_tx")["ocal"];
@@ -57,13 +56,6 @@ class DailyCalendarControllerTest extends TestCase
             $this->store,
             $this->view
         );
-    }
-
-    /** @see <https://github.com/cmb69/ocal_xh/issues/33> */
-    public function testContructorDoesNotCrashForVisitors(): void
-    {
-        $this->csrfProtector = null;
-        $this->sut();
     }
 
     public function testReportsInvalidCalendarName(): void
@@ -172,6 +164,7 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsSuccess(): void
     {
+        $this->csrfProtector->method("check")->willReturn(true);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
@@ -181,18 +174,20 @@ class DailyCalendarControllerTest extends TestCase
         $this->assertStringContainsString('Successfully saved.', $response->output());
     }
 
-    public function testSaveActionPreventCsrf(): void
+    public function testSaveActionPreventsCsrf(): void
     {
-        $this->csrfProtector->expects($this->once())->method('check');
+        $this->csrfProtector->method("check")->willReturn(false);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
         ]);
-        $this->sut()($request, "test-daily", 1);
+        $response = $this->sut()($request, "test-daily", 1);
+        $this->assertStringContainsString("You are not authorized for this action!", $response->output());
     }
 
     public function testSaveActionRejectsBadRequest(): void
     {
+        $this->csrfProtector->method("check")->willReturn(true);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
@@ -204,6 +199,7 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsFailureToSave(): void
     {
+        $this->csrfProtector->method("check")->willReturn(true);
         vfsStream::setQuota(0);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",

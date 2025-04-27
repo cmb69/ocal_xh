@@ -21,6 +21,7 @@
 
 namespace Ocal;
 
+use Plib\CsrfProtector;
 use Plib\DocumentStore;
 use Plib\SystemChecker;
 use Plib\View;
@@ -41,11 +42,11 @@ class Dic
 
     public static function makeDailyCalendarController(): DailyCalendarController
     {
-        global $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+        global $pth, $plugin_cf, $plugin_tx;
 
         return new DailyCalendarController(
             "{$pth['folder']['plugins']}ocal/",
-            $_XH_csrfProtection,
+            new CsrfProtector(),
             $plugin_cf['ocal'],
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
             new DocumentStore($pth["folder"]["base"] . "content/ocal/"),
@@ -55,11 +56,11 @@ class Dic
 
     public static function makeHourlyCalendarController(): HourlyCalendarController
     {
-        global $pth, $plugin_cf, $plugin_tx, $_XH_csrfProtection;
+        global $pth, $plugin_cf, $plugin_tx;
 
         return new HourlyCalendarController(
             "{$pth['folder']['plugins']}ocal/",
-            $_XH_csrfProtection,
+            new CsrfProtector(),
             $plugin_cf['ocal'],
             new ListService($plugin_cf['ocal'], $plugin_tx['ocal']),
             new DocumentStore($pth["folder"]["base"] . "content/ocal/"),

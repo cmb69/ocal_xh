@@ -2,20 +2,20 @@
 
 namespace Ocal;
 
-use DateTimeImmutable;
 use ApprovalTests\Approvals;
 use Ocal\Model\DailyOccupancy;
 use Ocal\Model\HourlyOccupancy;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use Plib\CsrfProtector;
 use Plib\DocumentStore;
 use Plib\FakeRequest;
 use Plib\View;
-use XH\CSRFProtection as CsrfProtector;
 
 class HourlyCalendarControllerTest extends TestCase
 {
-    /** @var CsrfProtector&MockObject */
+    /** @var CsrfProtector&Stub */
     private $csrfProtector;
 
     /** @var array<string,string> */
@@ -37,9 +37,7 @@ class HourlyCalendarControllerTest extends TestCase
     {
         vfsStream::setup("root");
         $this->csrfProtector = $this->createStub(CsrfProtector::class);
-        $this->csrfProtector->method('tokenInput')->willReturn(
-            '<input type="hidden" name="xh_csrf_token" value="dcfff515ebf5bd421d5a0777afc6358b">'
-        );
+        $this->csrfProtector->method('token')->willReturn("dcfff515ebf5bd421d5a0777afc6358b");
         $this->config = XH_includeVar("./config/config.php", "plugin_cf")["ocal"];
         $this->lang = XH_includeVar("./languages/en.php", "plugin_tx")["ocal"];
         $this->listService = new ListService($this->config, $this->lang);
@@ -173,18 +171,20 @@ class HourlyCalendarControllerTest extends TestCase
         $this->stringContains("Successfully saved.", $response->output());
     }
 
-    public function testSaveActionPreventCsrf(): void
+    public function testSaveActionPreventsCsrf(): void
     {
-        $this->csrfProtector->expects($this->once())->method('check');
+        $this->csrfProtector->method("check")->willReturn(false);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-hourly&ocal_action=save",
             "admin" => true,
         ]);
-        $this->sut()($request, "test-hourly", 1);
+        $response = $this->sut()($request, "test-hourly", 1);
+        $this->assertStringContainsString("You are not authorized for this action!", $response->output());
     }
 
     public function testSaveActionRejectsBadRequest(): void
     {
+        $this->csrfProtector->method("check")->willReturn(true);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-hourly&ocal_action=save",
             "admin" => true,
@@ -196,6 +196,7 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testSaveActionReportsFailureToSave(): void
     {
+        $this->csrfProtector->method("check")->willReturn(true);
         vfsStream::setQuota(0);
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=save&ocal_name=test-hourly",

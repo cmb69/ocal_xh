@@ -4,10 +4,10 @@ const CMSIMPLE_XH_VERSION = "CMSimple_XH 1.7.5";
 const OCAL_VERSION = "1.4-dev";
 
 require_once './vendor/autoload.php';
-require_once '../../cmsimple/classes/CSRFProtection.php';
 require_once '../../cmsimple/functions.php';
 require_once '../../cmsimple/adminfuncs.php';
 
+require_once "../plib/classes/CsrfProtector.php";
 require_once "../plib/classes/Document.php";
 require_once "../plib/classes/DocumentStore.php";
 require_once "../plib/classes/Request.php";

@@ -24,6 +24,7 @@ $plugin_tx['ocal']['message_not_daily']="'%s' ist kein täglicher Belegungskalen
 $plugin_tx['ocal']['message_not_hourly']="'%s' ist kein stündlicher Belegungskalender!";
 $plugin_tx['ocal']['message_unsaved_changes']="Es gibt ungesicherte Änderungen, die beim Verlassen der Seite verloren gehen!";
 $plugin_tx['ocal']['error_occupancy_name']="Ein Belegungs-Name darf nur die Buchstaben a-z, die Ziffern 0-9 and Minus-Zeichen enthalten!";
+$plugin_tx['ocal']['error_unauthorized']="Sie sind nicht befugt diese Aktion auszuführen!";
 $plugin_tx['ocal']['syscheck_extension']="die Erweiterung '%s' geladen ist";
 $plugin_tx['ocal']['syscheck_fail']="Fehler";
 $plugin_tx['ocal']['syscheck_message']="Prüfe, dass %1\$s … %2\$s";

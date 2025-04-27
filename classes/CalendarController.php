@@ -87,10 +87,12 @@ trait CalendarController
     private function saveAction(Request $request, string $name): Response
     {
         $this->mode = 'calendar';
-        if (!$request->admin() || $request->get("ocal_name") !== $name || $this->csrfProtector === null) {
+        if ($request->get("ocal_name") !== $name) {
             return Response::create();
         }
-        $this->csrfProtector->check();
+        if (!$request->admin() || !$this->csrfProtector->check($request->post("ocal_token"))) {
+            return Response::error(403, $this->view->message("fail", "error_unauthorized"));
+        }
         return $this->saveStates($request, $name)->withContentType("text/html");
     }
 

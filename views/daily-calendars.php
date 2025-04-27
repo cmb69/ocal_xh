@@ -9,7 +9,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
  * @var string $occupancyName
  * @var bool $isEditable
  * @var string $modeLink
- * @var string $csrfTokenInput
+ * @var string $csrf_token
  * @var string $toolbar
  * @var string $statusbar
  * @var list<string> $monthCalendars
@@ -23,7 +23,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
 <div class="ocal_calendars" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
   <?=$this->raw($modeLink)?>
 <?if ($isEditable):?>
-  <?=$this->raw($csrfTokenInput)?>
+  <input type="hidden" name="ocal_token" value="<?=$this->esc($csrf_token)?>">
   <?=$this->raw($toolbar)?>
 <?endif?>
   <?=$this->raw($statusbar)?>

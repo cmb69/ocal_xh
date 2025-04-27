@@ -24,6 +24,7 @@ $plugin_tx['ocal']['message_not_daily']="'%s' is not a daily occupancy calendar!
 $plugin_tx['ocal']['message_not_hourly']="'%s' is not a hourly occupancy calendar!";
 $plugin_tx['ocal']['message_unsaved_changes']="There are unsaved changes that will be lost when leaving the page!";
 $plugin_tx['ocal']['error_occupancy_name']="An occupancy name may only contain the letters a-z, the digits 0-9 and minus signs!";
+$plugin_tx['ocal']['error_unauthorized']="You are not authorized for this action!";
 $plugin_tx['ocal']['syscheck_extension']="extension '%s' is loaded";
 $plugin_tx['ocal']['syscheck_fail']="failure";
 $plugin_tx['ocal']['syscheck_message']="Checking that %1\$s … %2\$s";

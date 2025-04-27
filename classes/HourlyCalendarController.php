@@ -25,18 +25,18 @@ use DateTimeImmutable;
 use Ocal\Model\HourlyOccupancy;
 use Ocal\Model\Occupancy;
 use Ocal\Model\Week;
+use Plib\CsrfProtector;
 use Plib\DocumentStore;
 use Plib\Request;
 use Plib\Response;
 use Plib\View;
 use stdClass;
-use XH\CSRFProtection as CsrfProtector;
 
 class HourlyCalendarController
 {
     use CalendarController;
 
-    /** @var ?CsrfProtector */
+    /** @var CsrfProtector */
     private $csrfProtector;
 
     /** @var array<string,string> */
@@ -65,7 +65,7 @@ class HourlyCalendarController
      */
     public function __construct(
         string $pluginFolder,
-        ?CsrfProtector $csrfProtector,
+        CsrfProtector $csrfProtector,
         array $config,
         ListService $listService,
         DocumentStore $store,
@@ -97,11 +97,8 @@ class HourlyCalendarController
             'weekCalendars' => $this->getWeekCalendars($request, $occupancy, $count),
             'js_config' => $this->getJsConfig($request),
             'js_script' => $this->pluginFolder . "ocal.min.js",
+            'csrf_token' => $this->csrfProtector->token(),
         ];
-        if ($request->admin()) {
-            assert($this->csrfProtector !== null);
-            $data['csrfTokenInput'] = $this->csrfProtector->tokenInput();
-        }
         return $this->view->render('hourly-calendars', $data);
     }
 
