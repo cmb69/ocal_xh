@@ -33,7 +33,7 @@ final class HourlyOccupancy extends Occupancy implements Document
             return self::fromLegacyString($contents, basename($key, ".dat"));
         }
         if ($contents === "") {
-            return new self(basename($key, ".json"));
+            return new self(basename($key, ".json"), sha1($contents));
         }
         $array = json_decode($contents, true);
         if (
@@ -45,7 +45,7 @@ final class HourlyOccupancy extends Occupancy implements Document
         ) {
             return null;
         }
-        $result = new self(basename($key, ".json"));
+        $result = new self(basename($key, ".json"), sha1($contents));
         foreach ($array["states"] as $date => $state) {
             $result->setState($date, $state, PHP_INT_MAX);
         }
@@ -61,7 +61,7 @@ final class HourlyOccupancy extends Occupancy implements Document
         if (!is_array($states)) {
             return null;
         }
-        $that = new self($name);
+        $that = new self($name, sha1($contents));
         foreach ($states as $date => $state) {
             if (is_string($date) && is_numeric($state)) {
                 $that->setState($date, (int) $state, PHP_INT_MAX);

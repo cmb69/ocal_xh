@@ -20,26 +20,26 @@ class HourlyOccupancyTest extends TestCase
 
     public function testGetName()
     {
-        $sut = new HourlyOccupancy('bar');
+        $sut = new HourlyOccupancy('bar', "");
         $this->assertSame('bar', $sut->getName());
     }
 
     public function testUnsetStateIsZero()
     {
-        $sut = new HourlyOccupancy('bar');
+        $sut = new HourlyOccupancy('bar', "");
         $this->assertSame(0, $sut->getHourlyState(2017, 9, 1, 12));
     }
 
     public function testSetAndGetState()
     {
-        $sut = new HourlyOccupancy('bar');
+        $sut = new HourlyOccupancy('bar', "");
         $sut->setState('2017-09-01-12', 3, 3);
         $this->assertSame(3, $sut->getHourlyState(2017, 9, 1, 12));
     }
 
     public function testSetStateToZeroUnsetsIt()
     {
-        $sut = new HourlyOccupancy('bar');
+        $sut = new HourlyOccupancy('bar', "");
         $sut->setState('2017-09-01-12', 0, 3);
         $this->assertSame(0, $sut->getHourlyState(2017, 9, 1, 12));
     }
@@ -50,6 +50,7 @@ class HourlyOccupancyTest extends TestCase
         $expected->setState("2017-09-01-12", 0, 3);
         $this->store->commit();
         $actual = HourlyOccupancy::retrieve("bar", $this->store);
+        $actual->setChecksum("da39a3ee5e6b4b0d3255bfef95601890afd80709");
         $this->assertEquals($expected, $actual);
     }
 
@@ -64,7 +65,7 @@ class HourlyOccupancyTest extends TestCase
     {
         file_put_contents(vfsStream::url("root/bar.dat"), '{a:1:{s:13:"2017-09-01-12";s:1:"1";}}');
         $actual = HourlyOccupancy::retrieve("bar", $this->store);
-        $expected = new HourlyOccupancy("bar");
+        $expected = new HourlyOccupancy("bar", "000235ad796aa51abb945efa10f2d1cd18316525");
         $expected->setState("2017-09-01-12", 1, 3);
         $this->assertEquals($expected, $actual);
     }

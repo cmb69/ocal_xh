@@ -20,26 +20,26 @@ class DailyOccupancyTest extends TestCase
 
     public function testGetName()
     {
-        $sut = new DailyOccupancy('foo');
+        $sut = new DailyOccupancy('foo', "");
         $this->assertSame('foo', $sut->getName());
     }
 
     public function testUnsetStateIsZero()
     {
-        $sut = new DailyOccupancy('foo');
+        $sut = new DailyOccupancy('foo', "");
         $this->assertSame(0, $sut->getDailyState(2017, 2, 26));
     }
 
     public function testSetAndGetState()
     {
-        $sut = new DailyOccupancy('foo');
+        $sut = new DailyOccupancy('foo', "");
         $sut->setState('2017-02-27', 3, 3);
         $this->assertSame(3, $sut->getDailyState(2017, 2, 27));
     }
 
     public function testSetStateToZeroUnsetsIt()
     {
-        $sut = new DailyOccupancy('foo');
+        $sut = new DailyOccupancy('foo', "");
         $sut->setState('2017-02-28', 0, 3);
         $this->assertSame(0, $sut->getDailyState(2017, 2, 28));
     }
@@ -50,6 +50,7 @@ class DailyOccupancyTest extends TestCase
         $expected->setState('2017-02-28', 0, 3);
         $this->store->commit();
         $actual = DailyOccupancy::retrieve("foo", $this->store);
+        $actual->setChecksum("da39a3ee5e6b4b0d3255bfef95601890afd80709");
         $this->assertEquals($expected, $actual);
     }
 
@@ -64,7 +65,7 @@ class DailyOccupancyTest extends TestCase
     {
         file_put_contents(vfsStream::url("root/foo.dat"), '{a:1:{s:10:"2017-02-03";s:1:"1";}}');
         $actual = DailyOccupancy::retrieve("foo", $this->store);
-        $expected = new DailyOccupancy("foo");
+        $expected = new DailyOccupancy("foo", "68dd21479191592baaf5a1b4836e5b4413b6742c");
         $expected->setState("2017-02-03", 1, 3);
         $this->assertEquals($expected, $actual);
     }
@@ -90,6 +91,7 @@ class DailyOccupancyTest extends TestCase
         $this->store->commit();
         $this->assertFileExists(vfsStream::url("root/foo.json"));
         $actual = DailyOccupancy::retrieve("foo", $this->store);
+        $actual->setChecksum("da39a3ee5e6b4b0d3255bfef95601890afd80709");
         $this->assertEquals($expected, $actual);
     }
 }

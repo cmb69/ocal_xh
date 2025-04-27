@@ -98,6 +98,7 @@ class DailyCalendarController
             'js_config' => $this->getJsConfig($request),
             'js_script' => $this->pluginFolder . "ocal.min.js",
             'csrf_token' => $this->csrfProtector->token(),
+            'checksum' => $occupancy->checksum(),
         ];
         return $this->view->render('daily-calendars', $data);
     }
@@ -243,6 +244,10 @@ class DailyCalendarController
         $occupancy = DailyOccupancy::update($name, $this->store);
         if ($occupancy === null) {
             return Response::error(500);
+        }
+        if ($occupancy->checksum() !== $request->post("ocal_checksum")) {
+            $this->store->rollback();
+            return Response::error(409, $this->view->message("warning", "error_conflicts"));
         }
         foreach ($states as $month => $states) {
             if (preg_match('/\d{4}-\d{2}/', $month) && is_array($states)) {

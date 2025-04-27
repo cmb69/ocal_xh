@@ -194,6 +194,22 @@ class HourlyCalendarControllerTest extends TestCase
         $this->assertEquals("", $response->output());
     }
 
+    public function testSaveActionRejectsConflicts(): void
+    {
+        $this->csrfProtector->method("check")->willReturn(true);
+        vfsStream::setQuota(0);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_action=save&ocal_name=test-hourly",
+            "admin" => true,
+            "post" => [
+                "ocal_states" => json_encode(['2023-06' => array_fill(0, 90, "1")]),
+                "ocal_checksum" => "da39a3ee5e6b4b0d3255bfef95601890afd8070a",
+            ],
+        ]);
+        $response = $this->sut()($request, "test-hourly", 1);
+        $this->assertStringContainsString("The occupancy has been changed in the meantime!", $response->output());
+    }
+
     public function testSaveActionReportsFailureToSave(): void
     {
         $this->csrfProtector->method("check")->willReturn(true);
@@ -201,7 +217,10 @@ class HourlyCalendarControllerTest extends TestCase
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=save&ocal_name=test-hourly",
             "admin" => true,
-            "post" => ["ocal_states" => json_encode(['2023-06' => array_fill(0, 90, "1")])],
+            "post" => [
+                "ocal_states" => json_encode(['2023-06' => array_fill(0, 90, "1")]),
+                "ocal_checksum" => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            ],
         ]);
         $response = $this->sut()($request, "test-hourly", 1);
         $this->assertStringContainsString("Saving failed!", $response->output());

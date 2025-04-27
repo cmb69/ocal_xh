@@ -23,7 +23,7 @@ class ListServiceTest extends TestCase
 
     public function testGetDailyList()
     {
-        $occupancy = new DailyOccupancy('daily');
+        $occupancy = new DailyOccupancy('daily', "");
         $occupancy->setState('2017-03-01', 1, 3);
         $occupancy->setState('2017-03-02', 1, 3);
         $occupancy->setState('2017-03-04', 2, 3);

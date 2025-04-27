@@ -16,6 +16,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
  * @var string $weekPagination
  * @var array<string,mixed> $js_config
  * @var string $js_script
+ * @var string $checksum
  */
 ?>
 
@@ -24,6 +25,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
   <?=$this->raw($modeLink)?>
 <?if ($isEditable):?>
   <input type="hidden" name="ocal_token" value="<?=$this->esc($csrf_token)?>">
+  <input type="hidden" name="ocal_checksum" value="<?=$this->esc($checksum)?>">
   <?=$this->raw($toolbar)?>
 <?endif?>
   <?=$this->raw($statusbar)?>

@@ -168,7 +168,10 @@ class DailyCalendarControllerTest extends TestCase
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
-            "post" => ["ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")])],
+            "post" => [
+                "ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")]),
+                "ocal_checksum" => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            ],
         ]);
         $response = $this->sut()($request, "test-daily", 1);
         $this->assertStringContainsString('Successfully saved.', $response->output());
@@ -197,6 +200,22 @@ class DailyCalendarControllerTest extends TestCase
         $this->assertEquals("", $response->output());
     }
 
+    public function testSaveActionRejectsConflicts(): void
+    {
+        $this->csrfProtector->method("check")->willReturn(true);
+        vfsStream::setQuota(0);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
+            "admin" => true,
+            "post" => [
+                "ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")]),
+                "ocal_checksum" => "da39a3ee5e6b4b0d3255bfef95601890afd8070a",
+            ]
+        ]);
+        $response = $this->sut()($request, "test-daily", 1);
+        $this->assertStringContainsString("The occupancy has been changed in the meantime!", $response->output());
+    }
+
     public function testSaveActionReportsFailureToSave(): void
     {
         $this->csrfProtector->method("check")->willReturn(true);
@@ -204,7 +223,10 @@ class DailyCalendarControllerTest extends TestCase
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_name=test-daily&ocal_action=save",
             "admin" => true,
-            "post" => ["ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")])]
+            "post" => [
+                "ocal_states" => json_encode(['2023-02' => array_fill(0, 27, "1")]),
+                "ocal_checksum" => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            ]
         ]);
         $response = $this->sut()($request, "test-daily", 1);
         $this->assertStringContainsString('Saving failed!', $response->output());

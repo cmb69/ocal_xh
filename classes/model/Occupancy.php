@@ -26,12 +26,16 @@ abstract class Occupancy
     /** @var string */
     protected $name;
 
+    /** @var string */
+    protected $checksum;
+
     /** @var array<string,int> */
     protected $states;
 
-    public function __construct(string $name)
+    public function __construct(string $name, string $checksum)
     {
         $this->name = (string) $name;
+        $this->checksum = $checksum;
         $this->states = array();
     }
 
@@ -42,6 +46,17 @@ abstract class Occupancy
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function checksum(): string
+    {
+        return $this->checksum;
+    }
+
+    /** for testing */
+    public function setChecksum(string $checksum): void
+    {
+        $this->checksum = $checksum;
     }
 
     protected function getState(string $date): int
