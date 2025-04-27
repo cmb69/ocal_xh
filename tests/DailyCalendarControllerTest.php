@@ -14,7 +14,7 @@ use XH\CSRFProtection as CsrfProtector;
 
 class DailyCalendarControllerTest extends TestCase
 {
-    /** @var CsrfProtector&MockObject */
+    /** @var (CsrfProtector&MockObject)|null */
     private $csrfProtector;
 
     /** @var array<string,string> */
@@ -55,11 +55,15 @@ class DailyCalendarControllerTest extends TestCase
             $this->config,
             $this->listService,
             $this->store,
-            $this->view,
-            true,
-            "test-daily",
-            1
+            $this->view
         );
+    }
+
+    /** @see <https://github.com/cmb69/ocal_xh/issues/33> */
+    public function testContructorDoesNotCrashForVisitors(): void
+    {
+        $this->csrfProtector = null;
+        $this->sut();
     }
 
     public function testReportsInvalidCalendarName(): void
