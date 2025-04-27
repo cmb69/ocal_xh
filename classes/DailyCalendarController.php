@@ -225,7 +225,7 @@ class DailyCalendarController
 
     private function year(Request $request): int
     {
-        return (int) ($request->get("ocal_year") ?? (new DateTimeImmutable("@{$request->time()}"))->format('Y'));
+        return (int) ($request->get("ocal_year") ?? idate("Y", $request->time()));
     }
 
     private function month(Request $request): int
@@ -233,7 +233,7 @@ class DailyCalendarController
         $month = $request->get("ocal_month");
         return $month !== null
             ? max(1, min(12, (int) $month))
-            : (int) (new DateTimeImmutable("@{$request->time()}"))->format('n');
+            : (int) idate("n", $request->time());
     }
 
     protected function saveStates(Request $request, string $name): ?string

@@ -223,7 +223,7 @@ class HourlyCalendarController
 
     private function isoYear(Request $request): int
     {
-        return (int) ($request->get("ocal_year") ?? (new DateTimeImmutable("@{$request->time()}"))->format('o'));
+        return (int) ($request->get("ocal_year") ?? date("o", $request->time()));
     }
 
     private function week(Request $request): int
@@ -231,7 +231,7 @@ class HourlyCalendarController
         $week = $request->get("ocal_week");
         return $week !== null
             ? max(1, min(53, (int) $week))
-            : (int) (new DateTimeImmutable("@{$request->time()}"))->format('W');
+            : (int) idate("W", $request->time());
     }
 
     protected function saveStates(Request $request, string $name): ?string
