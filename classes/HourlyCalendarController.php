@@ -97,8 +97,7 @@ class HourlyCalendarController
             'weekPagination' => $this->renderPaginationView($request, $count),
             'weekCalendars' => $this->getWeekCalendars($request, $occupancy, $count),
             'js_config' => $this->getJsConfig($request),
-            'js_script' => $request->url()->path($this->pluginFolder . "ocal.min.js")->with("v", OCAL_VERSION)
-                ->relative(),
+            'js_script' => $this->jsScript($request),
             'csrf_token' => $this->csrfProtector->token(),
             'checksum' => $occupancy->checksum(),
         ];
@@ -160,8 +159,7 @@ class HourlyCalendarController
             'weekPagination' => $this->renderPaginationView($request, $count),
             'weekLists' => $this->getWeekLists($request, $occupancy, $count),
             'js_config' => $this->getJsConfig($request),
-            'js_script' => $request->url()->path($this->pluginFolder . "ocal.min.js")->with("v", OCAL_VERSION)
-                ->relative(),
+            'js_script' => $this->jsScript($request),
         ]);
     }
 

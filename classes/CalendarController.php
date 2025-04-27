@@ -98,6 +98,16 @@ trait CalendarController
 
     abstract protected function saveStates(Request $request, string $name): Response;
 
+    private function jsScript(Request $request): string
+    {
+        $filename = $this->pluginFolder . "ocal.min.js";
+        if (!file_exists($filename)) {
+            $filename = $this->pluginFolder . "ocal.js";
+        }
+        return $request->url()->path($filename)->with("v", OCAL_VERSION)
+            ->relative();
+    }
+
     /** @return array<string,mixed> */
     private function getJsConfig(Request $request): array
     {

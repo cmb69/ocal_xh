@@ -3,3 +3,4 @@
 /composer.lock
 /.phpunit.cache
 /tools
+/ocal.min.js
