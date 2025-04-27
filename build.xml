@@ -2,7 +2,9 @@
 
 <project name="Ocal" default="help">
 
-  <target name="help" description="lists available targets">
+   <property name="dir" value="${project.basedir}"/>
+  
+   <target name="help" description="lists available targets">
     <exec executable="phing" outputProperty="help">
       <arg value="-l"/>
     </exec>
@@ -46,7 +48,13 @@
     </exec>
   </target>
 
-  <target name="gen-help" description="builds help.htm from README.md">
+  <target name="minify" description="minifies JS">
+    <exec executable="uglifyjs" checkreturn="true" dir="${dir}">
+      <arg line="ocal.js --compress --mangle --output ocal.min.js"/>
+    </exec>
+   </target>
+
+   <target name="gen-help" description="builds help.htm from README.md">
     <exec executable="pandoc" passthru="true" checkreturn="true">
       <arg line="-s --eol=lf --template=help/template.htm -Vlang=en -Vpagetitle=&quot;User Manual&quot; -o help/help.htm README.md -t html"/>
     </exec>
@@ -61,13 +69,9 @@
     </exec>
     <unzip file="export.zip" todir="export"/>
     <delete file="export.zip"/>
-    <exec executable="uglifyjs" passthru="true" checkreturn="true">
-      <arg file="export/ocal.min.js"/>
-      <arg value="--compress"/>
-      <arg value="--mangle"/>
-      <arg value="--output"/>
-      <arg file="export/ocal.min.js"/>
-    </exec>
+    <phingcall target="minify">
+       <property name="dir" value="export/"/>
+    </phingcall>
     <move todir="dist">
       <fileset dir="export">
         <include name="views/*.php"/>
