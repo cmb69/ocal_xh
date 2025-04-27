@@ -22,7 +22,7 @@
 use Ocal\Dic;
 use Plib\Request;
 
-const OCAL_VERSION = "1.4-dev";
+const OCAL_VERSION = "1.4";
 
 function ocal(string $name, int $monthCount = 1): string
 {
