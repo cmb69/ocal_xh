@@ -4,21 +4,32 @@ namespace Ocal\Model;
 
 use PHPUnit\Framework\TestCase;
 
+/** @small */
 class HourlyOccupancyTest extends TestCase
 {
-    /**
-     * @var HourlyOccupancy
-     */
-    private $subject;
-
-    public function setUp(): void
+    public function testGetName()
     {
-        $this->subject = new HourlyOccupancy('bar');
+        $sut = new HourlyOccupancy('bar');
+        $this->assertSame('bar', $sut->getName());
+    }
+
+    public function testUnsetStateIsZero()
+    {
+        $sut = new HourlyOccupancy('bar');
+        $this->assertSame(0, $sut->getHourlyState(2017, 9, 1, 12));
     }
 
     public function testSetAndGetState()
     {
-        $this->subject->setState('2017-09-01-12', 3, 3);
-        $this->assertSame(3, $this->subject->getHourlyState(2017, 9, 1, 12));
+        $sut = new HourlyOccupancy('bar');
+        $sut->setState('2017-09-01-12', 3, 3);
+        $this->assertSame(3, $sut->getHourlyState(2017, 9, 1, 12));
+    }
+
+    public function testSetStateToZeroUnsetsIt()
+    {
+        $sut = new HourlyOccupancy('bar');
+        $sut->setState('2017-09-01-12', 0, 3);
+        $this->assertSame(0, $sut->getHourlyState(2017, 9, 1, 12));
     }
 }

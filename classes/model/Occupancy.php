@@ -44,12 +44,6 @@ abstract class Occupancy
         return $this->name;
     }
 
-    /** @return void */
-    public function setName(string $name)
-    {
-        $this->name = (string) $name;
-    }
-
     protected function getState(string $date): int
     {
         if (!isset($this->states[$date])) {
