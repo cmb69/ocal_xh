@@ -33,18 +33,29 @@ final class HourlyOccupancy extends Occupancy implements Document
             if (!preg_match('/{(.+)}$/s', $contents, $matches)) {
                 return null;
             }
-            $states = unserialize($matches[1]);
-            assert(is_array($states)); // TODO: proper validation
+            $states = @unserialize($matches[1]);
+            if (!is_array($states)) {
+                return null;
+            }
             $that = new self(basename($key, ".dat"));
-            $that->states = $states;
+            foreach ($states as $date => $state) {
+                if (is_string($date) && is_numeric($state)) {
+                    $that->setState($date, $state, PHP_INT_MAX);
+                }
+            }
             return $that;
         }
-        $array = json_decode($contents, true);
         if ($contents === "") {
             return new self(basename($key, ".json"));
         }
-        assert(is_array($array)); // TODO: proper validation
-        if ($array["type"] !== "hourly") {
+        $array = json_decode($contents, true);
+        if (
+            !is_array($array)
+            || !array_key_exists("type", $array)
+            || $array["type"] !== "hourly"
+            || !array_key_exists("states", $array)
+            || !is_array($array["states"])
+        ) {
             return null;
         }
         $result = new self(basename($key, ".json"));

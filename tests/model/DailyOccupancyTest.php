@@ -53,12 +53,33 @@ class DailyOccupancyTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testReadsLegacyFormat(): void
+    public function testReadBrokenFormat(): void
+    {
+        file_put_contents(vfsStream::url("root/foo.json"), '{}');
+        $actual = DailyOccupancy::retrieve("foo", $this->store);
+        $this->assertNull($actual);
+    }
+
+    public function testReadLegacyFormat(): void
     {
         file_put_contents(vfsStream::url("root/foo.dat"), '{a:1:{s:10:"2017-02-03";s:1:"1";}}');
         $actual = DailyOccupancy::retrieve("foo", $this->store);
         $expected = new DailyOccupancy("foo");
         $expected->setState("2017-02-03", 1, 3);
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testReadEmptyLegacyFormat(): void
+    {
+        file_put_contents(vfsStream::url("root/foo.dat"), '');
+        $actual = DailyOccupancy::retrieve("foo", $this->store);
+        $this->assertNull($actual);
+    }
+
+    public function testReadBrokenLegacyFormat(): void
+    {
+        file_put_contents(vfsStream::url("root/foo.dat"), 'O:8:"stdClass":1:{s:5:"hello";s:5:"world";}');
+        $actual = DailyOccupancy::retrieve("foo", $this->store);
+        $this->assertNull($actual);
     }
 }
