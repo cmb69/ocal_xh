@@ -2,11 +2,22 @@
 
 namespace Ocal\Model;
 
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Plib\DocumentStore;
 
 /** @small */
 class DailyOccupancyTest extends TestCase
 {
+    /** @var DocumentStore */
+    private $store;
+
+    public function setUp(): void
+    {
+        vfsStream::setup("root");
+        $this->store = new DocumentStore(vfsStream::url("root/"));
+    }
+
     public function testGetName()
     {
         $sut = new DailyOccupancy('foo');
@@ -31,5 +42,14 @@ class DailyOccupancyTest extends TestCase
         $sut = new DailyOccupancy('foo');
         $sut->setState('2017-02-28', 0, 3);
         $this->assertSame(0, $sut->getDailyState(2017, 2, 28));
+    }
+
+    public function testRoundTrip(): void
+    {
+        $expected = DailyOccupancy::update("foo", $this->store);
+        $expected->setState('2017-02-28', 0, 3);
+        $this->store->commit();
+        $actual = DailyOccupancy::retrieve("foo", $this->store);
+        $this->assertEquals($expected, $actual);
     }
 }
