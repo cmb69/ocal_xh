@@ -236,9 +236,6 @@ class DailyCalendarController
             : (int) (new DateTimeImmutable("@{$request->time()}"))->format('n');
     }
 
-    /**
-     * @todo Properly validate the JSON payload
-     */
     protected function saveStates(Request $request, string $name): ?string
     {
         $states = json_decode($request->post("ocal_states") ?? "", true);
@@ -250,9 +247,13 @@ class DailyCalendarController
             return null;
         }
         foreach ($states as $month => $states) {
-            foreach ($states as $i => $state) {
-                $date = sprintf('%s-%02d', $month, $i + 1);
-                $occupancy->setState($date, $state, (int) $this->config["state_max"]);
+            if (preg_match('/\d{4}-\d{2}/', $month) && is_array($states)) {
+                foreach ($states as $i => $state) {
+                    if (is_int($i) && is_int($state)) {
+                        $date = sprintf('%s-%02d', $month, $i + 1);
+                        $occupancy->setState($date, $state, (int) $this->config["state_max"]);
+                    }
+                }
             }
         }
         if (!$this->store->commit()) {

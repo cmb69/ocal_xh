@@ -234,9 +234,6 @@ class HourlyCalendarController
             : (int) (new DateTimeImmutable("@{$request->time()}"))->format('W');
     }
 
-    /**
-     * @todo Properly validate the JSON payload
-     */
     protected function saveStates(Request $request, string $name): ?string
     {
         $states = json_decode($request->post("ocal_states") ?? "", true);
@@ -247,12 +244,18 @@ class HourlyCalendarController
         if ($occupancy === null) {
             return null;
         }
+        $interval = (int) $this->config['hour_interval'];
+        $first = (int) $this->config['hour_first'];
         foreach ($states as $week => $states) {
-            foreach ($states as $i => $state) {
-                $day = $i % 7 + 1;
-                $hour = (int) $this->config['hour_interval'] * (int) ($i / 7) + (int) $this->config['hour_first'];
-                $date = sprintf('%s-%02d-%02d', $week, $day, $hour);
-                $occupancy->setState($date, $state, (int) $this->config["state_max"]);
+            if (preg_match('/\d{4}-\d{2}/', $week) && is_array($states)) {
+                foreach ($states as $i => $state) {
+                    if (is_int($i) && is_int($state)) {
+                        $day = $i % 7 + 1;
+                        $hour = $interval * intdiv($i, 7) + $first;
+                        $date = sprintf('%s-%02d-%02d', $week, $day, $hour);
+                        $occupancy->setState($date, $state, (int) $this->config["state_max"]);
+                    }
+                }
             }
         }
         if (!$this->store->commit()) {
