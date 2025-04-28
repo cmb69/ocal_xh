@@ -23,6 +23,7 @@ namespace Ocal;
 
 use Ocal\Dto\ListItem;
 use Ocal\Dto\WeekListItem;
+use Ocal\Model\HourlyOccupancy;
 use Ocal\Model\Month;
 use Ocal\Model\Occupancy;
 use Ocal\Model\Week;
@@ -97,7 +98,7 @@ class ListService
         $hours = range(
             (int) $this->config['hour_first'],
             (int) $this->config['hour_last'],
-            (int) $this->config['hour_interval']
+            $this->hourlyInterval($this->config['hour_interval'])
         );
         foreach ($hours as $hour) {
             $state = $occupancy->getHourlyState($week->getYear(), $week->getWeek(), $weekday, $hour);
@@ -113,7 +114,7 @@ class ListService
         return $this->mapFilteredList($list);
     }
 
-    /** @param list<int> $range */
+    /** @param list<float> $range */
     private function formatHourlyRange(array $range): string
     {
         $start = $range[0];
@@ -122,8 +123,8 @@ class ListService
         } else {
             $end = $range[0];
         }
-        $end += (int) $this->config['hour_interval'] - 1;
-        return sprintf('%02d:00–%02d:59', $start, $end);
+        $end += $this->hourlyInterval($this->config['hour_interval']);
+        return sprintf('%05s–%05s', HourlyOccupancy::formatHourMinutes($start), HourlyOccupancy::formatHourMinutes($end));
     }
 
     /**
@@ -140,5 +141,14 @@ class ListService
             }
         }
         return $result;
+    }
+
+    public function hourlyInterval(string $hourlyInterval): float
+    {
+        if (preg_match('/^\s*(1)\s*\/\s*([2346])\s*$/', $hourlyInterval, $matches)) {
+            assert(count($matches) === 3);
+            return $matches[1] / $matches[2];
+        }
+        return (float) (int) $hourlyInterval;
     }
 }

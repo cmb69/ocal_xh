@@ -197,6 +197,7 @@ Besonders möchte ich *rothom*, der der erste Tester war, und *hixi*,
 die die stündlichen Kalender vorgeschlagen haben, danken.
 Und vielen Dank an *lck*, der schwerwiegende Fehler kurz nach der Veröffentlichung
 von Version 1.0 fand und gemeldet hat.
+Ebenfalls Dank an *Tata*, der einige Verbesserungen angeregt hat.
 
 Und zu guter letzt vielen Dank an [Peter Harteg](http://www.harteg.dk/),
 den „Vater“ von CMSimple, und allen Entwicklern von

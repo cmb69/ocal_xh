@@ -128,20 +128,20 @@ class HourlyCalendarController
         ]);
     }
 
-    /** @return list<list<object{hour:int,state:int}>> */
+    /** @return list<list<object{hour:string,state:int}>> */
     private function getDaysOfHours(Occupancy $occupancy, Week $week): array
     {
         $daysOfHours = [];
         $hours = range(
             (int) $this->config['hour_first'],
             (int) $this->config['hour_last'],
-            (int) $this->config['hour_interval']
+            $this->listService->hourlyInterval($this->config['hour_interval'])
         );
         foreach ($hours as $hour) {
             $days = [];
             foreach (range(1, 7) as $day) {
                 $days[]  = (object) array(
-                    'hour' => $hour,
+                    'hour' => HourlyOccupancy::formatHourMinutes($hour),
                     'state' => $occupancy->getHourlyState($week->getYear(), $week->getWeek(), $day, $hour)
                 );
             }
@@ -249,7 +249,7 @@ class HourlyCalendarController
             $this->store->rollback();
             return Response::error(409, $this->view->message("warning", "error_conflicts"));
         }
-        $interval = (int) $this->config['hour_interval'];
+        $interval = $this->listService->hourlyInterval($this->config['hour_interval']);
         $first = (int) $this->config['hour_first'];
         foreach ($states as $week => $states) {
             if (preg_match('/\d{4}-\d{2}/', $week) && is_array($states)) {
@@ -257,7 +257,7 @@ class HourlyCalendarController
                     if (is_int($i) && is_int($state)) {
                         $day = $i % 7 + 1;
                         $hour = $interval * intdiv($i, 7) + $first;
-                        $date = sprintf('%s-%02d-%02d', $week, $day, $hour);
+                        $date = sprintf('%s-%02d-%05s', $week, $day, HourlyOccupancy::formatHourMinutes($hour));
                         $occupancy->setState($date, $state, (int) $this->config["state_max"]);
                     }
                 }

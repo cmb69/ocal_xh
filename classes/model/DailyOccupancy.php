@@ -109,7 +109,7 @@ final class DailyOccupancy extends Occupancy implements Document
         return $this->getState($date);
     }
 
-    public function getHourlyState(int $year, int $week, int $day, int $hour): int
+    public function getHourlyState(int $year, int $week, int $day, float $hour): int
     {
         throw new LogicException("not implemented in subclass");
     }

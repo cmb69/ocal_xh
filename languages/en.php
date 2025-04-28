@@ -40,7 +40,7 @@ $plugin_tx['ocal']['syscheck_plibversion']="Plib_XH version ≥ %s";
 
 $plugin_tx['ocal']['cf_state_max']="The maximum state that is supported. See the manual section about \"States\" for details.";
 $plugin_tx['ocal']['cf_hour_first']="The first hour that shall be displayed in the hourly occupancy calendars.";
-$plugin_tx['ocal']['cf_hour_interval']="The integral hourly interval. For instance, if only every second hour should be shown, enter \"2\".";
+$plugin_tx['ocal']['cf_hour_interval']="The hourly interval. For instance, if only every second hour should be shown, enter '2'. Intervals of less than an hour are also supported: '1/2' means 30 minutes, '1/3' means 20 minutes, '1/4' means 15 minutes, and '1/6' means 10 minutes.";
 $plugin_tx['ocal']['cf_hour_last']="The last hour that shall be displayed in the hourly occupancy calendars.";
 $plugin_tx['ocal']['cf_pagination_past']="The number of months or weeks in the past the pagination should support.";
 $plugin_tx['ocal']['cf_pagination_future']="The number of months or weeks in the future the pagination should support.";

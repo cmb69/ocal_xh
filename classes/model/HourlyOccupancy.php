@@ -102,9 +102,28 @@ final class HourlyOccupancy extends Occupancy implements Document
         return self::update($name, $store);
     }
 
-    public function getHourlyState(int $year, int $week, int $day, int $hour): int
+    public static function formatHourMinutes(float $hour): string
     {
-        $date = sprintf('%04d-%02d-%02d-%02d', $year, $week, $day, $hour);
+        $int = floor($hour);
+        $frac = $hour - $int;
+        $mins = (int) round(60 * $frac);
+        // cater to imprecision for 1/3 and 1/6
+        if ($mins % 10 === 1) {
+            $mins -= 1;
+        } elseif ($mins % 10 === 9) {
+            $mins += 1;
+        }
+        if ($mins === 60) {
+            $mins -= 60;
+            $int++;
+        }
+        return sprintf("%02d:%02d", $int, $mins);
+    }
+
+    public function getHourlyState(int $year, int $week, int $day, float $hour): int
+    {
+        $hour = self::formatHourMinutes($hour);
+        $date = sprintf('%04d-%02d-%02d-%05s', $year, $week, $day, $hour);
         return $this->getState($date);
     }
 

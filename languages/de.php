@@ -40,7 +40,7 @@ $plugin_tx['ocal']['syscheck_plibversion']="die Plib_XH-Version ≥ %s";
 
 $plugin_tx['ocal']['cf_state_max']="Der höchste Zustand, der unterstüzt wird. Details sind im Abschnitt \"Zustände\" des Handbuchs zu finden.";
 $plugin_tx['ocal']['cf_hour_first']="Die erste Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";
-$plugin_tx['ocal']['cf_hour_interval']="Das ganzzahlige stündliche Intervall. Soll beispielsweise nur jede zweite Stunde angezeigt werden, geben Sie \"2\" ein.";
+$plugin_tx['ocal']['cf_hour_interval']="Das stündliche Intervall. Soll beispielsweise nur jede zweite Stunde angezeigt werden, geben Sie '2' ein. Intervalle kürzer als eine Stunde werden ebenfalls unterstützt: '1/2' bedeutet 30 Minuten, '1/3' bedeutet 20 Minuten, '1/4' bedeutet 15 Minuten, und '1/6' bedeutet 10 Minuten.";
 $plugin_tx['ocal']['cf_hour_last']="Die letzte Stunde, die in den stündlichen Belegungskalendern angezeigt werden soll.";
 $plugin_tx['ocal']['cf_pagination_past']="Die Anzahl der Monate bzw. Wochen in der Vergangenheit, die die Paginierung unterstützen soll.";
 $plugin_tx['ocal']['cf_pagination_future']="Die Anzahl der Monate bzw. Wochen in der Zukunft, die die Paginierung unterstützen soll.";

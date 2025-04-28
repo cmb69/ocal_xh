@@ -41,7 +41,7 @@ abstract class Occupancy
 
     abstract public function getDailyState(int $year, int $month, int $day): int;
 
-    abstract public function getHourlyState(int $year, int $week, int $day, int $hour): int;
+    abstract public function getHourlyState(int $year, int $week, int $day, float $hour): int;
 
     public function getName(): string
     {
@@ -70,6 +70,9 @@ abstract class Occupancy
     /** @return void */
     public function setState(string $date, int $state, int $max)
     {
+        if (strlen($date) === 13) { // old hourly format (YYYY-oo-dd-hh)
+            $date .= ":00";
+        }
         if ($state > 0 && $state <= $max) {
             $this->states[$date] = $state;
         } else {

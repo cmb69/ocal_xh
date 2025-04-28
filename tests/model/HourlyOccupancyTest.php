@@ -93,4 +93,18 @@ class HourlyOccupancyTest extends TestCase
         $actual = HourlyOccupancy::retrieve("bar", $this->store);
         $this->assertEquals($expected, $actual);
     }
+
+    /** @dataProvider formatHourMinutesData */
+    public function testFormatHourMinutes(float $hour, string $expected): void
+    {
+        $this->assertSame($expected, HourlyOccupancy::formatHourMinutes($hour));
+    }
+
+    public function formatHourMinutesData(): array
+    {
+        return [
+            [17.99, "18:00"],
+            [9.01, "09:00"],
+        ];
+    }
 }
