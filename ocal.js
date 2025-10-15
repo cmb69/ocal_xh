@@ -156,10 +156,10 @@ var editor = Object.seal({
         if (!(event.target instanceof HTMLElement)) return;
         var target = event.target;
         if (target.dataset.ocal_state === undefined) return;
-        this.element.querySelectorAll(".ocal_toolbar").forEach(function (element) {
-            element.querySelectorAll("span").forEach(function (element) {
-                element.style.borderWidth = "";
-            });
+        /** @type {HTMLElement[]} */ (
+            array(this.element.querySelectorAll(".ocal_toolbar span"))
+        ).forEach(function (element) {
+            element.style.borderWidth = "";
         });
         this.currentState = +target.dataset.ocal_state;
         target.style.borderWidth = "3px";
