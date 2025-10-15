@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["es5", "dom"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "strictNullChecks": false
+  },
+  "files": [
+    "ocal.js"
+  ]
+}

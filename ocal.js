@@ -17,9 +17,13 @@
  * along with Ocal_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// @ts-check
+/**
+ * @typedef {Object} Config
+ * @prop {string} message_unsaved_changes
+ * @prop {boolean} isAdmin
+ */
 
-/** @type {Object} */
+/** @type {Config} */
 var config;
 
 /** @type {function(void): void} */
@@ -74,7 +78,7 @@ function makeEditor(element, occupancy) {
      * @returns {Array<number>}
      */
     function getCalendarStates(calendar) {
-        let states = [];
+        let states = /** @type {number[]} */ ([]);
         calendar.querySelectorAll("td").forEach(cell => {
             if (cell.classList.contains("ocal_state")) {
                 states.push(+(cell.dataset.ocal_state || ""));

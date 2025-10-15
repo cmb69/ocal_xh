@@ -43,9 +43,7 @@
     <exec executable="jshint" passthru="true" checkreturn="true">
       <arg line="ocal.min.js"/>
     </exec>
-    <exec executable="tsc" passthru="true" checkreturn="true">
-      <arg line="--checkJs --strictNullChecks --lib ES6,DOM --noEmit ocal.min.js"/>
-    </exec>
+    <exec executable="tsc" passthru="true" checkreturn="true"/>
   </target>
 
   <target name="minify" description="minifies JS">
@@ -95,6 +93,7 @@
         <exclude name="phpstan.*"/>
         <exclude name="phpunit.xml"/>
         <exclude name="teplad.xml"/>
+        <exclude name="tsconfig.json"/>
       </fileset>
     </move>
     <delete dir="export"/>
