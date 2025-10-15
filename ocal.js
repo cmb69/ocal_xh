@@ -119,6 +119,7 @@
             this.loaderbars.forEach(function (bar) {
                 bar.style.display = "block";
             });
+            event.preventDefault();
         },
         /** @type {(request: XMLHttpRequest) => void} */
         handleLoadReadyStateChange: function (request) {
