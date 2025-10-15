@@ -119,34 +119,36 @@
             var request = new XMLHttpRequest();
             request.open("GET", target.href + "&ocal_name=" + calendar.dataset.name);
             request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
-            request.onreadystatechange = function () {
-                if (request.readyState === 4) {
-                    if (request.status === 200) {
-                        calendar.outerHTML = request.responseText;
-                        init();
-                    } else {
-                        /** @type {HTMLElement[]} */ (
-                            array(calendar.querySelectorAll(".ocal_loaderbar"))
-                        ).forEach(function (bar) {
-                            bar.style.display = "none";
-                        });
-                        array(calendar.querySelectorAll(".ocal_statusbar")).forEach(function (bar) {
-                            bar.innerHTML =
-                                '<p class="xh_fail">' +
-                                request.status +
-                                " " +
-                                request.statusText +
-                                "</p>";
-                        });
-                    }
-                }
-            };
+            request.onreadystatechange = this.handleLoadReadyStateChange.bind(this, request);
             request.send(null);
             /** @type {HTMLElement[]} */ (
                 array(calendar.querySelectorAll(".ocal_loaderbar"))
             ).forEach(function (bar) {
                 bar.style.display = "block";
             });
+        },
+        /** @type {(request: XMLHttpRequest) => void} */
+        handleLoadReadyStateChange: function (request) {
+            if (request.readyState === 4) {
+                if (request.status === 200) {
+                    this.element.outerHTML = request.responseText;
+                    init();
+                } else {
+                    /** @type {HTMLElement[]} */ (
+                        array(this.element.querySelectorAll(".ocal_loaderbar"))
+                    ).forEach(function (bar) {
+                        bar.style.display = "none";
+                    });
+                    array(this.element.querySelectorAll(".ocal_statusbar")).forEach(function (bar) {
+                        bar.innerHTML =
+                            '<p class="xh_fail">' +
+                            request.status +
+                            " " +
+                            request.statusText +
+                            "</p>";
+                    });
+                }
+            }
         },
         /** @type {(event: Event) => void} */
         onClick: function (event) {
@@ -187,7 +189,7 @@
             }, /** @type {{[x: string]: number[]}} */ ({}));
         },
         /** @type {(request: XMLHttpRequest) => void} */
-        onSaveReadyStateChange: function (request) {
+        handleSaveReadyStateChange: function (request) {
             if (request.readyState === 4) {
                 this.loaderbars.forEach(function (bar) {
                     bar.style.display = "none";
@@ -253,7 +255,7 @@
             if (checksumInput) {
                 payload += "&ocal_checksum=" + encodeURIComponent(checksumInput.value);
             }
-            request.onreadystatechange = this.onSaveReadyStateChange.bind(this, request);
+            request.onreadystatechange = this.handleSaveReadyStateChange.bind(this, request);
             request.send(payload);
             this.loaderbars.forEach(function (bar) {
                 bar.style.display = "block";
