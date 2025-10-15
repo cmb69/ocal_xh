@@ -85,7 +85,7 @@ var editor = Object.seal({
         let target = event.target;
         if (target.classList.contains("ocal_state")) {
             if (target.dataset.ocal_state !== undefined) {
-                if (parseInt(target.dataset.ocal_state) !== this.currentState) {
+                if (+target.dataset.ocal_state !== this.currentState) {
                     target.dataset.ocal_state = this.currentState.toString();
                     this.element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
                         bar.innerHTML = "";
@@ -154,7 +154,7 @@ var editor = Object.seal({
                 element.style.borderWidth = "";
             });
         });
-        this.currentState = parseInt(target.dataset.ocal_state);
+        this.currentState = +target.dataset.ocal_state;
         target.style.borderWidth = "3px";
         this.element.querySelectorAll(".ocal_calendar td.ocal_state").forEach((cell) => {
             if (!(cell instanceof HTMLElement)) return;
