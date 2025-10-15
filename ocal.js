@@ -31,9 +31,6 @@
         return Array.prototype.slice.call(arrayLike);
     }
 
-    /** @type {Config} */
-    var config;
-
     /** @type {() => void} */
     var init;
 
@@ -47,6 +44,10 @@
         currentState: undefined,
         /** @type {boolean} */
         unsavedChanges: undefined,
+        /** @type {Config} */
+        get config() {
+            return JSON.parse(this.element.dataset.ocalConfig);
+        },
         /** @type {HTMLElement[]} */
         get stateButtons() {
             return array(this.element.querySelectorAll(".ocal_toolbar span"));
@@ -64,7 +65,7 @@
             var classList = this.element.classList;
             this.unsavedChanges = false;
             if (
-                config.isAdmin &&
+                this.config.isAdmin &&
                 (classList.contains("ocal_calendars") || classList.contains("ocal_week_calendars"))
             ) {
                 this.occupancy = this.element.dataset.name;
@@ -104,7 +105,7 @@
         onModeOrPaginationClick: function (event) {
             var target = /** @type {HTMLAnchorElement} */ (event.target);
             if (this.unsavedChanges) {
-                if (window.confirm(config.message_unsaved_changes)) {
+                if (window.confirm(this.config.message_unsaved_changes)) {
                     this.unsavedChanges = false;
                     removeEventListener("beforeunload", this);
                 } else {
@@ -255,7 +256,7 @@
         },
         /** @type {(event: Event) => string} */
         warning: function (event) {
-            var confirmation = config.message_unsaved_changes;
+            var confirmation = this.config.message_unsaved_changes;
             // @ts-ignore
             event.returnValue = confirmation;
             return confirmation;
@@ -277,7 +278,6 @@
             )
         );
         if (!element) return;
-        config = JSON.parse(element.dataset.ocalConfig);
         makeWidget(element);
     };
 
