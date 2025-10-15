@@ -31,9 +31,6 @@
         return Array.prototype.slice.call(arrayLike);
     }
 
-    /** @type {() => void} */
-    var init;
-
     /** @readonly */
     var widget = Object.seal({
         /** @readonly @type {HTMLElement} */
@@ -270,7 +267,8 @@
         ).init();
     }
 
-    init = function () {
+    /** @type {() => void} */
+    function init() {
         /** @type {HTMLElement[]} */ (
             array(
                 document.querySelectorAll(
@@ -279,7 +277,7 @@
                 )
             )
         ).forEach(makeWidget);
-    };
+    }
 
     init();
 })();

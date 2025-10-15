@@ -1,6 +1,6 @@
 {
     "browser": true,
     "esversion": 5,
-    "latedef": true,
+    "latedef": "nofunc",
     "strict": true
 }
