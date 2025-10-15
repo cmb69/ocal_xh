@@ -5,17 +5,10 @@
     text-align: center;
     position: relative;
 }
-.ocal_toolbar, .ocal_loaderbar {
+.ocal_toolbar {
     margin: 1em 0;
 }
-.ocal_loaderbar {
-    display: none;
-    /*position: absolute;*/
-    /*left: 40%;*/
-    /*top: 40%;*/
-    /*z-index: 1;*/
-}
-.ocal_loaderbar progress {
+.ocal_toolbar progress {
     width: 50%;
 }
 .ocal_toolbar span {

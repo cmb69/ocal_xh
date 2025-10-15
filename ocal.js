@@ -53,10 +53,6 @@
             return array(this.element.querySelectorAll(".ocal_toolbar span"));
         },
         /** @type {HTMLElement} */
-        get loaderbar() {
-            return this.element.querySelector(".ocal_loaderbar");
-        },
-        /** @type {HTMLElement} */
         get statusbar() {
             return this.element.querySelector(".ocal_statusbar");
         },
@@ -110,7 +106,7 @@
             request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
             request.onreadystatechange = this.handleLoadReadyStateChange.bind(this, request);
             request.send(null);
-            this.loaderbar.style.display = "block";
+            this.statusbar.innerHTML = "<progress></progress>";
             event.preventDefault();
         },
         /** @type {(request: XMLHttpRequest) => void} */
@@ -121,7 +117,6 @@
                 this.element.innerHTML = matches[0];
                 this.init();
             } else {
-                this.loaderbar.style.display = "none";
                 this.statusbar.innerHTML =
                     '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
             }
@@ -175,7 +170,6 @@
         /** @type {(request: XMLHttpRequest) => void} */
         handleSaveReadyStateChange: function (request) {
             if (request.readyState !== 4) return;
-            this.loaderbar.style.display = "none";
             if (request.status === 200) {
                 this.markClean();
                 this.statusbar.innerHTML = request.responseText;
@@ -212,7 +206,7 @@
             request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             request.onreadystatechange = this.handleSaveReadyStateChange.bind(this, request);
             request.send(this.getPayload());
-            this.loaderbar.style.display = "block";
+            this.statusbar.innerHTML = "<progress></progress>";
         },
         /** @type {() => string} */
         getPayload: function () {
