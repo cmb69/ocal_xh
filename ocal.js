@@ -49,7 +49,7 @@
     }
 
     /** @readonly */
-    var editor = Object.seal({
+    var widget = Object.seal({
         /** @readonly @type {HTMLElement} */
         element: undefined,
         /** @type {string} */
@@ -70,6 +70,13 @@
         },
         /** @type {() => void} */
         init: function () {
+            var classList = this.element.classList;
+            if (
+                !config.isAdmin ||
+                !(classList.contains("ocal_calendars") || classList.contains("ocal_week_calendars"))
+            ) {
+                return;
+            }
             this.occupancy = this.element.dataset.name;
             /** @type {HTMLButtonElement[]} */ (
                 array(this.element.querySelectorAll(".ocal_save"))
@@ -208,9 +215,9 @@
     });
 
     /** @type {(element: HTMLElement) => void} */
-    function makeEditor(element) {
-        /** @type {typeof editor} */ (
-            Object.create(editor, { element: { value: element } })
+    function makeWidget(element) {
+        /** @type {typeof widget} */ (
+            Object.create(widget, { element: { value: element } })
         ).init();
     }
 
@@ -276,17 +283,7 @@
         ).forEach(function (element) {
             element.onclick = onModeOrPaginationClick;
         });
-        if (config.isAdmin) {
-            /** @type {HTMLElement[]} */ (
-                array(
-                    document.querySelectorAll(
-                        ".ocal_calendars[data-name], .ocal_week_calendars[data-name]"
-                    )
-                )
-            ).forEach(function (element) {
-                makeEditor(element);
-            });
-        }
+        makeWidget(element);
     };
 
     init();
