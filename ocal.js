@@ -26,16 +26,13 @@
 /** @type {Config} */
 var config;
 
-/** @type {function(void): void} */
+/** @type {() => void} */
 var init;
 
 /** @type {boolean} */
 var unsavedChanges;
 
-/**
- * @param {Event} event
- * @returns {string}
- */
+/** @type {(event: Event) => string} */
 function warning(event) {
     let confirmation = config.message_unsaved_changes;
     // @ts-ignore
@@ -43,19 +40,12 @@ function warning(event) {
     return confirmation;
 }
 
-/**
- * @param {HTMLElement} element
- * @param {string} occupancy
- * @returns {void}
- */
+/** @type {(element: HTMLElement, occupancy: string) => void} */
 function makeEditor(element, occupancy) {
     /** @type {number} */
     var currentState;
 
-    /**
-     * @param {Event} event
-     * @returns {void}
-     */
+    /** @type {(event: Event) => void} */
     function onClick(event) {
         if (!(event.target instanceof HTMLElement) || typeof currentState !== "number") return;
         let target = event.target;
@@ -73,10 +63,7 @@ function makeEditor(element, occupancy) {
         }
     }
 
-    /**
-     * @param {HTMLElement} calendar
-     * @returns {Array<number>}
-     */
+    /** @type {(calendar: HTMLElement) => number[]} */
     function getCalendarStates(calendar) {
         let states = /** @type {number[]} */ ([]);
         calendar.querySelectorAll("td").forEach((cell) => {
@@ -87,11 +74,9 @@ function makeEditor(element, occupancy) {
         return states;
     }
 
-    /**
-     * @returns {Object<string, Array<number>>}
-     */
+    /** @type {() => {[x: string]: number[]}} */
     function getAllCalendarStates() {
-        /** @type {Object<string, Array<number>>} */
+        /** @type {{[x: string]: number[]}} */
         var states = {};
         element.querySelectorAll(".ocal_calendar").forEach((calendar) => {
             if (!(calendar instanceof HTMLElement) || calendar.dataset.ocal_date === undefined)
@@ -101,10 +86,7 @@ function makeEditor(element, occupancy) {
         return states;
     }
 
-    /**
-     * @param {XMLHttpRequest} request
-     * @returns {void}
-     */
+    /** @type {(request: XMLHttpRequest) => void} */
     function doReadyStateChange(request) {
         if (request.readyState === 4) {
             element.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
@@ -134,10 +116,7 @@ function makeEditor(element, occupancy) {
         }
     }
 
-    /**
-     * @param {MouseEvent} event
-     * @returns {void}
-     */
+    /** @type {(event: MouseEvent) => void} */
     function onSelectState(event) {
         if (!(event.target instanceof HTMLElement)) return;
         let target = event.target;
@@ -155,9 +134,7 @@ function makeEditor(element, occupancy) {
         });
     }
 
-    /**
-     * @returns {void}
-     */
+    /** @type {() => void} */
     function onSave() {
         let request = new XMLHttpRequest();
         request.open(
@@ -200,10 +177,7 @@ function makeEditor(element, occupancy) {
     });
 }
 
-/**
- * @param {MouseEvent} event
- * @returns {void|false}
- */
+/** @type {(event: MouseEvent) => void|false} */
 function onModeOrPaginationClick(event) {
     if (!(event.target instanceof HTMLAnchorElement)) return;
     let target = event.target;
