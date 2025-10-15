@@ -181,13 +181,12 @@
         /** @type {() => void} */
         onSave: function () {
             var request = new XMLHttpRequest();
-            request.open(
-                "POST",
+            var url =
                 location.href.replace(/#.*$/, "") +
-                    "&ocal_name=" +
-                    this.occupancy +
-                    "&ocal_action=save"
-            );
+                "&ocal_name=" +
+                this.occupancy +
+                "&ocal_action=save";
+            request.open("POST", url);
             request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             var states = JSON.stringify(this.getAllCalendarStates());
             var payload = "ocal_states=" + encodeURIComponent(states);
