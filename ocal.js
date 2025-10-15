@@ -53,6 +53,10 @@ var editor = Object.seal({
     occupancy: undefined,
     /** @type {number} */
     currentState: undefined,
+    /** @type {HTMLElement[]} */
+    get statusbars() {
+        return array(this.element.querySelectorAll(".ocal_statusbar"));
+    },
     /** @type {() => void} */
     init: function () {
         this.occupancy = this.element.dataset.name;
@@ -87,7 +91,7 @@ var editor = Object.seal({
             if (target.dataset.ocal_state !== undefined) {
                 if (+target.dataset.ocal_state !== this.currentState) {
                     target.dataset.ocal_state = this.currentState.toString();
-                    this.element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
+                    this.statusbars.forEach((bar) => {
                         bar.innerHTML = "";
                     });
                     addEventListener("beforeunload", warning);
@@ -125,11 +129,11 @@ var editor = Object.seal({
             if (request.status === 200) {
                 removeEventListener("beforeunload", warning);
                 unsavedChanges = false;
-                this.element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
+                this.statusbars.forEach((bar) => {
                     bar.innerHTML = request.responseText;
                 });
             } else {
-                this.element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
+                this.statusbars.forEach((bar) => {
                     if (request.responseText) {
                         bar.innerHTML = request.responseText;
                     } else {
