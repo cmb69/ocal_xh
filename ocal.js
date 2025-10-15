@@ -72,23 +72,24 @@
         init: function () {
             var classList = this.element.classList;
             if (
-                !config.isAdmin ||
-                !(classList.contains("ocal_calendars") || classList.contains("ocal_week_calendars"))
+                config.isAdmin &&
+                (classList.contains("ocal_calendars") || classList.contains("ocal_week_calendars"))
             ) {
-                return;
+                this.occupancy = this.element.dataset.name;
+                /** @type {HTMLButtonElement[]} */ (
+                    array(this.element.querySelectorAll(".ocal_save"))
+                ).forEach(function (button) {
+                    button.disabled = false;
+                });
             }
-            this.occupancy = this.element.dataset.name;
-            /** @type {HTMLButtonElement[]} */ (
-                array(this.element.querySelectorAll(".ocal_save"))
-            ).forEach(function (button) {
-                button.disabled = false;
-            });
             this.element.addEventListener("click", this);
         },
         /** @type {(event: Event) => void} */
         handleEvent: function (event) {
             var target = /** @type {Element} */ (event.target);
             switch (target.classList[0]) {
+                case "ocal_button":
+                    return this.onModeOrPaginationClick(/** @type {MouseEvent} */ (event));
                 case "ocal_state":
                     switch (target.localName) {
                         case "span":
@@ -100,6 +101,52 @@
                 case "ocal_save":
                     return this.onSave();
             }
+        },
+        /** @type {(event: MouseEvent) => void} */
+        onModeOrPaginationClick: function (event) {
+            var target = /** @type {HTMLAnchorElement} */ (event.target);
+            if (target.parentElement === null || target.parentElement.parentElement === null)
+                return;
+            if (unsavedChanges) {
+                if (window.confirm(config.message_unsaved_changes)) {
+                    unsavedChanges = false;
+                    removeEventListener("beforeunload", warning);
+                } else {
+                    event.preventDefault();
+                }
+            }
+            var calendar = target.parentElement.parentElement;
+            var request = new XMLHttpRequest();
+            request.open("GET", target.href + "&ocal_name=" + calendar.dataset.name);
+            request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
+            request.onreadystatechange = function () {
+                if (request.readyState === 4) {
+                    if (request.status === 200) {
+                        calendar.outerHTML = request.responseText;
+                        init();
+                    } else {
+                        /** @type {HTMLElement[]} */ (
+                            array(calendar.querySelectorAll(".ocal_loaderbar"))
+                        ).forEach(function (bar) {
+                            bar.style.display = "none";
+                        });
+                        array(calendar.querySelectorAll(".ocal_statusbar")).forEach(function (bar) {
+                            bar.innerHTML =
+                                '<p class="xh_fail">' +
+                                request.status +
+                                " " +
+                                request.statusText +
+                                "</p>";
+                        });
+                    }
+                }
+            };
+            request.send(null);
+            /** @type {HTMLElement[]} */ (
+                array(calendar.querySelectorAll(".ocal_loaderbar"))
+            ).forEach(function (bar) {
+                bar.style.display = "block";
+            });
         },
         /** @type {(event: Event) => void} */
         onClick: function (event) {
@@ -221,53 +268,6 @@
         ).init();
     }
 
-    /** @type {(event: MouseEvent) => void|false} */
-    function onModeOrPaginationClick(event) {
-        var target = /** @type {HTMLAnchorElement} */ (event.target);
-        if (target.parentElement === null || target.parentElement.parentElement === null) return;
-        if (unsavedChanges) {
-            if (window.confirm(config.message_unsaved_changes)) {
-                unsavedChanges = false;
-                removeEventListener("beforeunload", warning);
-            } else {
-                return false;
-            }
-        }
-        var calendar = target.parentElement.parentElement;
-        var request = new XMLHttpRequest();
-        request.open("GET", target.href + "&ocal_name=" + calendar.dataset.name);
-        request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
-        request.onreadystatechange = function () {
-            if (request.readyState === 4) {
-                if (request.status === 200) {
-                    calendar.outerHTML = request.responseText;
-                    init();
-                } else {
-                    /** @type {HTMLElement[]} */ (
-                        array(calendar.querySelectorAll(".ocal_loaderbar"))
-                    ).forEach(function (bar) {
-                        bar.style.display = "none";
-                    });
-                    array(calendar.querySelectorAll(".ocal_statusbar")).forEach(function (bar) {
-                        bar.innerHTML =
-                            '<p class="xh_fail">' +
-                            request.status +
-                            " " +
-                            request.statusText +
-                            "</p>";
-                    });
-                }
-            }
-        };
-        request.send(null);
-        /** @type {HTMLElement[]} */ (array(calendar.querySelectorAll(".ocal_loaderbar"))).forEach(
-            function (bar) {
-                bar.style.display = "block";
-            }
-        );
-        return false;
-    }
-
     init = function () {
         unsavedChanges = false;
         var element = /** @type {HTMLElement} */ (
@@ -278,11 +278,6 @@
         );
         if (!element) return;
         config = JSON.parse(element.dataset.ocalConfig);
-        /** @type {HTMLAnchorElement[]} */ (
-            array(document.querySelectorAll(".ocal_pagination a, .ocal_mode a"))
-        ).forEach(function (element) {
-            element.onclick = onModeOrPaginationClick;
-        });
         makeWidget(element);
     };
 
