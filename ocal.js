@@ -37,9 +37,6 @@
     /** @type {() => void} */
     var init;
 
-    /** @type {boolean} */
-    var unsavedChanges;
-
     /** @readonly */
     var widget = Object.seal({
         /** @readonly @type {HTMLElement} */
@@ -48,6 +45,8 @@
         occupancy: undefined,
         /** @type {number} */
         currentState: undefined,
+        /** @type {boolean} */
+        unsavedChanges: undefined,
         /** @type {HTMLElement[]} */
         get stateButtons() {
             return array(this.element.querySelectorAll(".ocal_toolbar span"));
@@ -63,6 +62,7 @@
         /** @type {() => void} */
         init: function () {
             var classList = this.element.classList;
+            this.unsavedChanges = false;
             if (
                 config.isAdmin &&
                 (classList.contains("ocal_calendars") || classList.contains("ocal_week_calendars"))
@@ -103,9 +103,9 @@
         /** @type {(event: MouseEvent) => void} */
         onModeOrPaginationClick: function (event) {
             var target = /** @type {HTMLAnchorElement} */ (event.target);
-            if (unsavedChanges) {
+            if (this.unsavedChanges) {
                 if (window.confirm(config.message_unsaved_changes)) {
-                    unsavedChanges = false;
+                    this.unsavedChanges = false;
                     removeEventListener("beforeunload", this);
                 } else {
                     event.preventDefault();
@@ -154,7 +154,7 @@
                             bar.innerHTML = "";
                         });
                         addEventListener("beforeunload", this);
-                        unsavedChanges = true;
+                        this.unsavedChanges = true;
                     }
                 }
             }
@@ -188,7 +188,7 @@
                 });
                 if (request.status === 200) {
                     removeEventListener("beforeunload", this);
-                    unsavedChanges = false;
+                    this.unsavedChanges = false;
                     this.statusbars.forEach(function (bar) {
                         bar.innerHTML = request.responseText;
                     });
@@ -270,7 +270,6 @@
     }
 
     init = function () {
-        unsavedChanges = false;
         var element = /** @type {HTMLElement} */ (
             document.querySelector(
                 ".ocal_calendars[data-ocal-config], .ocal_week_calendars[data-ocal-config], " +
