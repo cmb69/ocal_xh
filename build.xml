@@ -41,7 +41,7 @@
 
   <target name="js" description="run jshint and tsc">
     <exec executable="jshint" passthru="true" checkreturn="true">
-      <arg line="ocal.min.js"/>
+      <arg line="ocal.js"/>
     </exec>
     <exec executable="tsc" passthru="true" checkreturn="true"/>
   </target>
