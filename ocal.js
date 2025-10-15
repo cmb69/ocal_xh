@@ -271,14 +271,14 @@
     }
 
     init = function () {
-        var element = /** @type {HTMLElement} */ (
-            document.querySelector(
-                ".ocal_calendars[data-ocal-config], .ocal_week_calendars[data-ocal-config], " +
-                    ".ocal_lists[data-ocal-config], .ocal_week_lists[data-ocal-config]"
+        /** @type {HTMLElement[]} */ (
+            array(
+                document.querySelectorAll(
+                    ".ocal_calendars[data-ocal-config], .ocal_week_calendars[data-ocal-config], " +
+                        ".ocal_lists[data-ocal-config], .ocal_week_lists[data-ocal-config]"
+                )
             )
-        );
-        if (!element) return;
-        makeWidget(element);
+        ).forEach(makeWidget);
     };
 
     init();
