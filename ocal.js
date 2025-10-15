@@ -40,14 +40,6 @@
     /** @type {boolean} */
     var unsavedChanges;
 
-    /** @type {(event: Event) => string} */
-    function warning(event) {
-        var confirmation = config.message_unsaved_changes;
-        // @ts-ignore
-        event.returnValue = confirmation;
-        return confirmation;
-    }
-
     /** @readonly */
     var widget = Object.seal({
         /** @readonly @type {HTMLElement} */
@@ -87,19 +79,25 @@
         /** @type {(event: Event) => void} */
         handleEvent: function (event) {
             var target = /** @type {Element} */ (event.target);
-            switch (target.classList[0]) {
-                case "ocal_button":
-                    return this.onModeOrPaginationClick(/** @type {MouseEvent} */ (event));
-                case "ocal_state":
-                    switch (target.localName) {
-                        case "span":
-                            return this.onSelectState(/** @type {MouseEvent} */ (event));
-                        case "td":
-                            return this.onClick(event);
+            switch (event.type) {
+                case "click":
+                    switch (target.classList[0]) {
+                        case "ocal_button":
+                            return this.onModeOrPaginationClick(/** @type {MouseEvent} */ (event));
+                        case "ocal_state":
+                            switch (target.localName) {
+                                case "span":
+                                    return this.onSelectState(/** @type {MouseEvent} */ (event));
+                                case "td":
+                                    return this.onClick(event);
+                            }
+                            break;
+                        case "ocal_save":
+                            return this.onSave();
                     }
                     break;
-                case "ocal_save":
-                    return this.onSave();
+                case "beforeunload":
+                    this.warning(event);
             }
         },
         /** @type {(event: MouseEvent) => void} */
@@ -108,7 +106,7 @@
             if (unsavedChanges) {
                 if (window.confirm(config.message_unsaved_changes)) {
                     unsavedChanges = false;
-                    removeEventListener("beforeunload", warning);
+                    removeEventListener("beforeunload", this);
                 } else {
                     event.preventDefault();
                 }
@@ -154,7 +152,7 @@
                         this.statusbars.forEach(function (bar) {
                             bar.innerHTML = "";
                         });
-                        addEventListener("beforeunload", warning);
+                        addEventListener("beforeunload", this);
                         unsavedChanges = true;
                     }
                 }
@@ -188,7 +186,7 @@
                     bar.style.display = "none";
                 });
                 if (request.status === 200) {
-                    removeEventListener("beforeunload", warning);
+                    removeEventListener("beforeunload", this);
                     unsavedChanges = false;
                     this.statusbars.forEach(function (bar) {
                         bar.innerHTML = request.responseText;
@@ -253,6 +251,13 @@
             this.loaderbars.forEach(function (bar) {
                 bar.style.display = "block";
             });
+        },
+        /** @type {(event: Event) => string} */
+        warning: function (event) {
+            var confirmation = config.message_unsaved_changes;
+            // @ts-ignore
+            event.returnValue = confirmation;
+            return confirmation;
         }
     });
 
