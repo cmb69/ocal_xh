@@ -30,7 +30,17 @@
     <exec executable="phpunit" passthru="true" checkreturn="true"/>
   </target>
 
-  <target name="check" description="runs all checks" depends="sniff,stan,test"/>
+  <target name="js" description="formats and checks JS">
+    <exec executable="prettier" passthru="true" checkreturn="true">
+      <arg line="--write --print-width 100 --tab-width 4 --trailing-comma es5 ocal.js"/>
+    </exec>
+    <exec executable="jshint" passthru="true" checkreturn="true">
+      <arg line="ocal.js"/>
+    </exec>
+    <exec executable="tsc" passthru="true" checkreturn="true"/>
+  </target>
+
+  <target name="check" description="runs all checks" depends="sniff,stan,test,js"/>
 
   <target name="coverage" description="generates coverage report">
     <exec executable="phpunit" passthru="true" checkreturn="true">
@@ -39,18 +49,9 @@
     </exec>
   </target>
 
-  <target name="js" description="run jshint and tsc">
-    <exec executable="jshint" passthru="true" checkreturn="true">
-      <arg line="ocal.min.js"/>
-    </exec>
-    <exec executable="tsc" passthru="true" checkreturn="true">
-      <arg line="--checkJs --strictNullChecks --lib ES6,DOM --noEmit ocal.min.js"/>
-    </exec>
-  </target>
-
   <target name="minify" description="minifies JS">
     <exec executable="uglifyjs" checkreturn="true" dir="${dir}">
-      <arg line="ocal.js --compress --mangle --output ocal.min.js"/>
+      <arg line="ocal.js --no-module --compress --mangle --output ocal.min.js"/>
     </exec>
    </target>
 
@@ -95,6 +96,7 @@
         <exclude name="phpstan.*"/>
         <exclude name="phpunit.xml"/>
         <exclude name="teplad.xml"/>
+        <exclude name="tsconfig.json"/>
       </fileset>
     </move>
     <delete dir="export"/>

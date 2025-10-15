@@ -15,12 +15,10 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
  * @var string $statusbar
  * @var string $weekPagination
  * @var array<string,mixed> $js_config
- * @var string $js_script
  * @var string $checksum
  */
 ?>
 
-<script type="module" src="<?=$this->esc($js_script)?>"></script>
 <div class="ocal_week_calendars" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
   <?=$this->raw($modeLink)?>
 <?if ($isEditable):?>

@@ -6,11 +6,13 @@ use ApprovalTests\Approvals;
 use Ocal\Model\DailyOccupancy;
 use Ocal\Model\HourlyOccupancy;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Plib\CsrfProtector;
 use Plib\DocumentStore;
 use Plib\FakeRequest;
+use Plib\JavaScript;
 use Plib\View;
 
 class HourlyCalendarControllerTest extends TestCase
@@ -30,6 +32,9 @@ class HourlyCalendarControllerTest extends TestCase
     /** @var DocumentStore */
     private $store;
 
+    /** @var JavaScript&MockObject */
+    private $javaScript;
+
     /** @var View */
     private $view;
 
@@ -42,6 +47,7 @@ class HourlyCalendarControllerTest extends TestCase
         $this->lang = XH_includeVar("./languages/en.php", "plugin_tx")["ocal"];
         $this->listService = new ListService($this->config, $this->lang);
         $this->store = new DocumentStore(vfsStream::url("root/"));
+        $this->javaScript = $this->createMock(JavaScript::class);
         $this->view = new View("./views/", $this->lang);
     }
 
@@ -53,6 +59,7 @@ class HourlyCalendarControllerTest extends TestCase
             $this->config,
             $this->listService,
             $this->store,
+            $this->javaScript,
             $this->view,
             true,
             "test-hourly",
@@ -71,6 +78,7 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testDefaultActionRendersCalendar(): void
     {
+        $this->javaScript->expects($this->once())->method("include")->with("./ocal");
         $response = $this->sut()(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-hourly", 1);
         Approvals::verifyHtml($response->output());
     }
@@ -105,6 +113,7 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testListActionRendersListWithoutEntries(): void
     {
+        $this->javaScript->expects($this->once())->method("include")->with("./ocal");
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
             "time" => 1688256000,
