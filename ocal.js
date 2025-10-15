@@ -40,22 +40,23 @@ function warning(event) {
     return confirmation;
 }
 
-/** @type {(element: HTMLElement) => void} */
-function makeEditor(element) {
+/** @readonly */
+var editor = Object.seal({
+    /** @readonly @type {HTMLElement} */
+    element: undefined,
     /** @type {string} */
-    var occupancy;
+    occupancy: undefined,
     /** @type {number} */
-    var currentState;
-
+    currentState: undefined,
     /** @type {(event: Event) => void} */
-    function onClick(event) {
-        if (!(event.target instanceof HTMLElement) || typeof currentState !== "number") return;
+    onClick: function (event) {
+        if (!(event.target instanceof HTMLElement) || typeof this.currentState !== "number") return;
         let target = event.target;
         if (target.classList.contains("ocal_state")) {
             if (target.dataset.ocal_state !== undefined) {
-                if (parseInt(target.dataset.ocal_state) !== currentState) {
-                    target.dataset.ocal_state = currentState.toString();
-                    element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
+                if (parseInt(target.dataset.ocal_state) !== this.currentState) {
+                    target.dataset.ocal_state = this.currentState.toString();
+                    this.element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
                         bar.innerHTML = "";
                     });
                     addEventListener("beforeunload", warning);
@@ -63,10 +64,9 @@ function makeEditor(element) {
                 }
             }
         }
-    }
-
+    },
     /** @type {(calendar: HTMLElement) => number[]} */
-    function getCalendarStates(calendar) {
+    getCalendarStates: function (calendar) {
         let states = /** @type {number[]} */ ([]);
         calendar.querySelectorAll("td").forEach((cell) => {
             if (cell.classList.contains("ocal_state")) {
@@ -74,35 +74,33 @@ function makeEditor(element) {
             }
         });
         return states;
-    }
-
+    },
     /** @type {() => {[x: string]: number[]}} */
-    function getAllCalendarStates() {
+    getAllCalendarStates: function () {
         /** @type {{[x: string]: number[]}} */
         var states = {};
-        element.querySelectorAll(".ocal_calendar").forEach((calendar) => {
+        this.element.querySelectorAll(".ocal_calendar").forEach((calendar) => {
             if (!(calendar instanceof HTMLElement) || calendar.dataset.ocal_date === undefined)
                 return;
-            states[calendar.dataset.ocal_date] = getCalendarStates(calendar);
+            states[calendar.dataset.ocal_date] = this.getCalendarStates(calendar);
         });
         return states;
-    }
-
+    },
     /** @type {(request: XMLHttpRequest) => void} */
-    function doReadyStateChange(request) {
+    doReadyStateChange: function (request) {
         if (request.readyState === 4) {
-            element.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
+            this.element.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
                 if (!(bar instanceof HTMLElement)) return;
                 bar.style.display = "none";
             });
             if (request.status === 200) {
                 removeEventListener("beforeunload", warning);
                 unsavedChanges = false;
-                element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
+                this.element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
                     bar.innerHTML = request.responseText;
                 });
             } else {
-                element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
+                this.element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
                     if (request.responseText) {
                         bar.innerHTML = request.responseText;
                     } else {
@@ -116,69 +114,74 @@ function makeEditor(element) {
                 });
             }
         }
-    }
-
+    },
     /** @type {(event: MouseEvent) => void} */
-    function onSelectState(event) {
+    onSelectState: function (event) {
         if (!(event.target instanceof HTMLElement)) return;
         let target = event.target;
         if (target.dataset.ocal_state === undefined) return;
-        element.querySelectorAll(".ocal_toolbar").forEach((element) => {
+        this.element.querySelectorAll(".ocal_toolbar").forEach((element) => {
             element.querySelectorAll("span").forEach((element) => {
                 element.style.borderWidth = "";
             });
         });
-        currentState = parseInt(target.dataset.ocal_state);
+        this.currentState = parseInt(target.dataset.ocal_state);
         target.style.borderWidth = "3px";
-        element.querySelectorAll(".ocal_calendar td.ocal_state").forEach((cell) => {
+        this.element.querySelectorAll(".ocal_calendar td.ocal_state").forEach((cell) => {
             if (!(cell instanceof HTMLElement)) return;
             cell.style.cursor = "pointer";
         });
-    }
-
+    },
     /** @type {() => void} */
-    function onSave() {
+    onSave: function () {
         let request = new XMLHttpRequest();
         request.open(
             "POST",
-            location.href.replace(/#.*$/, "") + "&ocal_name=" + occupancy + "&ocal_action=save"
+            location.href.replace(/#.*$/, "") + "&ocal_name=" + this.occupancy + "&ocal_action=save"
         );
         request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        let states = JSON.stringify(getAllCalendarStates());
+        let states = JSON.stringify(this.getAllCalendarStates());
         let payload = "ocal_states=" + encodeURIComponent(states);
-        let tokenInput = element.querySelector("input[name=ocal_token]");
+        let tokenInput = this.element.querySelector("input[name=ocal_token]");
         if (tokenInput instanceof HTMLInputElement) {
             payload += "&ocal_token=" + encodeURIComponent(tokenInput.value);
         }
-        const checksumInput = element.querySelector("input[name=ocal_checksum]");
+        const checksumInput = this.element.querySelector("input[name=ocal_checksum]");
         if (checksumInput instanceof HTMLInputElement) {
             payload += "&ocal_checksum=" + encodeURIComponent(checksumInput.value);
         }
-        request.onreadystatechange = () => doReadyStateChange(request);
+        request.onreadystatechange = () => this.doReadyStateChange(request);
         request.send(payload);
-        element.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
+        this.element.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
             if (!(bar instanceof HTMLElement)) return;
             bar.style.display = "block";
         });
+    },
+    /** @type {() => void} */
+    init: function () {
+        this.occupancy = this.element.dataset.name;
+
+        this.element.querySelectorAll(".ocal_calendar").forEach((element) => {
+            if (!(element instanceof HTMLElement)) return;
+            element.onclick = this.onClick.bind(this);
+        });
+
+        this.element.querySelectorAll(".ocal_toolbar span").forEach((element) => {
+            if (!(element instanceof HTMLElement)) return;
+            element.onclick = this.onSelectState.bind(this);
+        });
+
+        this.element.querySelectorAll(".ocal_save").forEach((button) => {
+            if (!(button instanceof HTMLButtonElement)) return;
+            button.onclick = this.onSave.bind(this);
+            button.disabled = false;
+        });
     }
+});
 
-    occupancy = element.dataset.name;
-
-    element.querySelectorAll(".ocal_calendar").forEach((element) => {
-        if (!(element instanceof HTMLElement)) return;
-        element.onclick = onClick;
-    });
-
-    element.querySelectorAll(".ocal_toolbar span").forEach((element) => {
-        if (!(element instanceof HTMLElement)) return;
-        element.onclick = onSelectState;
-    });
-
-    element.querySelectorAll(".ocal_save").forEach((button) => {
-        if (!(button instanceof HTMLButtonElement)) return;
-        button.onclick = onSave;
-        button.disabled = false;
-    });
+/** @type {(element: HTMLElement) => void} */
+function makeEditor(element) {
+    /** @type {typeof editor} */ (Object.create(editor, { element: { value: element } })).init();
 }
 
 /** @type {(event: MouseEvent) => void|false} */
