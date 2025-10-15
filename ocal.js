@@ -51,22 +51,27 @@ var editor = Object.seal({
     /** @type {() => void} */
     init: function () {
         this.occupancy = this.element.dataset.name;
-
-        this.element.querySelectorAll(".ocal_calendar").forEach((element) => {
-            if (!(element instanceof HTMLElement)) return;
-            element.onclick = this.onClick.bind(this);
-        });
-
-        this.element.querySelectorAll(".ocal_toolbar span").forEach((element) => {
-            if (!(element instanceof HTMLElement)) return;
-            element.onclick = this.onSelectState.bind(this);
-        });
-
-        this.element.querySelectorAll(".ocal_save").forEach((button) => {
-            if (!(button instanceof HTMLButtonElement)) return;
-            button.onclick = this.onSave.bind(this);
+        /** @type {NodeListOf<HTMLButtonElement>} */ (
+            this.element.querySelectorAll(".ocal_save")
+        ).forEach((button) => {
             button.disabled = false;
         });
+        this.element.addEventListener("click", this);
+    },
+    /** @type {(event: Event) => void} */
+    handleEvent: function (event) {
+        var target = /** @type {Element} */ (event.target);
+        switch (target.classList[0]) {
+            case "ocal_state":
+                switch (target.localName) {
+                    case "span":
+                        return this.onSelectState(/** @type {MouseEvent} */ (event));
+                    case "td":
+                        return this.onClick(event);
+                }
+            case "ocal_save":
+                return this.onSave();
+        }
     },
     /** @type {(event: Event) => void} */
     onClick: function (event) {
