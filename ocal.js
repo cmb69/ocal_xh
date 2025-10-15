@@ -93,14 +93,12 @@
         /** @type {(event: MouseEvent) => void} */
         onModeOrPaginationClick: function (event) {
             var target = /** @type {HTMLAnchorElement} */ (event.target);
-            if (this.unsavedChanges) {
-                if (window.confirm(this.config.message_unsaved_changes)) {
-                    this.unsavedChanges = false;
-                    removeEventListener("beforeunload", this);
-                } else {
-                    event.preventDefault();
-                }
+            if (this.unsavedChanges && !window.confirm(this.config.message_unsaved_changes)) {
+                event.preventDefault();
+                return;
             }
+            this.unsavedChanges = false;
+            removeEventListener("beforeunload", this);
             var request = new XMLHttpRequest();
             request.open("GET", target.href + "&ocal_name=" + this.element.dataset.name);
             request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
