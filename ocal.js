@@ -260,13 +260,6 @@
         },
     });
 
-    /** @type {(element: HTMLElement) => void} */
-    function makeWidget(element) {
-        /** @type {typeof widget} */ (
-            Object.create(widget, { element: { value: element } })
-        ).init();
-    }
-
     /** @type {() => void} */
     function init() {
         /** @type {HTMLElement[]} */ (
@@ -276,7 +269,11 @@
                         ".ocal_lists[data-ocal-config], .ocal_week_lists[data-ocal-config]"
                 )
             )
-        ).forEach(makeWidget);
+        ).forEach(function (element) {
+            /** @type {typeof widget} */ (
+                Object.create(widget, { element: { value: element } })
+            ).init();
+        });
     }
 
     init();
