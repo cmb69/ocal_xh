@@ -105,8 +105,6 @@
         /** @type {(event: MouseEvent) => void} */
         onModeOrPaginationClick: function (event) {
             var target = /** @type {HTMLAnchorElement} */ (event.target);
-            if (target.parentElement === null || target.parentElement.parentElement === null)
-                return;
             if (unsavedChanges) {
                 if (window.confirm(config.message_unsaved_changes)) {
                     unsavedChanges = false;
@@ -115,15 +113,12 @@
                     event.preventDefault();
                 }
             }
-            var calendar = target.parentElement.parentElement;
             var request = new XMLHttpRequest();
-            request.open("GET", target.href + "&ocal_name=" + calendar.dataset.name);
+            request.open("GET", target.href + "&ocal_name=" + this.element.dataset.name);
             request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
             request.onreadystatechange = this.handleLoadReadyStateChange.bind(this, request);
             request.send(null);
-            /** @type {HTMLElement[]} */ (
-                array(calendar.querySelectorAll(".ocal_loaderbar"))
-            ).forEach(function (bar) {
+            this.loaderbars.forEach(function (bar) {
                 bar.style.display = "block";
             });
         },
@@ -134,12 +129,10 @@
                     this.element.outerHTML = request.responseText;
                     init();
                 } else {
-                    /** @type {HTMLElement[]} */ (
-                        array(this.element.querySelectorAll(".ocal_loaderbar"))
-                    ).forEach(function (bar) {
+                    this.loaderbars.forEach(function (bar) {
                         bar.style.display = "none";
                     });
-                    array(this.element.querySelectorAll(".ocal_statusbar")).forEach(function (bar) {
+                    this.statusbars.forEach(function (bar) {
                         bar.innerHTML =
                             '<p class="xh_fail">' +
                             request.status +
