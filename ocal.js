@@ -76,7 +76,9 @@
                                 case "span":
                                     return this.onSelectState(/** @type {MouseEvent} */ (event));
                                 case "td":
-                                    return this.onClick(event);
+                                    return this.changeState(
+                                        /** @type {HTMLElement} */ (event.target)
+                                    );
                             }
                             break;
                         case "ocal_save":
@@ -119,13 +121,12 @@
                 }
             }
         },
-        /** @type {(event: Event) => void} */
-        onClick: function (event) {
+        /** @type {(element: HTMLElement) => void} */
+        changeState: function (element) {
             if (typeof this.currentState !== "number") return;
-            var target = /** @type {HTMLElement} */ (event.target);
-            var state = target.dataset.ocal_state;
+            var state = element.dataset.ocal_state;
             if (state !== undefined && +state !== this.currentState) {
-                target.dataset.ocal_state = this.currentState.toString();
+                element.dataset.ocal_state = this.currentState.toString();
                 this.statusbar.innerHTML = "";
                 addEventListener("beforeunload", this);
                 this.unsavedChanges = true;
