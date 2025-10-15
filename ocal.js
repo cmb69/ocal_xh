@@ -63,7 +63,7 @@ function makeEditor(element, occupancy) {
             if (target.dataset.ocal_state !== undefined) {
                 if (parseInt(target.dataset.ocal_state) !== currentState) {
                     target.dataset.ocal_state = currentState.toString();
-                    element.querySelectorAll(".ocal_statusbar").forEach(bar => {
+                    element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
                         bar.innerHTML = "";
                     });
                     addEventListener("beforeunload", warning);
@@ -74,12 +74,12 @@ function makeEditor(element, occupancy) {
     }
 
     /**
-     * @param {HTMLElement} calendar 
+     * @param {HTMLElement} calendar
      * @returns {Array<number>}
      */
     function getCalendarStates(calendar) {
         let states = /** @type {number[]} */ ([]);
-        calendar.querySelectorAll("td").forEach(cell => {
+        calendar.querySelectorAll("td").forEach((cell) => {
             if (cell.classList.contains("ocal_state")) {
                 states.push(+(cell.dataset.ocal_state || ""));
             }
@@ -93,8 +93,9 @@ function makeEditor(element, occupancy) {
     function getAllCalendarStates() {
         /** @type {Object<string, Array<number>>} */
         var states = {};
-        element.querySelectorAll(".ocal_calendar").forEach(calendar => {
-            if (!(calendar instanceof HTMLElement) || calendar.dataset.ocal_date === undefined) return;
+        element.querySelectorAll(".ocal_calendar").forEach((calendar) => {
+            if (!(calendar instanceof HTMLElement) || calendar.dataset.ocal_date === undefined)
+                return;
             states[calendar.dataset.ocal_date] = getCalendarStates(calendar);
         });
         return states;
@@ -106,22 +107,27 @@ function makeEditor(element, occupancy) {
      */
     function doReadyStateChange(request) {
         if (request.readyState === 4) {
-            element.querySelectorAll(".ocal_loaderbar").forEach(bar => {
+            element.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
                 if (!(bar instanceof HTMLElement)) return;
                 bar.style.display = "none";
             });
             if (request.status === 200) {
                 removeEventListener("beforeunload", warning);
                 unsavedChanges = false;
-                element.querySelectorAll( ".ocal_statusbar").forEach(bar => {
+                element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
                     bar.innerHTML = request.responseText;
                 });
             } else {
-                element.querySelectorAll(".ocal_statusbar").forEach(bar => {
+                element.querySelectorAll(".ocal_statusbar").forEach((bar) => {
                     if (request.responseText) {
                         bar.innerHTML = request.responseText;
                     } else {
-                        bar.innerHTML = "<p class=\"xh_fail\">" + request.status + " " + request.statusText + "</p>";
+                        bar.innerHTML =
+                            '<p class="xh_fail">' +
+                            request.status +
+                            " " +
+                            request.statusText +
+                            "</p>";
                     }
                 });
             }
@@ -136,14 +142,14 @@ function makeEditor(element, occupancy) {
         if (!(event.target instanceof HTMLElement)) return;
         let target = event.target;
         if (target.dataset.ocal_state === undefined) return;
-        element.querySelectorAll(".ocal_toolbar").forEach(element => {
-            element.querySelectorAll("span").forEach(element => {
+        element.querySelectorAll(".ocal_toolbar").forEach((element) => {
+            element.querySelectorAll("span").forEach((element) => {
                 element.style.borderWidth = "";
             });
         });
         currentState = parseInt(target.dataset.ocal_state);
         target.style.borderWidth = "3px";
-        element.querySelectorAll(".ocal_calendar td.ocal_state").forEach(cell => {
+        element.querySelectorAll(".ocal_calendar td.ocal_state").forEach((cell) => {
             if (!(cell instanceof HTMLElement)) return;
             cell.style.cursor = "pointer";
         });
@@ -158,8 +164,7 @@ function makeEditor(element, occupancy) {
             "POST",
             location.href.replace(/#.*$/, "") + "&ocal_name=" + occupancy + "&ocal_action=save"
         );
-        request.setRequestHeader("Content-Type",
-                "application/x-www-form-urlencoded");
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         let states = JSON.stringify(getAllCalendarStates());
         let payload = "ocal_states=" + encodeURIComponent(states);
         let tokenInput = element.querySelector("input[name=ocal_token]");
@@ -172,23 +177,23 @@ function makeEditor(element, occupancy) {
         }
         request.onreadystatechange = () => doReadyStateChange(request);
         request.send(payload);
-        element.querySelectorAll(".ocal_loaderbar").forEach(bar => {
+        element.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
             if (!(bar instanceof HTMLElement)) return;
             bar.style.display = "block";
         });
     }
 
-    element.querySelectorAll(".ocal_calendar").forEach(element => {
+    element.querySelectorAll(".ocal_calendar").forEach((element) => {
         if (!(element instanceof HTMLElement)) return;
         element.onclick = onClick;
     });
 
-    element.querySelectorAll(".ocal_toolbar span").forEach(element => {
+    element.querySelectorAll(".ocal_toolbar span").forEach((element) => {
         if (!(element instanceof HTMLElement)) return;
         element.onclick = onSelectState;
     });
 
-    element.querySelectorAll(".ocal_save").forEach(button => {
+    element.querySelectorAll(".ocal_save").forEach((button) => {
         if (!(button instanceof HTMLButtonElement)) return;
         button.onclick = onSave;
         button.disabled = false;
@@ -221,19 +226,19 @@ function onModeOrPaginationClick(event) {
                 calendar.outerHTML = request.responseText;
                 init();
             } else {
-                calendar.querySelectorAll(".ocal_loaderbar").forEach(bar => {
+                calendar.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
                     if (!(bar instanceof HTMLElement)) return;
                     bar.style.display = "none";
                 });
-                calendar.querySelectorAll(".ocal_statusbar").forEach(bar => {
-                    bar.innerHTML = "<p class=\"xh_fail\">" +
-                        request.status + " " + request.statusText + "</p>";
+                calendar.querySelectorAll(".ocal_statusbar").forEach((bar) => {
+                    bar.innerHTML =
+                        '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
                 });
             }
         }
     };
     request.send(null);
-    calendar.querySelectorAll(".ocal_loaderbar").forEach(bar => {
+    calendar.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
         if (!(bar instanceof HTMLElement)) return;
         bar.style.display = "block";
     });
@@ -242,15 +247,17 @@ function onModeOrPaginationClick(event) {
 
 init = () => {
     unsavedChanges = false;
-    let element = document.querySelector(".ocal_calendars, .ocal_week_calendars, .ocal_lists, .ocal_week_lists");
+    let element = document.querySelector(
+        ".ocal_calendars, .ocal_week_calendars, .ocal_lists, .ocal_week_lists"
+    );
     if (!(element instanceof HTMLElement) || element.dataset.ocalConfig === undefined) return;
     config = JSON.parse(element.dataset.ocalConfig);
-    document.querySelectorAll(".ocal_pagination a, .ocal_mode a").forEach(element => {
+    document.querySelectorAll(".ocal_pagination a, .ocal_mode a").forEach((element) => {
         if (!(element instanceof HTMLElement)) return;
         element.onclick = onModeOrPaginationClick;
     });
     if (config.isAdmin) {
-        document.querySelectorAll(".ocal_calendars, .ocal_week_calendars").forEach(element => {
+        document.querySelectorAll(".ocal_calendars, .ocal_week_calendars").forEach((element) => {
             if (!(element instanceof HTMLElement) || element.dataset.name === undefined) return;
             makeEditor(element, element.dataset.name);
         });
