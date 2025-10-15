@@ -166,7 +166,7 @@
                     array(calendar.querySelectorAll("td.ocal_state"))
                 ).map(function (cell) {
                     return +cell.dataset.ocal_state;
-                })
+                }),
             ];
         },
         /** @type {() => {[x: string]: number[]}} */
@@ -258,7 +258,7 @@
             // @ts-ignore
             event.returnValue = confirmation;
             return confirmation;
-        }
+        },
     });
 
     /** @type {(element: HTMLElement) => void} */
