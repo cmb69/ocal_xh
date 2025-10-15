@@ -15,11 +15,15 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
  */
 ?>
 
-<div class="ocal_week_lists" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
-  <?=$this->raw($modeLink)?>
-  <?=$this->raw($statusbar)?>
+<div class="ocal_container" data-name="<?=$this->esc($occupancyName)?>">
+  <!--AJAX START-->
+  <div class="ocal_week_lists" data-ocal-config='<?=$this->json($js_config)?>'>
+    <?=$this->raw($modeLink)?>
+    <?=$this->raw($statusbar)?>
 <?foreach ($weekLists as $weekList):?>
-  <?=$this->raw($weekList)?>
+    <?=$this->raw($weekList)?>
 <?endforeach?>
-  <?=$this->raw($weekPagination)?>
+    <?=$this->raw($weekPagination)?>
+  </div>
+  <!--AJAX END-->
 </div>

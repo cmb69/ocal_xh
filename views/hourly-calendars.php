@@ -19,16 +19,20 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
  */
 ?>
 
-<div class="ocal_week_calendars" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
-  <?=$this->raw($modeLink)?>
+<div class="ocal_container" data-name="<?=$this->esc($occupancyName)?>">
+  <!--AJAX START-->
+  <div class="ocal_week_calendars" data-ocal-config='<?=$this->json($js_config)?>'>
+    <?=$this->raw($modeLink)?>
 <?if ($isEditable):?>
-  <input type="hidden" name="ocal_token" value="<?=$this->esc($csrf_token)?>">
-  <input type="hidden" name="ocal_checksum" value="<?=$this->esc($checksum)?>">
-  <?=$this->raw($toolbar)?>
+    <input type="hidden" name="ocal_token" value="<?=$this->esc($csrf_token)?>">
+    <input type="hidden" name="ocal_checksum" value="<?=$this->esc($checksum)?>">
+    <?=$this->raw($toolbar)?>
 <?endif?>
-  <?=$this->raw($statusbar)?>
+    <?=$this->raw($statusbar)?>
 <?foreach ($weekCalendars as $weekCalendar):?>
-  <?=$this->raw($weekCalendar)?>
+    <?=$this->raw($weekCalendar)?>
 <?endforeach?>
-  <?=$this->raw($weekPagination)?>
+    <?=$this->raw($weekPagination)?>
+  </div>
+  <!--AJAX END-->
 </div>

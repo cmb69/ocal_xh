@@ -35,15 +35,18 @@
     var widget = Object.seal({
         /** @readonly @type {HTMLElement} */
         element: undefined,
-        /** @type {string} */
-        occupancy: undefined,
         /** @type {number} */
         currentState: undefined,
         /** @type {boolean} */
         unsavedChanges: undefined,
+        /** @type {string} */
+        get occupancy() {
+            return this.element.dataset.name;
+        },
         /** @type {Config} */
         get config() {
-            return JSON.parse(this.element.dataset.ocalConfig);
+            var child = /** @type {HTMLElement} */ (this.element.firstElementChild);
+            return JSON.parse(child.dataset.ocalConfig);
         },
         /** @type {HTMLElement[]} */
         get stateButtons() {
@@ -57,10 +60,14 @@
         get statusbar() {
             return this.element.querySelector(".ocal_statusbar");
         },
+        /** @type {HTMLButtonElement} */
+        get saveButton() {
+            return this.element.querySelector(".ocal_save");
+        },
         /** @type {() => void} */
         init: function () {
-            this.unsavedChanges = false;
-            this.occupancy = this.element.dataset.name;
+            this.currentState = undefined;
+            this.markClean();
             this.element.addEventListener("click", this);
         },
         /** @type {(event: Event) => void} */
@@ -97,8 +104,7 @@
                 event.preventDefault();
                 return;
             }
-            this.unsavedChanges = false;
-            removeEventListener("beforeunload", this);
+            this.markClean();
             var request = new XMLHttpRequest();
             request.open("GET", target.href + "&ocal_name=" + this.element.dataset.name);
             request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
@@ -110,14 +116,30 @@
         /** @type {(request: XMLHttpRequest) => void} */
         handleLoadReadyStateChange: function (request) {
             if (request.readyState !== 4) return;
-            if (request.status === 200) {
-                this.element.outerHTML = request.responseText;
-                init();
+            var matches = request.responseText.match(/<!--AJAX START-->[\s\S]*<!--AJAX END-->/);
+            if (request.status === 200 && matches) {
+                this.element.innerHTML = matches[0];
+                this.init();
             } else {
                 this.loaderbar.style.display = "none";
                 this.statusbar.innerHTML =
                     '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
             }
+        },
+        /** @type {() => void} */
+        markClean: function () {
+            this.unsavedChanges = false;
+            removeEventListener("beforeunload", this);
+            var saveButton = this.saveButton;
+            if (saveButton) {
+                saveButton.disabled = true;
+            }
+        },
+        /** @type {() => void} */
+        markDirty: function () {
+            this.unsavedChanges = true;
+            addEventListener("beforeunload", this);
+            this.saveButton.disabled = false;
         },
         /** @type {(element: HTMLElement) => void} */
         changeState: function (element) {
@@ -126,9 +148,7 @@
             if (state !== undefined && +state !== this.currentState) {
                 element.dataset.ocal_state = this.currentState.toString();
                 this.statusbar.innerHTML = "";
-                addEventListener("beforeunload", this);
-                this.unsavedChanges = true;
-                this.enableSaveButton(true);
+                this.markDirty();
             }
         },
         /** @type {(calendar: HTMLElement) => [string, number[]]} */
@@ -157,9 +177,7 @@
             if (request.readyState !== 4) return;
             this.loaderbar.style.display = "none";
             if (request.status === 200) {
-                removeEventListener("beforeunload", this);
-                this.unsavedChanges = false;
-                this.enableSaveButton(false);
+                this.markClean();
                 this.statusbar.innerHTML = request.responseText;
             } else if (request.responseText) {
                 this.statusbar.innerHTML = request.responseText;
@@ -214,11 +232,6 @@
             }
             return payload;
         },
-        /** @type {(enable: boolean) => void} */
-        enableSaveButton: function (enable) {
-            /** @type {HTMLButtonElement} */ (this.element.querySelector(".ocal_save")).disabled =
-                !enable;
-        },
         /** @type {(event: Event) => string} */
         warning: function (event) {
             var confirmation = this.config.message_unsaved_changes;
@@ -228,18 +241,11 @@
         },
     });
 
-    /** @type {() => void} */
-    function init() {
-        var sel =
-            ".ocal_calendars[data-ocal-config], .ocal_week_calendars[data-ocal-config], " +
-            ".ocal_lists[data-ocal-config], .ocal_week_lists[data-ocal-config]";
-        var elements = /** @type {HTMLElement[]} */ (array(document.querySelectorAll(sel)));
-        elements.forEach(function (element) {
+    /** @type {HTMLElement[]} */ (array(document.querySelectorAll(".ocal_container"))).forEach(
+        function (element) {
             /** @type {typeof widget} */ (
                 Object.create(widget, { element: { value: element } })
             ).init();
-        });
-    }
-
-    init();
+        }
+    );
 })();

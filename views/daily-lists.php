@@ -15,11 +15,15 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
  */
 ?>
 
-<div class="ocal_lists" data-name="<?=$this->esc($occupancyName)?>" data-ocal-config='<?=$this->json($js_config)?>'>
-  <?=$this->raw($modeLink)?>
-  <?=$this->raw($statusbar)?>
+<div class="ocal_container" data-name="<?=$this->esc($occupancyName)?>">
+  <!--AJAX START-->
+  <div class="ocal_lists" data-ocal-config='<?=$this->json($js_config)?>'>
+    <?=$this->raw($modeLink)?>
+    <?=$this->raw($statusbar)?>
 <?foreach ($monthLists as $monthList):?>
-  <?=$this->raw($monthList)?>
+    <?=$this->raw($monthList)?>
 <?endforeach?>
-  <?=$this->raw($monthPagination)?>
+    <?=$this->raw($monthPagination)?>
+  </div>
+  <!--AJAX END-->
 </div>
