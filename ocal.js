@@ -48,6 +48,26 @@ var editor = Object.seal({
     occupancy: undefined,
     /** @type {number} */
     currentState: undefined,
+    /** @type {() => void} */
+    init: function () {
+        this.occupancy = this.element.dataset.name;
+
+        this.element.querySelectorAll(".ocal_calendar").forEach((element) => {
+            if (!(element instanceof HTMLElement)) return;
+            element.onclick = this.onClick.bind(this);
+        });
+
+        this.element.querySelectorAll(".ocal_toolbar span").forEach((element) => {
+            if (!(element instanceof HTMLElement)) return;
+            element.onclick = this.onSelectState.bind(this);
+        });
+
+        this.element.querySelectorAll(".ocal_save").forEach((button) => {
+            if (!(button instanceof HTMLButtonElement)) return;
+            button.onclick = this.onSave.bind(this);
+            button.disabled = false;
+        });
+    },
     /** @type {(event: Event) => void} */
     onClick: function (event) {
         if (!(event.target instanceof HTMLElement) || typeof this.currentState !== "number") return;
@@ -155,26 +175,6 @@ var editor = Object.seal({
         this.element.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
             if (!(bar instanceof HTMLElement)) return;
             bar.style.display = "block";
-        });
-    },
-    /** @type {() => void} */
-    init: function () {
-        this.occupancy = this.element.dataset.name;
-
-        this.element.querySelectorAll(".ocal_calendar").forEach((element) => {
-            if (!(element instanceof HTMLElement)) return;
-            element.onclick = this.onClick.bind(this);
-        });
-
-        this.element.querySelectorAll(".ocal_toolbar span").forEach((element) => {
-            if (!(element instanceof HTMLElement)) return;
-            element.onclick = this.onSelectState.bind(this);
-        });
-
-        this.element.querySelectorAll(".ocal_save").forEach((button) => {
-            if (!(button instanceof HTMLButtonElement)) return;
-            button.onclick = this.onSave.bind(this);
-            button.disabled = false;
         });
     }
 });
