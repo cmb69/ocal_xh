@@ -1,6 +1,6 @@
 {
     "browser": true,
-    "esversion": 6,
+    "esversion": 5,
     "latedef": true,
-    "module": true
+    "strict": "implied"
 }
