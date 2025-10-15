@@ -59,14 +59,8 @@
         },
         /** @type {() => void} */
         init: function () {
-            var classList = this.element.classList;
             this.unsavedChanges = false;
-            if (
-                this.config.isAdmin &&
-                (classList.contains("ocal_calendars") || classList.contains("ocal_week_calendars"))
-            ) {
-                this.occupancy = this.element.dataset.name;
-            }
+            this.occupancy = this.element.dataset.name;
             this.element.addEventListener("click", this);
         },
         /** @type {(event: Event) => void} */
