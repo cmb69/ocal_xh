@@ -109,15 +109,14 @@
         },
         /** @type {(request: XMLHttpRequest) => void} */
         handleLoadReadyStateChange: function (request) {
-            if (request.readyState === 4) {
-                if (request.status === 200) {
-                    this.element.outerHTML = request.responseText;
-                    init();
-                } else {
-                    this.loaderbar.style.display = "none";
-                    this.statusbar.innerHTML =
-                        '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
-                }
+            if (request.readyState !== 4) return;
+            if (request.status === 200) {
+                this.element.outerHTML = request.responseText;
+                init();
+            } else {
+                this.loaderbar.style.display = "none";
+                this.statusbar.innerHTML =
+                    '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
             }
         },
         /** @type {(element: HTMLElement) => void} */
