@@ -71,8 +71,8 @@
         /** @type {() => void} */
         init: function () {
             this.occupancy = this.element.dataset.name;
-            /** @type {NodeListOf<HTMLButtonElement>} */ (
-                this.element.querySelectorAll(".ocal_save")
+            /** @type {HTMLButtonElement[]} */ (
+                array(this.element.querySelectorAll(".ocal_save"))
             ).forEach(function (button) {
                 button.disabled = false;
             });
@@ -171,10 +171,12 @@
             });
             this.currentState = +target.dataset.ocal_state;
             target.style.borderWidth = "3px";
-            this.element.querySelectorAll(".ocal_calendar td.ocal_state").forEach(function (cell) {
-                if (!(cell instanceof HTMLElement)) return;
-                cell.style.cursor = "pointer";
-            });
+            array(this.element.querySelectorAll(".ocal_calendar td.ocal_state")).forEach(
+                function (cell) {
+                    if (!(cell instanceof HTMLElement)) return;
+                    cell.style.cursor = "pointer";
+                }
+            );
         },
         /** @type {() => void} */
         onSave: function () {
@@ -235,11 +237,11 @@
                     calendar.outerHTML = request.responseText;
                     init();
                 } else {
-                    calendar.querySelectorAll(".ocal_loaderbar").forEach(function (bar) {
+                    array(calendar.querySelectorAll(".ocal_loaderbar")).forEach(function (bar) {
                         if (!(bar instanceof HTMLElement)) return;
                         bar.style.display = "none";
                     });
-                    calendar.querySelectorAll(".ocal_statusbar").forEach(function (bar) {
+                    array(calendar.querySelectorAll(".ocal_statusbar")).forEach(function (bar) {
                         bar.innerHTML =
                             '<p class="xh_fail">' +
                             request.status +
@@ -251,7 +253,7 @@
             }
         };
         request.send(null);
-        calendar.querySelectorAll(".ocal_loaderbar").forEach(function (bar) {
+        array(calendar.querySelectorAll(".ocal_loaderbar")).forEach(function (bar) {
             if (!(bar instanceof HTMLElement)) return;
             bar.style.display = "block";
         });
@@ -265,18 +267,20 @@
         );
         if (!(element instanceof HTMLElement) || element.dataset.ocalConfig === undefined) return;
         config = JSON.parse(element.dataset.ocalConfig);
-        document.querySelectorAll(".ocal_pagination a, .ocal_mode a").forEach(function (element) {
-            if (!(element instanceof HTMLElement)) return;
-            element.onclick = onModeOrPaginationClick;
-        });
+        array(document.querySelectorAll(".ocal_pagination a, .ocal_mode a")).forEach(
+            function (element) {
+                if (!(element instanceof HTMLElement)) return;
+                element.onclick = onModeOrPaginationClick;
+            }
+        );
         if (config.isAdmin) {
-            document
-                .querySelectorAll(".ocal_calendars, .ocal_week_calendars")
-                .forEach(function (element) {
+            array(document.querySelectorAll(".ocal_calendars, .ocal_week_calendars")).forEach(
+                function (element) {
                     if (!(element instanceof HTMLElement) || element.dataset.name === undefined)
                         return;
                     makeEditor(element);
-                });
+                }
+            );
         }
     };
 
