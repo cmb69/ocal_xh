@@ -216,17 +216,17 @@ function onModeOrPaginationClick(event) {
     var request = new XMLHttpRequest();
     request.open("GET", target.href + "&ocal_name=" + calendar.dataset.name);
     request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
-    request.onreadystatechange = () => {
+    request.onreadystatechange = function () {
         if (request.readyState === 4) {
             if (request.status === 200) {
                 calendar.outerHTML = request.responseText;
                 init();
             } else {
-                calendar.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
+                calendar.querySelectorAll(".ocal_loaderbar").forEach(function (bar) {
                     if (!(bar instanceof HTMLElement)) return;
                     bar.style.display = "none";
                 });
-                calendar.querySelectorAll(".ocal_statusbar").forEach((bar) => {
+                calendar.querySelectorAll(".ocal_statusbar").forEach(function (bar) {
                     bar.innerHTML =
                         '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
                 });
@@ -234,29 +234,31 @@ function onModeOrPaginationClick(event) {
         }
     };
     request.send(null);
-    calendar.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
+    calendar.querySelectorAll(".ocal_loaderbar").forEach(function (bar) {
         if (!(bar instanceof HTMLElement)) return;
         bar.style.display = "block";
     });
     return false;
 }
 
-init = () => {
+init = function () {
     unsavedChanges = false;
     var element = document.querySelector(
         ".ocal_calendars, .ocal_week_calendars, .ocal_lists, .ocal_week_lists"
     );
     if (!(element instanceof HTMLElement) || element.dataset.ocalConfig === undefined) return;
     config = JSON.parse(element.dataset.ocalConfig);
-    document.querySelectorAll(".ocal_pagination a, .ocal_mode a").forEach((element) => {
+    document.querySelectorAll(".ocal_pagination a, .ocal_mode a").forEach(function (element) {
         if (!(element instanceof HTMLElement)) return;
         element.onclick = onModeOrPaginationClick;
     });
     if (config.isAdmin) {
-        document.querySelectorAll(".ocal_calendars, .ocal_week_calendars").forEach((element) => {
-            if (!(element instanceof HTMLElement) || element.dataset.name === undefined) return;
-            makeEditor(element);
-        });
+        document
+            .querySelectorAll(".ocal_calendars, .ocal_week_calendars")
+            .forEach(function (element) {
+                if (!(element instanceof HTMLElement) || element.dataset.name === undefined) return;
+                makeEditor(element);
+            });
     }
 };
 
