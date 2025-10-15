@@ -54,6 +54,10 @@ var editor = Object.seal({
     /** @type {number} */
     currentState: undefined,
     /** @type {HTMLElement[]} */
+    get stateButtons() {
+        return array(this.element.querySelectorAll(".ocal_toolbar span"));
+    },
+    /** @type {HTMLElement[]} */
     get loaderbars() {
         return array(this.element.querySelectorAll(".ocal_loaderbar"));
     },
@@ -156,9 +160,7 @@ var editor = Object.seal({
         if (!(event.target instanceof HTMLElement)) return;
         var target = event.target;
         if (target.dataset.ocal_state === undefined) return;
-        /** @type {HTMLElement[]} */ (
-            array(this.element.querySelectorAll(".ocal_toolbar span"))
-        ).forEach(function (element) {
+        this.stateButtons.forEach(function (element) {
             element.style.borderWidth = "";
         });
         this.currentState = +target.dataset.ocal_state;
