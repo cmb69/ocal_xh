@@ -192,6 +192,12 @@
                 "&ocal_action=save";
             request.open("POST", url);
             request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.onreadystatechange = this.handleSaveReadyStateChange.bind(this, request);
+            request.send(this.getPayload());
+            this.loaderbar.style.display = "block";
+        },
+        /** @type {() => string} */
+        getPayload: function () {
             var states = JSON.stringify(this.getAllCalendarStates());
             var payload = "ocal_states=" + encodeURIComponent(states);
             var tokenInput = /** @type {HTMLInputElement} */ (
@@ -206,9 +212,7 @@
             if (checksumInput) {
                 payload += "&ocal_checksum=" + encodeURIComponent(checksumInput.value);
             }
-            request.onreadystatechange = this.handleSaveReadyStateChange.bind(this, request);
-            request.send(payload);
-            this.loaderbar.style.display = "block";
+            return payload;
         },
         /** @type {(enable: boolean) => void} */
         enableSaveButton: function (enable) {
