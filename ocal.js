@@ -54,6 +54,10 @@ var editor = Object.seal({
     /** @type {number} */
     currentState: undefined,
     /** @type {HTMLElement[]} */
+    get loaderbars() {
+        return array(this.element.querySelectorAll(".ocal_loaderbar"));
+    },
+    /** @type {HTMLElement[]} */
     get statusbars() {
         return array(this.element.querySelectorAll(".ocal_statusbar"));
     },
@@ -122,8 +126,7 @@ var editor = Object.seal({
     /** @type {(request: XMLHttpRequest) => void} */
     doReadyStateChange: function (request) {
         if (request.readyState === 4) {
-            this.element.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
-                if (!(bar instanceof HTMLElement)) return;
+            this.loaderbars.forEach((bar) => {
                 bar.style.display = "none";
             });
             if (request.status === 200) {
@@ -185,8 +188,7 @@ var editor = Object.seal({
         }
         request.onreadystatechange = () => this.doReadyStateChange(request);
         request.send(payload);
-        this.element.querySelectorAll(".ocal_loaderbar").forEach((bar) => {
-            if (!(bar instanceof HTMLElement)) return;
+        this.loaderbars.forEach((bar) => {
             bar.style.display = "block";
         });
     }
