@@ -66,7 +66,7 @@ var editor = Object.seal({
         this.occupancy = this.element.dataset.name;
         /** @type {NodeListOf<HTMLButtonElement>} */ (
             this.element.querySelectorAll(".ocal_save")
-        ).forEach((button) => {
+        ).forEach(function (button) {
             button.disabled = false;
         });
         this.element.addEventListener("click", this);
@@ -95,7 +95,7 @@ var editor = Object.seal({
             if (target.dataset.ocal_state !== undefined) {
                 if (+target.dataset.ocal_state !== this.currentState) {
                     target.dataset.ocal_state = this.currentState.toString();
-                    this.statusbars.forEach((bar) => {
+                    this.statusbars.forEach(function (bar) {
                         bar.innerHTML = "";
                     });
                     addEventListener("beforeunload", warning);
@@ -108,7 +108,7 @@ var editor = Object.seal({
     getCalendarStates: function (calendar) {
         return /** @type {HTMLTableCellElement[]} */ (
             array(calendar.querySelectorAll("td.ocal_state"))
-        ).map((cell) => {
+        ).map(function (cell) {
             return +cell.dataset.ocal_state;
         });
     },
@@ -126,17 +126,17 @@ var editor = Object.seal({
     /** @type {(request: XMLHttpRequest) => void} */
     doReadyStateChange: function (request) {
         if (request.readyState === 4) {
-            this.loaderbars.forEach((bar) => {
+            this.loaderbars.forEach(function (bar) {
                 bar.style.display = "none";
             });
             if (request.status === 200) {
                 removeEventListener("beforeunload", warning);
                 unsavedChanges = false;
-                this.statusbars.forEach((bar) => {
+                this.statusbars.forEach(function (bar) {
                     bar.innerHTML = request.responseText;
                 });
             } else {
-                this.statusbars.forEach((bar) => {
+                this.statusbars.forEach(function (bar) {
                     if (request.responseText) {
                         bar.innerHTML = request.responseText;
                     } else {
@@ -156,14 +156,14 @@ var editor = Object.seal({
         if (!(event.target instanceof HTMLElement)) return;
         let target = event.target;
         if (target.dataset.ocal_state === undefined) return;
-        this.element.querySelectorAll(".ocal_toolbar").forEach((element) => {
-            element.querySelectorAll("span").forEach((element) => {
+        this.element.querySelectorAll(".ocal_toolbar").forEach(function (element) {
+            element.querySelectorAll("span").forEach(function (element) {
                 element.style.borderWidth = "";
             });
         });
         this.currentState = +target.dataset.ocal_state;
         target.style.borderWidth = "3px";
-        this.element.querySelectorAll(".ocal_calendar td.ocal_state").forEach((cell) => {
+        this.element.querySelectorAll(".ocal_calendar td.ocal_state").forEach(function (cell) {
             if (!(cell instanceof HTMLElement)) return;
             cell.style.cursor = "pointer";
         });
@@ -186,9 +186,9 @@ var editor = Object.seal({
         if (checksumInput instanceof HTMLInputElement) {
             payload += "&ocal_checksum=" + encodeURIComponent(checksumInput.value);
         }
-        request.onreadystatechange = () => this.doReadyStateChange(request);
+        request.onreadystatechange = this.doReadyStateChange.bind(this, request);
         request.send(payload);
-        this.loaderbars.forEach((bar) => {
+        this.loaderbars.forEach(function (bar) {
             bar.style.display = "block";
         });
     }
