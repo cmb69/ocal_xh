@@ -187,7 +187,7 @@
             }, /** @type {{[x: string]: number[]}} */ ({}));
         },
         /** @type {(request: XMLHttpRequest) => void} */
-        doReadyStateChange: function (request) {
+        onSaveReadyStateChange: function (request) {
             if (request.readyState === 4) {
                 this.loaderbars.forEach(function (bar) {
                     bar.style.display = "none";
@@ -253,7 +253,7 @@
             if (checksumInput) {
                 payload += "&ocal_checksum=" + encodeURIComponent(checksumInput.value);
             }
-            request.onreadystatechange = this.doReadyStateChange.bind(this, request);
+            request.onreadystatechange = this.onSaveReadyStateChange.bind(this, request);
             request.send(payload);
             this.loaderbars.forEach(function (bar) {
                 bar.style.display = "block";
