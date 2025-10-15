@@ -129,16 +129,13 @@
         onClick: function (event) {
             if (typeof this.currentState !== "number") return;
             var target = /** @type {HTMLElement} */ (event.target);
-            if (target.classList.contains("ocal_state")) {
-                if (target.dataset.ocal_state !== undefined) {
-                    if (+target.dataset.ocal_state !== this.currentState) {
-                        target.dataset.ocal_state = this.currentState.toString();
-                        this.statusbar.innerHTML = "";
-                        addEventListener("beforeunload", this);
-                        this.unsavedChanges = true;
-                        this.enableSaveButton(true);
-                    }
-                }
+            var state = target.dataset.ocal_state;
+            if (state !== undefined && +state !== this.currentState) {
+                target.dataset.ocal_state = this.currentState.toString();
+                this.statusbar.innerHTML = "";
+                addEventListener("beforeunload", this);
+                this.unsavedChanges = true;
+                this.enableSaveButton(true);
             }
         },
         /** @type {(calendar: HTMLElement) => [string, number[]]} */
@@ -164,25 +161,18 @@
         },
         /** @type {(request: XMLHttpRequest) => void} */
         handleSaveReadyStateChange: function (request) {
-            if (request.readyState === 4) {
-                this.loaderbar.style.display = "none";
-                if (request.status === 200) {
-                    removeEventListener("beforeunload", this);
-                    this.unsavedChanges = false;
-                    this.enableSaveButton(false);
-                    this.statusbar.innerHTML = request.responseText;
-                } else {
-                    if (request.responseText) {
-                        this.statusbar.innerHTML = request.responseText;
-                    } else {
-                        this.statusbar.innerHTML =
-                            '<p class="xh_fail">' +
-                            request.status +
-                            " " +
-                            request.statusText +
-                            "</p>";
-                    }
-                }
+            if (request.readyState !== 4) return;
+            this.loaderbar.style.display = "none";
+            if (request.status === 200) {
+                removeEventListener("beforeunload", this);
+                this.unsavedChanges = false;
+                this.enableSaveButton(false);
+                this.statusbar.innerHTML = request.responseText;
+            } else if (request.responseText) {
+                this.statusbar.innerHTML = request.responseText;
+            } else {
+                this.statusbar.innerHTML =
+                    '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
             }
         },
         /** @type {(event: MouseEvent) => void} */
