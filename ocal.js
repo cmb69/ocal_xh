@@ -108,24 +108,26 @@ var editor = Object.seal({
             }
         }
     },
-    /** @type {(calendar: HTMLElement) => number[]} */
+    /** @type {(calendar: HTMLElement) => [string, number[]]} */
     getCalendarStates: function (calendar) {
-        return /** @type {HTMLTableCellElement[]} */ (
-            array(calendar.querySelectorAll("td.ocal_state"))
-        ).map(function (cell) {
-            return +cell.dataset.ocal_state;
-        });
+        return [
+            calendar.dataset.ocal_date,
+            /** @type {HTMLTableCellElement[]} */ (
+                array(calendar.querySelectorAll("td.ocal_state"))
+            ).map(function (cell) {
+                return +cell.dataset.ocal_state;
+            })
+        ];
     },
     /** @type {() => {[x: string]: number[]}} */
     getAllCalendarStates: function () {
-        /** @type {{[x: string]: number[]}} */
-        var states = {};
-        this.element.querySelectorAll(".ocal_calendar").forEach((calendar) => {
-            if (!(calendar instanceof HTMLElement) || calendar.dataset.ocal_date === undefined)
-                return;
-            states[calendar.dataset.ocal_date] = this.getCalendarStates(calendar);
-        });
-        return states;
+        var calendars = /** @type {HTMLElement[]} */ (
+            array(this.element.querySelectorAll(".ocal_calendar"))
+        );
+        return calendars.map(this.getCalendarStates.bind(this)).reduce(function (acc, pair) {
+            acc[pair[0]] = pair[1];
+            return acc;
+        }, /** @type {{[x: string]: number[]}} */ ({}));
     },
     /** @type {(request: XMLHttpRequest) => void} */
     doReadyStateChange: function (request) {
