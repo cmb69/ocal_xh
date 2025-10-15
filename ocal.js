@@ -23,6 +23,11 @@
  * @prop {boolean} isAdmin
  */
 
+/** @type {<T>(arrayLike: ArrayLike<T>) => T[]} */
+function array(arrayLike) {
+    return Array.prototype.slice.call(arrayLike);
+}
+
 /** @type {Config} */
 var config;
 
@@ -69,6 +74,7 @@ var editor = Object.seal({
                     case "td":
                         return this.onClick(event);
                 }
+                break;
             case "ocal_save":
                 return this.onSave();
         }
@@ -92,13 +98,11 @@ var editor = Object.seal({
     },
     /** @type {(calendar: HTMLElement) => number[]} */
     getCalendarStates: function (calendar) {
-        let states = /** @type {number[]} */ ([]);
-        calendar.querySelectorAll("td").forEach((cell) => {
-            if (cell.classList.contains("ocal_state")) {
-                states.push(+(cell.dataset.ocal_state || ""));
-            }
+        return /** @type {HTMLTableCellElement[]} */ (
+            array(calendar.querySelectorAll("td.ocal_state"))
+        ).map((cell) => {
+            return +cell.dataset.ocal_state;
         });
-        return states;
     },
     /** @type {() => {[x: string]: number[]}} */
     getAllCalendarStates: function () {
