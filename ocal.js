@@ -262,14 +262,11 @@
 
     /** @type {() => void} */
     function init() {
-        /** @type {HTMLElement[]} */ (
-            array(
-                document.querySelectorAll(
-                    ".ocal_calendars[data-ocal-config], .ocal_week_calendars[data-ocal-config], " +
-                        ".ocal_lists[data-ocal-config], .ocal_week_lists[data-ocal-config]"
-                )
-            )
-        ).forEach(function (element) {
+        var sel =
+            ".ocal_calendars[data-ocal-config], .ocal_week_calendars[data-ocal-config], " +
+            ".ocal_lists[data-ocal-config], .ocal_week_lists[data-ocal-config]";
+        var elements = /** @type {HTMLElement[]} */ (array(document.querySelectorAll(sel)));
+        elements.forEach(function (element) {
             /** @type {typeof widget} */ (
                 Object.create(widget, { element: { value: element } })
             ).init();
