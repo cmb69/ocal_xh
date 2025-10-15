@@ -40,8 +40,10 @@ function warning(event) {
     return confirmation;
 }
 
-/** @type {(element: HTMLElement, occupancy: string) => void} */
-function makeEditor(element, occupancy) {
+/** @type {(element: HTMLElement) => void} */
+function makeEditor(element) {
+    /** @type {string} */
+    var occupancy;
     /** @type {number} */
     var currentState;
 
@@ -160,6 +162,8 @@ function makeEditor(element, occupancy) {
         });
     }
 
+    occupancy = element.dataset.name;
+
     element.querySelectorAll(".ocal_calendar").forEach((element) => {
         if (!(element instanceof HTMLElement)) return;
         element.onclick = onClick;
@@ -233,7 +237,7 @@ init = () => {
     if (config.isAdmin) {
         document.querySelectorAll(".ocal_calendars, .ocal_week_calendars").forEach((element) => {
             if (!(element instanceof HTMLElement) || element.dataset.name === undefined) return;
-            makeEditor(element, element.dataset.name);
+            makeEditor(element);
         });
     }
 };
