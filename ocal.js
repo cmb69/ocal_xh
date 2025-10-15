@@ -65,30 +65,29 @@
         },
         /** @type {(event: Event) => void} */
         handleEvent: function (event) {
-            var target = /** @type {Element} */ (event.target);
             switch (event.type) {
                 case "click":
-                    switch (target.classList[0]) {
-                        case "ocal_button":
-                            return this.onModeOrPaginationClick(/** @type {MouseEvent} */ (event));
-                        case "ocal_state":
-                            switch (target.localName) {
-                                case "span":
-                                    return this.selectState(
-                                        /** @type {HTMLElement} */ (event.target)
-                                    );
-                                case "td":
-                                    return this.changeState(
-                                        /** @type {HTMLElement} */ (event.target)
-                                    );
-                            }
-                            break;
-                        case "ocal_save":
-                            return this.onSave();
-                    }
-                    break;
+                    return this.handleClickEvent(/** @type {MouseEvent} */ (event));
                 case "beforeunload":
                     this.warning(event);
+            }
+        },
+        /** @type {(event: MouseEvent) => void} */
+        handleClickEvent: function (event) {
+            var target = /** @type {Element} */ (event.target);
+            switch (target.classList[0]) {
+                case "ocal_button":
+                    return this.onModeOrPaginationClick(/** @type {MouseEvent} */ (event));
+                case "ocal_state":
+                    switch (target.localName) {
+                        case "span":
+                            return this.selectState(/** @type {HTMLElement} */ (event.target));
+                        case "td":
+                            return this.changeState(/** @type {HTMLElement} */ (event.target));
+                    }
+                    break;
+                case "ocal_save":
+                    return this.onSave();
             }
         },
         /** @type {(event: MouseEvent) => void} */
