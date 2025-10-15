@@ -39,7 +39,7 @@ var unsavedChanges;
 
 /** @type {(event: Event) => string} */
 function warning(event) {
-    let confirmation = config.message_unsaved_changes;
+    var confirmation = config.message_unsaved_changes;
     // @ts-ignore
     event.returnValue = confirmation;
     return confirmation;
@@ -90,7 +90,7 @@ var editor = Object.seal({
     /** @type {(event: Event) => void} */
     onClick: function (event) {
         if (!(event.target instanceof HTMLElement) || typeof this.currentState !== "number") return;
-        let target = event.target;
+        var target = event.target;
         if (target.classList.contains("ocal_state")) {
             if (target.dataset.ocal_state !== undefined) {
                 if (+target.dataset.ocal_state !== this.currentState) {
@@ -154,7 +154,7 @@ var editor = Object.seal({
     /** @type {(event: MouseEvent) => void} */
     onSelectState: function (event) {
         if (!(event.target instanceof HTMLElement)) return;
-        let target = event.target;
+        var target = event.target;
         if (target.dataset.ocal_state === undefined) return;
         this.element.querySelectorAll(".ocal_toolbar").forEach(function (element) {
             element.querySelectorAll("span").forEach(function (element) {
@@ -170,19 +170,19 @@ var editor = Object.seal({
     },
     /** @type {() => void} */
     onSave: function () {
-        let request = new XMLHttpRequest();
+        var request = new XMLHttpRequest();
         request.open(
             "POST",
             location.href.replace(/#.*$/, "") + "&ocal_name=" + this.occupancy + "&ocal_action=save"
         );
         request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        let states = JSON.stringify(this.getAllCalendarStates());
-        let payload = "ocal_states=" + encodeURIComponent(states);
-        let tokenInput = this.element.querySelector("input[name=ocal_token]");
+        var states = JSON.stringify(this.getAllCalendarStates());
+        var payload = "ocal_states=" + encodeURIComponent(states);
+        var tokenInput = this.element.querySelector("input[name=ocal_token]");
         if (tokenInput instanceof HTMLInputElement) {
             payload += "&ocal_token=" + encodeURIComponent(tokenInput.value);
         }
-        const checksumInput = this.element.querySelector("input[name=ocal_checksum]");
+        var checksumInput = this.element.querySelector("input[name=ocal_checksum]");
         if (checksumInput instanceof HTMLInputElement) {
             payload += "&ocal_checksum=" + encodeURIComponent(checksumInput.value);
         }
@@ -202,7 +202,7 @@ function makeEditor(element) {
 /** @type {(event: MouseEvent) => void|false} */
 function onModeOrPaginationClick(event) {
     if (!(event.target instanceof HTMLAnchorElement)) return;
-    let target = event.target;
+    var target = event.target;
     if (target.parentElement === null || target.parentElement.parentElement === null) return;
     if (unsavedChanges) {
         if (window.confirm(config.message_unsaved_changes)) {
@@ -212,8 +212,8 @@ function onModeOrPaginationClick(event) {
             return false;
         }
     }
-    let calendar = target.parentElement.parentElement;
-    let request = new XMLHttpRequest();
+    var calendar = target.parentElement.parentElement;
+    var request = new XMLHttpRequest();
     request.open("GET", target.href + "&ocal_name=" + calendar.dataset.name);
     request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
     request.onreadystatechange = () => {
@@ -243,7 +243,7 @@ function onModeOrPaginationClick(event) {
 
 init = () => {
     unsavedChanges = false;
-    let element = document.querySelector(
+    var element = document.querySelector(
         ".ocal_calendars, .ocal_week_calendars, .ocal_lists, .ocal_week_lists"
     );
     if (!(element instanceof HTMLElement) || element.dataset.ocalConfig === undefined) return;
