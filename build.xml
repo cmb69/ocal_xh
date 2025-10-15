@@ -30,15 +30,6 @@
     <exec executable="phpunit" passthru="true" checkreturn="true"/>
   </target>
 
-  <target name="check" description="runs all checks" depends="sniff,stan,test"/>
-
-  <target name="coverage" description="generates coverage report">
-    <exec executable="phpunit" passthru="true" checkreturn="true">
-      <arg value="--coverage-html"/>
-      <arg file="coverage"/>
-    </exec>
-  </target>
-
   <target name="js" description="formats and checks JS">
     <exec executable="prettier" passthru="true" checkreturn="true">
       <arg line="--write --print-width 100 --tab-width 4 --trailing-comma none ocal.js"/>
@@ -47,6 +38,15 @@
       <arg line="ocal.js"/>
     </exec>
     <exec executable="tsc" passthru="true" checkreturn="true"/>
+  </target>
+
+  <target name="check" description="runs all checks" depends="sniff,stan,test,js"/>
+
+  <target name="coverage" description="generates coverage report">
+    <exec executable="phpunit" passthru="true" checkreturn="true">
+      <arg value="--coverage-html"/>
+      <arg file="coverage"/>
+    </exec>
   </target>
 
   <target name="minify" description="minifies JS">
