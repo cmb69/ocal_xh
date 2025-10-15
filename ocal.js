@@ -96,9 +96,8 @@
         },
         /** @type {(event: Event) => void} */
         onClick: function (event) {
-            if (!(event.target instanceof HTMLElement) || typeof this.currentState !== "number")
-                return;
-            var target = event.target;
+            if (typeof this.currentState !== "number") return;
+            var target = /** @type {HTMLElement} */ (event.target);
             if (target.classList.contains("ocal_state")) {
                 if (target.dataset.ocal_state !== undefined) {
                     if (+target.dataset.ocal_state !== this.currentState) {
@@ -163,20 +162,18 @@
         },
         /** @type {(event: MouseEvent) => void} */
         onSelectState: function (event) {
-            if (!(event.target instanceof HTMLElement)) return;
-            var target = event.target;
+            var target = /** @type {HTMLElement} */ (event.target);
             if (target.dataset.ocal_state === undefined) return;
             this.stateButtons.forEach(function (element) {
                 element.style.borderWidth = "";
             });
             this.currentState = +target.dataset.ocal_state;
             target.style.borderWidth = "3px";
-            array(this.element.querySelectorAll(".ocal_calendar td.ocal_state")).forEach(
-                function (cell) {
-                    if (!(cell instanceof HTMLElement)) return;
-                    cell.style.cursor = "pointer";
-                }
-            );
+            /** @type {HTMLElement[]} */ (
+                array(this.element.querySelectorAll(".ocal_calendar td.ocal_state"))
+            ).forEach(function (cell) {
+                cell.style.cursor = "pointer";
+            });
         },
         /** @type {() => void} */
         onSave: function () {
@@ -190,12 +187,16 @@
             request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             var states = JSON.stringify(this.getAllCalendarStates());
             var payload = "ocal_states=" + encodeURIComponent(states);
-            var tokenInput = this.element.querySelector("input[name=ocal_token]");
-            if (tokenInput instanceof HTMLInputElement) {
+            var tokenInput = /** @type {HTMLInputElement} */ (
+                this.element.querySelector("input[name=ocal_token]")
+            );
+            if (tokenInput) {
                 payload += "&ocal_token=" + encodeURIComponent(tokenInput.value);
             }
-            var checksumInput = this.element.querySelector("input[name=ocal_checksum]");
-            if (checksumInput instanceof HTMLInputElement) {
+            var checksumInput = /** @type {HTMLInputElement} */ (
+                this.element.querySelector("input[name=ocal_checksum]")
+            );
+            if (checksumInput) {
                 payload += "&ocal_checksum=" + encodeURIComponent(checksumInput.value);
             }
             request.onreadystatechange = this.doReadyStateChange.bind(this, request);
@@ -215,8 +216,7 @@
 
     /** @type {(event: MouseEvent) => void|false} */
     function onModeOrPaginationClick(event) {
-        if (!(event.target instanceof HTMLAnchorElement)) return;
-        var target = event.target;
+        var target = /** @type {HTMLAnchorElement} */ (event.target);
         if (target.parentElement === null || target.parentElement.parentElement === null) return;
         if (unsavedChanges) {
             if (window.confirm(config.message_unsaved_changes)) {
@@ -236,8 +236,9 @@
                     calendar.outerHTML = request.responseText;
                     init();
                 } else {
-                    array(calendar.querySelectorAll(".ocal_loaderbar")).forEach(function (bar) {
-                        if (!(bar instanceof HTMLElement)) return;
+                    /** @type {HTMLElement[]} */ (
+                        array(calendar.querySelectorAll(".ocal_loaderbar"))
+                    ).forEach(function (bar) {
                         bar.style.display = "none";
                     });
                     array(calendar.querySelectorAll(".ocal_statusbar")).forEach(function (bar) {
@@ -252,34 +253,39 @@
             }
         };
         request.send(null);
-        array(calendar.querySelectorAll(".ocal_loaderbar")).forEach(function (bar) {
-            if (!(bar instanceof HTMLElement)) return;
-            bar.style.display = "block";
-        });
+        /** @type {HTMLElement[]} */ (array(calendar.querySelectorAll(".ocal_loaderbar"))).forEach(
+            function (bar) {
+                bar.style.display = "block";
+            }
+        );
         return false;
     }
 
     init = function () {
         unsavedChanges = false;
-        var element = document.querySelector(
-            ".ocal_calendars, .ocal_week_calendars, .ocal_lists, .ocal_week_lists"
+        var element = /** @type {HTMLElement} */ (
+            document.querySelector(
+                ".ocal_calendars[data-ocal-config], .ocal_week_calendars[data-ocal-config], " +
+                    ".ocal_lists[data-ocal-config], .ocal_week_lists[data-ocal-config]"
+            )
         );
-        if (!(element instanceof HTMLElement) || element.dataset.ocalConfig === undefined) return;
+        if (!element) return;
         config = JSON.parse(element.dataset.ocalConfig);
-        array(document.querySelectorAll(".ocal_pagination a, .ocal_mode a")).forEach(
-            function (element) {
-                if (!(element instanceof HTMLElement)) return;
-                element.onclick = onModeOrPaginationClick;
-            }
-        );
+        /** @type {HTMLAnchorElement[]} */ (
+            array(document.querySelectorAll(".ocal_pagination a, .ocal_mode a"))
+        ).forEach(function (element) {
+            element.onclick = onModeOrPaginationClick;
+        });
         if (config.isAdmin) {
-            array(document.querySelectorAll(".ocal_calendars, .ocal_week_calendars")).forEach(
-                function (element) {
-                    if (!(element instanceof HTMLElement) || element.dataset.name === undefined)
-                        return;
-                    makeEditor(element);
-                }
-            );
+            /** @type {HTMLElement[]} */ (
+                array(
+                    document.querySelectorAll(
+                        ".ocal_calendars[data-name], .ocal_week_calendars[data-name]"
+                    )
+                )
+            ).forEach(function (element) {
+                makeEditor(element);
+            });
         }
     };
 
