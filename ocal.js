@@ -74,7 +74,9 @@
                         case "ocal_state":
                             switch (target.localName) {
                                 case "span":
-                                    return this.onSelectState(/** @type {MouseEvent} */ (event));
+                                    return this.selectState(
+                                        /** @type {HTMLElement} */ (event.target)
+                                    );
                                 case "td":
                                     return this.changeState(
                                         /** @type {HTMLElement} */ (event.target)
@@ -170,15 +172,14 @@
                     '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
             }
         },
-        /** @type {(event: MouseEvent) => void} */
-        onSelectState: function (event) {
-            var target = /** @type {HTMLElement} */ (event.target);
-            if (target.dataset.ocal_state === undefined) return;
+        /** @type {(element: HTMLElement) => void} */
+        selectState: function (element) {
+            if (element.dataset.ocal_state === undefined) return;
             this.stateButtons.forEach(function (element) {
                 element.style.borderWidth = "";
             });
-            this.currentState = +target.dataset.ocal_state;
-            target.style.borderWidth = "3px";
+            this.currentState = +element.dataset.ocal_state;
+            element.style.borderWidth = "3px";
             /** @type {HTMLElement[]} */ (
                 array(this.element.querySelectorAll(".ocal_calendar td.ocal_state"))
             ).forEach(function (cell) {
