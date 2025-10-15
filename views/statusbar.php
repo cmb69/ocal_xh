@@ -10,5 +10,5 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
  */
 ?>
 
-<div class="ocal_loaderbar"><img src="<?=$this->esc($image)?>" alt="loading"></div>
+<div class="ocal_loaderbar"><progress></progress></div>
 <div class="ocal_statusbar"></div>

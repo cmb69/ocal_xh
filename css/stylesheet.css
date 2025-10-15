@@ -15,6 +15,9 @@
     /*top: 40%;*/
     /*z-index: 1;*/
 }
+.ocal_loaderbar progress {
+    width: 50%;
+}
 .ocal_toolbar span {
     display: inline-block;
     width: 1em;

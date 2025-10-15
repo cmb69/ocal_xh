@@ -117,9 +117,7 @@ trait CalendarController
 
     private function renderStatusbarView(): string
     {
-        return $this->view->render('statusbar', [
-            'image' => "{$this->pluginFolder}images/ajax-loader-bar.gif",
-        ]);
+        return $this->view->render('statusbar', []);
     }
 
     private function renderToolbarView(): string
