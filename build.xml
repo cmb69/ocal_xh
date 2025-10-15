@@ -51,7 +51,7 @@
 
   <target name="minify" description="minifies JS">
     <exec executable="uglifyjs" checkreturn="true" dir="${dir}">
-      <arg line="ocal.js --compress --mangle --output ocal.min.js"/>
+      <arg line="ocal.js --no-module --compress --mangle --output ocal.min.js"/>
     </exec>
    </target>
 

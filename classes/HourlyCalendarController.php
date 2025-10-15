@@ -29,6 +29,7 @@ use Ocal\Model\Occupancy;
 use Ocal\Model\Week;
 use Plib\CsrfProtector;
 use Plib\DocumentStore;
+use Plib\JavaScript;
 use Plib\Request;
 use Plib\Response;
 use Plib\View;
@@ -55,6 +56,9 @@ class HourlyCalendarController
     /** @var DocumentStore */
     private $store;
 
+    /** @var JavaScript */
+    private $javaScript;
+
     /** @var View */
     private $view;
 
@@ -70,6 +74,7 @@ class HourlyCalendarController
         array $config,
         ListService $listService,
         DocumentStore $store,
+        JavaScript $javaScript,
         View $view
     ) {
         $this->pluginFolder = $pluginFolder;
@@ -77,6 +82,7 @@ class HourlyCalendarController
         $this->config = $config;
         $this->listService = $listService;
         $this->store = $store;
+        $this->javaScript = $javaScript;
         $this->view = $view;
         $this->type = "hourly";
     }
@@ -88,6 +94,7 @@ class HourlyCalendarController
 
     protected function renderCalendarView(Request $request, Occupancy $occupancy, int $count): string
     {
+        $this->javaScript->include($this->pluginFolder . "ocal");
         $data = [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView($request),
@@ -97,7 +104,6 @@ class HourlyCalendarController
             'weekPagination' => $this->renderPaginationView($request, $count),
             'weekCalendars' => $this->getWeekCalendars($request, $occupancy, $count),
             'js_config' => $this->getJsConfig($request),
-            'js_script' => $this->jsScript($request),
             'csrf_token' => $this->csrfProtector->token(),
             'checksum' => $occupancy->checksum(),
         ];
@@ -152,6 +158,7 @@ class HourlyCalendarController
 
     protected function renderListView(Request $request, Occupancy $occupancy, int $count): string
     {
+        $this->javaScript->include($this->pluginFolder . "ocal");
         return $this->view->render('hourly-lists', [
             'occupancyName' => $occupancy->getName(),
             'modeLink' => $this->renderModeLinkView($request),
@@ -159,7 +166,6 @@ class HourlyCalendarController
             'weekPagination' => $this->renderPaginationView($request, $count),
             'weekLists' => $this->getWeekLists($request, $occupancy, $count),
             'js_config' => $this->getJsConfig($request),
-            'js_script' => $this->jsScript($request),
         ]);
     }
 

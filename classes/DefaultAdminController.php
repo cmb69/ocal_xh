@@ -64,7 +64,7 @@ class DefaultAdminController
         return [
             $this->checkPhpVersion('7.1.0'),
             $this->checkXhVersion('1.7.0'),
-            $this->checkPlibVersion('1.6'),
+            $this->checkPlibVersion('1.12'),
             $this->checkWritability($this->contentFolder),
             $this->checkWritability("{$this->pluginFolder}config/"),
             $this->checkWritability("{$this->pluginFolder}css/"),

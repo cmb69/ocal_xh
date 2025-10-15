@@ -2,5 +2,5 @@
     "browser": true,
     "esversion": 5,
     "latedef": true,
-    "strict": "implied"
+    "strict": true
 }
