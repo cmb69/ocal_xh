@@ -66,11 +66,6 @@
                 (classList.contains("ocal_calendars") || classList.contains("ocal_week_calendars"))
             ) {
                 this.occupancy = this.element.dataset.name;
-                /** @type {HTMLButtonElement[]} */ (
-                    array(this.element.querySelectorAll(".ocal_save"))
-                ).forEach(function (button) {
-                    button.disabled = false;
-                });
             }
             this.element.addEventListener("click", this);
         },
@@ -153,6 +148,7 @@
                         });
                         addEventListener("beforeunload", this);
                         this.unsavedChanges = true;
+                        this.enableSaveButtons(true);
                     }
                 }
             }
@@ -187,6 +183,7 @@
                 if (request.status === 200) {
                     removeEventListener("beforeunload", this);
                     this.unsavedChanges = false;
+                    this.enableSaveButtons(false);
                     this.statusbars.forEach(function (bar) {
                         bar.innerHTML = request.responseText;
                     });
@@ -249,6 +246,14 @@
             request.send(payload);
             this.loaderbars.forEach(function (bar) {
                 bar.style.display = "block";
+            });
+        },
+        /** @type {(enable: boolean) => void} */
+        enableSaveButtons: function (enable) {
+            /** @type {HTMLButtonElement[]} */ (
+                array(this.element.querySelectorAll(".ocal_save"))
+            ).forEach(function (button) {
+                button.disabled = !enable;
             });
         },
         /** @type {(event: Event) => string} */
