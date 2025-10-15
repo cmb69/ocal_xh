@@ -49,13 +49,13 @@
         get stateButtons() {
             return array(this.element.querySelectorAll(".ocal_toolbar span"));
         },
-        /** @type {HTMLElement[]} */
-        get loaderbars() {
-            return array(this.element.querySelectorAll(".ocal_loaderbar"));
+        /** @type {HTMLElement} */
+        get loaderbar() {
+            return this.element.querySelector(".ocal_loaderbar");
         },
-        /** @type {HTMLElement[]} */
-        get statusbars() {
-            return array(this.element.querySelectorAll(".ocal_statusbar"));
+        /** @type {HTMLElement} */
+        get statusbar() {
+            return this.element.querySelector(".ocal_statusbar");
         },
         /** @type {() => void} */
         init: function () {
@@ -109,9 +109,7 @@
             request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
             request.onreadystatechange = this.handleLoadReadyStateChange.bind(this, request);
             request.send(null);
-            this.loaderbars.forEach(function (bar) {
-                bar.style.display = "block";
-            });
+            this.loaderbar.style.display = "block";
             event.preventDefault();
         },
         /** @type {(request: XMLHttpRequest) => void} */
@@ -121,17 +119,9 @@
                     this.element.outerHTML = request.responseText;
                     init();
                 } else {
-                    this.loaderbars.forEach(function (bar) {
-                        bar.style.display = "none";
-                    });
-                    this.statusbars.forEach(function (bar) {
-                        bar.innerHTML =
-                            '<p class="xh_fail">' +
-                            request.status +
-                            " " +
-                            request.statusText +
-                            "</p>";
-                    });
+                    this.loaderbar.style.display = "none";
+                    this.statusbar.innerHTML =
+                        '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
                 }
             }
         },
@@ -143,12 +133,10 @@
                 if (target.dataset.ocal_state !== undefined) {
                     if (+target.dataset.ocal_state !== this.currentState) {
                         target.dataset.ocal_state = this.currentState.toString();
-                        this.statusbars.forEach(function (bar) {
-                            bar.innerHTML = "";
-                        });
+                        this.statusbar.innerHTML = "";
                         addEventListener("beforeunload", this);
                         this.unsavedChanges = true;
-                        this.enableSaveButtons(true);
+                        this.enableSaveButton(true);
                     }
                 }
             }
@@ -177,29 +165,23 @@
         /** @type {(request: XMLHttpRequest) => void} */
         handleSaveReadyStateChange: function (request) {
             if (request.readyState === 4) {
-                this.loaderbars.forEach(function (bar) {
-                    bar.style.display = "none";
-                });
+                this.loaderbar.style.display = "none";
                 if (request.status === 200) {
                     removeEventListener("beforeunload", this);
                     this.unsavedChanges = false;
-                    this.enableSaveButtons(false);
-                    this.statusbars.forEach(function (bar) {
-                        bar.innerHTML = request.responseText;
-                    });
+                    this.enableSaveButton(false);
+                    this.statusbar.innerHTML = request.responseText;
                 } else {
-                    this.statusbars.forEach(function (bar) {
-                        if (request.responseText) {
-                            bar.innerHTML = request.responseText;
-                        } else {
-                            bar.innerHTML =
-                                '<p class="xh_fail">' +
-                                request.status +
-                                " " +
-                                request.statusText +
-                                "</p>";
-                        }
-                    });
+                    if (request.responseText) {
+                        this.statusbar.innerHTML = request.responseText;
+                    } else {
+                        this.statusbar.innerHTML =
+                            '<p class="xh_fail">' +
+                            request.status +
+                            " " +
+                            request.statusText +
+                            "</p>";
+                    }
                 }
             }
         },
@@ -244,17 +226,12 @@
             }
             request.onreadystatechange = this.handleSaveReadyStateChange.bind(this, request);
             request.send(payload);
-            this.loaderbars.forEach(function (bar) {
-                bar.style.display = "block";
-            });
+            this.loaderbar.style.display = "block";
         },
         /** @type {(enable: boolean) => void} */
-        enableSaveButtons: function (enable) {
-            /** @type {HTMLButtonElement[]} */ (
-                array(this.element.querySelectorAll(".ocal_save"))
-            ).forEach(function (button) {
-                button.disabled = !enable;
-            });
+        enableSaveButton: function (enable) {
+            /** @type {HTMLButtonElement} */ (this.element.querySelector(".ocal_save")).disabled =
+                !enable;
         },
         /** @type {(event: Event) => string} */
         warning: function (event) {
