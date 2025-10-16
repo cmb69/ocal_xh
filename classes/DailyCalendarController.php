@@ -270,6 +270,7 @@ class DailyCalendarController
         if (!$this->store->commit()) {
             return Response::create($this->view->message("fail", "message_not_saved"));
         }
-        return Response::create($this->view->message("success", "message_saved"));
+        return Response::create("<!--{$occupancy->checksum()}-->"
+            . $this->view->message("success", "message_saved"));
     }
 }

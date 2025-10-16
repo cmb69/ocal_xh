@@ -50,7 +50,7 @@ class HourlyOccupancyTest extends TestCase
         $expected->setState("2017-09-01-12", 0, 3);
         $this->store->commit();
         $actual = HourlyOccupancy::retrieve("bar", $this->store);
-        $actual->setChecksum("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+        $actual->invalidateChecksum();
         $this->assertEquals($expected, $actual);
     }
 

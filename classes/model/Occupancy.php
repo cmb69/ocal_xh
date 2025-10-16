@@ -26,7 +26,7 @@ abstract class Occupancy
     /** @var string */
     protected $name;
 
-    /** @var string */
+    /** @var ?string */
     protected $checksum;
 
     /** @var array<string,int> */
@@ -50,13 +50,16 @@ abstract class Occupancy
 
     public function checksum(): string
     {
+        if ($this->checksum === null) {
+            $this->checksum = sha1($this->toString());
+        }
         return $this->checksum;
     }
 
     /** for testing */
-    public function setChecksum(string $checksum): void
+    public function invalidateChecksum(): void
     {
-        $this->checksum = $checksum;
+        $this->checksum = null;
     }
 
     protected function getState(string $date): int
@@ -75,5 +78,8 @@ abstract class Occupancy
         } else {
             unset($this->states[$date]);
         }
+        $this->checksum = null;
     }
+
+    abstract public function toString(): string;
 }

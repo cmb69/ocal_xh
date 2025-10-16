@@ -48,6 +48,10 @@
             var child = /** @type {HTMLElement} */ (this.element.firstElementChild);
             return JSON.parse(child.dataset.ocalConfig);
         },
+        /** @type {HTMLInputElement} */
+        get checksumInput() {
+            return this.element.querySelector("input[name=ocal_checksum]");
+        },
         /** @type {HTMLElement[]} */
         get stateButtons() {
             return array(this.element.querySelectorAll(".ocal_toolbar span"));
@@ -172,7 +176,9 @@
             if (request.readyState !== 4) return;
             if (request.status === 200) {
                 this.markClean();
-                this.statusbar.innerHTML = request.responseText;
+                var statusbar = this.statusbar;
+                statusbar.innerHTML = request.responseText;
+                this.checksumInput.value = statusbar.firstChild.textContent;
             } else if (request.responseText) {
                 this.statusbar.innerHTML = request.responseText;
             } else {
@@ -218,9 +224,7 @@
             if (tokenInput) {
                 payload += "&ocal_token=" + encodeURIComponent(tokenInput.value);
             }
-            var checksumInput = /** @type {HTMLInputElement} */ (
-                this.element.querySelector("input[name=ocal_checksum]")
-            );
+            var checksumInput = this.checksumInput;
             if (checksumInput) {
                 payload += "&ocal_checksum=" + encodeURIComponent(checksumInput.value);
             }

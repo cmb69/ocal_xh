@@ -184,6 +184,7 @@ class DailyCalendarControllerTest extends TestCase
         ]);
         $response = $this->sut()($request, "test-daily", 1);
         $this->assertStringContainsString('Successfully saved.', $response->output());
+        $this->assertStringContainsString('<!--da39a3ee5e6b4b0d3255bfef95601890afd80709-->', $response->output());
     }
 
     public function testSaveActionPreventsCsrf(): void

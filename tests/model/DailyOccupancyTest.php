@@ -50,7 +50,7 @@ class DailyOccupancyTest extends TestCase
         $expected->setState('2017-02-28', 0, 3);
         $this->store->commit();
         $actual = DailyOccupancy::retrieve("foo", $this->store);
-        $actual->setChecksum("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+        $actual->invalidateChecksum();
         $this->assertEquals($expected, $actual);
     }
 
@@ -88,10 +88,11 @@ class DailyOccupancyTest extends TestCase
     {
         file_put_contents(vfsStream::url("root/foo.dat"), '{a:1:{s:10:"2017-02-03";s:1:"1";}}');
         $expected = DailyOccupancy::update("foo", $this->store);
+        $expected->invalidateChecksum();
         $this->store->commit();
         $this->assertFileExists(vfsStream::url("root/foo.json"));
         $actual = DailyOccupancy::retrieve("foo", $this->store);
-        $actual->setChecksum("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+        $actual->invalidateChecksum();
         $this->assertEquals($expected, $actual);
     }
 }
