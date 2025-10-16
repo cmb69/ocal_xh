@@ -71,7 +71,7 @@
             this.element.addEventListener("click", this);
             addEventListener("popstate", this);
             if (!again) {
-                var url = location.href + "&ocal_name=" + this.occupancy;
+                var url = this.buildUrl(location.href);
                 history.replaceState(this.updatedHistoryState(url), "", url);
             }
         },
@@ -117,7 +117,7 @@
                 return;
             }
             var target = /** @type {HTMLAnchorElement} */ (event.target);
-            var url = target.href + "&ocal_name=" + this.occupancy;
+            var url = this.buildUrl(target.href);
             this.load(url);
             history.pushState(this.updatedHistoryState(url), "", url);
             event.preventDefault();
@@ -136,12 +136,12 @@
             var request = new XMLHttpRequest();
             request.open("GET", url);
             request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
-            request.onreadystatechange = this.handleLoadReadyStateChange.bind(this, request, url);
+            request.onreadystatechange = this.handleLoadReadyStateChange.bind(this, request);
             request.send(null);
             this.statusbar.innerHTML = "<progress></progress>";
         },
-        /** @type {(request: XMLHttpRequest, url: string) => void} */
-        handleLoadReadyStateChange: function (request, url) {
+        /** @type {(request: XMLHttpRequest) => void} */
+        handleLoadReadyStateChange: function (request) {
             if (request.readyState !== 4) return;
             var matches = request.responseText.match(/<!--AJAX START-->[\s\S]*<!--AJAX END-->/);
             if (request.status === 200 && matches) {
@@ -230,16 +230,30 @@
         /** @type {() => void} */
         onSave: function () {
             var request = new XMLHttpRequest();
-            var url =
-                location.href.replace(/#.*$/, "") +
-                "&ocal_name=" +
-                this.occupancy +
-                "&ocal_action=save";
-            request.open("POST", url);
+            request.open("POST", this.buildUrl(location.href, true));
             request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             request.onreadystatechange = this.handleSaveReadyStateChange.bind(this, request);
             request.send(this.getPayload());
             this.statusbar.innerHTML = "<progress></progress>";
+        },
+        /** @type {(url: string, save?: boolean) => string} */
+        buildUrl: function (url, save) {
+            var matches = url.match(/(.*)(#.*)?/);
+            var res = matches[1];
+            if (res.indexOf("?") < 0) {
+                res += "?";
+            }
+            var name = "&ocal_name=" + this.occupancy;
+            if (!new RegExp(name).test(res)) {
+                res += name;
+            }
+            if (save) {
+                res += "&ocal_action=save";
+            }
+            if (matches[2]) {
+                res += matches[2];
+            }
+            return res;
         },
         /** @type {() => string} */
         getPayload: function () {
