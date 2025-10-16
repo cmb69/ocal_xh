@@ -23,12 +23,14 @@ if (!defined("CMSIMPLE_XH_VERSION")) {http_response_code(403); exit;}
   <!--AJAX START-->
   <div class="ocal_calendars" data-ocal-config='<?=$this->json($js_config)?>'>
     <?=$this->raw($modeLink)?>
+    <script type="text/x-template">
 <?if ($isEditable):?>
-    <input type="hidden" name="ocal_token" value="<?=$this->esc($csrf_token)?>">
-    <input type="hidden" name="ocal_checksum" value="<?=$this->esc($checksum)?>">
-    <?=$this->raw($toolbar)?>
+      <input type="hidden" name="ocal_token" value="<?=$this->esc($csrf_token)?>">
+      <input type="hidden" name="ocal_checksum" value="<?=$this->esc($checksum)?>">
+      <?=$this->raw($toolbar)?>
 <?endif?>
-    <?=$this->raw($statusbar)?>
+      <?=$this->raw($statusbar)?>
+    </script>
 <?foreach ($monthCalendars as $monthCalendar):?>
     <?=$this->raw($monthCalendar)?>
 <?endforeach?>

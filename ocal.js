@@ -39,6 +39,10 @@
         currentState: undefined,
         /** @type {boolean} */
         unsavedChanges: undefined,
+        /** @type {HTMLScriptElement[]} */
+        get templates() {
+            return array(this.element.querySelectorAll("script[type='text/x-template']"));
+        },
         /** @type {string} */
         get occupancy() {
             return this.element.dataset.name;
@@ -66,6 +70,9 @@
         },
         /** @type {(again?: boolean) => void} */
         init: function (again) {
+            this.templates.forEach(function (script) {
+                script.outerHTML = script.text;
+            });
             this.currentState = undefined;
             this.markClean();
             this.element.addEventListener("click", this);
