@@ -124,8 +124,7 @@ By default, four states are available which have the following meaning:
 
 Note that the number and meaning of the states [is customizable](#states).
 
-Also note that the administration requires JavaScript and a somewhat
-contemporary browser (e.g. IE < 8 is not supported).
+Also note that the administration requires JavaScript.
 
 ### States
 

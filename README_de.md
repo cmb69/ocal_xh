@@ -128,8 +128,7 @@ Standardmäßig sind vier Zustände verfügbar, die wie folgt vorbelegt sind:
 
 Es ist möglich Anzahl und Bedeutung der Zustände [anzupassen](#zustände).
 
-Beachten Sie, dass die Administration JavaScript und einen einigermaßen
-zeitgemäßen Browser erfordert (z.B. wird IE < 8 nicht unterstüzt).
+Beachten Sie, dass die Administration JavaScript erfordert.
 
 ### Zustände
 
