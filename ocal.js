@@ -64,19 +64,32 @@
         get saveButton() {
             return this.element.querySelector(".ocal_save");
         },
-        /** @type {() => void} */
-        init: function () {
+        /** @type {(again?: boolean) => void} */
+        init: function (again) {
             this.currentState = undefined;
             this.markClean();
             this.element.addEventListener("click", this);
+            addEventListener("popstate", this);
+            if (!again) {
+                var url = location.href + "&ocal_name=" + this.occupancy;
+                history.replaceState(this.updatedHistoryState(url), "", url);
+            }
         },
         /** @type {(event: Event) => void} */
         handleEvent: function (event) {
             switch (event.type) {
+                case "popstate":
+                    return this.handlePopstateEvent(/** @type {PopStateEvent} */ (event));
                 case "click":
                     return this.handleClickEvent(/** @type {MouseEvent} */ (event));
                 case "beforeunload":
                     this.warning(event);
+            }
+        },
+        /** @type {(event: PopStateEvent) => void} */
+        handlePopstateEvent: function (event) {
+            if (event.state && this.occupancy in event.state.ocalUrls) {
+                this.load(event.state.ocalUrls[this.occupancy]);
             }
         },
         /** @type {(event: MouseEvent) => void} */
@@ -99,27 +112,41 @@
         },
         /** @type {(event: MouseEvent) => void} */
         onModeOrPaginationClick: function (event) {
-            var target = /** @type {HTMLAnchorElement} */ (event.target);
             if (this.unsavedChanges && !window.confirm(this.config.message_unsaved_changes)) {
                 event.preventDefault();
                 return;
             }
-            this.markClean();
-            var request = new XMLHttpRequest();
-            request.open("GET", target.href + "&ocal_name=" + this.element.dataset.name);
-            request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
-            request.onreadystatechange = this.handleLoadReadyStateChange.bind(this, request);
-            request.send(null);
-            this.statusbar.innerHTML = "<progress></progress>";
+            var target = /** @type {HTMLAnchorElement} */ (event.target);
+            var url = target.href + "&ocal_name=" + this.occupancy;
+            this.load(url);
+            history.pushState(this.updatedHistoryState(url), "", url);
             event.preventDefault();
         },
-        /** @type {(request: XMLHttpRequest) => void} */
-        handleLoadReadyStateChange: function (request) {
+        /** @type {(url: string) => Object} */
+        updatedHistoryState: function (url) {
+            var state = history.state || Object.create(null);
+            var urls = state.ocalUrls || Object.create(null);
+            urls[this.occupancy] = url;
+            state.ocalUrls = urls;
+            return state;
+        },
+        /** @type {(url: string) => void} */
+        load: function (url) {
+            this.markClean();
+            var request = new XMLHttpRequest();
+            request.open("GET", url);
+            request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
+            request.onreadystatechange = this.handleLoadReadyStateChange.bind(this, request, url);
+            request.send(null);
+            this.statusbar.innerHTML = "<progress></progress>";
+        },
+        /** @type {(request: XMLHttpRequest, url: string) => void} */
+        handleLoadReadyStateChange: function (request, url) {
             if (request.readyState !== 4) return;
             var matches = request.responseText.match(/<!--AJAX START-->[\s\S]*<!--AJAX END-->/);
             if (request.status === 200 && matches) {
                 this.element.innerHTML = matches[0];
-                this.init();
+                this.init(true);
             } else {
                 this.statusbar.innerHTML =
                     '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
