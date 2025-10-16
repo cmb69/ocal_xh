@@ -83,7 +83,7 @@
                 case "click":
                     return this.handleClickEvent(/** @type {MouseEvent} */ (event));
                 case "beforeunload":
-                    this.warning(event);
+                    event.preventDefault();
             }
         },
         /** @type {(event: PopStateEvent) => void} */
@@ -270,13 +270,6 @@
                 payload += "&ocal_checksum=" + encodeURIComponent(checksumInput.value);
             }
             return payload;
-        },
-        /** @type {(event: Event) => string} */
-        warning: function (event) {
-            var confirmation = this.config.message_unsaved_changes;
-            // @ts-ignore
-            event.returnValue = confirmation;
-            return confirmation;
         },
     });
 
