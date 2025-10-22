@@ -30,39 +30,49 @@
     var widget = Object.seal({
         /** @readonly @type {HTMLElement} */
         element: undefined,
+
         /** @type {number} */
         currentState: undefined,
+
         /** @type {boolean} */
         unsavedChanges: undefined,
+
         /** @type {NodeListOf<HTMLScriptElement>} */
         get templates() {
             return this.element.querySelectorAll("script[type='text/x-template']");
         },
+
         /** @type {string} */
         get occupancy() {
             return this.element.dataset.name;
         },
+
         /** @type {Config} */
         get config() {
             var child = /** @type {HTMLElement} */ (this.element.firstElementChild);
             return JSON.parse(child.dataset.ocalConfig);
         },
+
         /** @type {HTMLInputElement} */
         get checksumInput() {
             return this.element.querySelector("input[name=ocal_checksum]");
         },
+
         /** @type {NodeListOf<HTMLElement>} */
         get stateButtons() {
             return this.element.querySelectorAll(".ocal_toolbar span");
         },
+
         /** @type {HTMLElement} */
         get statusbar() {
             return this.element.querySelector(".ocal_statusbar");
         },
+
         /** @type {HTMLButtonElement} */
         get saveButton() {
             return this.element.querySelector(".ocal_save");
         },
+
         /** @type {(again?: boolean) => void} */
         init: function (again) {
             this.templates.forEach(function (script) {
@@ -77,6 +87,7 @@
                 history.replaceState(this.updatedHistoryState(url), "", url);
             }
         },
+
         /** @type {(event: Event) => void} */
         handleEvent: function (event) {
             switch (event.type) {
@@ -88,12 +99,14 @@
                     event.preventDefault();
             }
         },
+
         /** @type {(event: PopStateEvent) => void} */
         handlePopstateEvent: function (event) {
             if (event.state && this.occupancy in event.state.ocalUrls) {
                 this.load(event.state.ocalUrls[this.occupancy], true);
             }
         },
+
         /** @type {(event: MouseEvent) => void} */
         handleClickEvent: function (event) {
             var target = /** @type {Element} */ (event.target);
@@ -112,6 +125,7 @@
                     return this.onSave();
             }
         },
+
         /** @type {(event: MouseEvent) => void} */
         onModeOrPaginationClick: function (event) {
             if (this.unsavedChanges && !window.confirm(this.config.message_unsaved_changes)) {
@@ -123,6 +137,7 @@
             this.load(url);
             event.preventDefault();
         },
+
         /** @type {(url: string) => Object} */
         updatedHistoryState: function (url) {
             var state = history.state || Object.create(null);
@@ -131,6 +146,7 @@
             state.ocalUrls = urls;
             return state;
         },
+
         /** @type {(url: string, reload?: boolean) => void} */
         load: function (url, reload) {
             this.markClean();
@@ -146,6 +162,7 @@
             request.send(null);
             this.statusbar.innerHTML = "<progress></progress>";
         },
+
         /** @type {(request: XMLHttpRequest, url: string, reload: boolean) => void} */
         handleLoadReadyStateChange: function (request, url, reload) {
             if (request.readyState !== 4) return;
@@ -159,6 +176,7 @@
                     '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
             }
         },
+
         /** @type {() => void} */
         markClean: function () {
             this.unsavedChanges = false;
@@ -168,12 +186,14 @@
                 saveButton.disabled = true;
             }
         },
+
         /** @type {() => void} */
         markDirty: function () {
             this.unsavedChanges = true;
             addEventListener("beforeunload", this);
             this.saveButton.disabled = false;
         },
+
         /** @type {(element: HTMLElement) => void} */
         changeState: function (element) {
             if (typeof this.currentState !== "number") return;
@@ -184,6 +204,7 @@
                 this.markDirty();
             }
         },
+
         /** @type {(calendar: HTMLElement) => [string, number[]]} */
         getCalendarStates: function (calendar) {
             return [
@@ -195,6 +216,7 @@
                 }),
             ];
         },
+
         /** @type {() => {[x: string]: number[]}} */
         getAllCalendarStates: function () {
             var calendars = /** @type {HTMLElement[]} */ (
@@ -205,6 +227,7 @@
                 return acc;
             }, /** @type {{[x: string]: number[]}} */ ({}));
         },
+
         /** @type {(request: XMLHttpRequest) => void} */
         handleSaveReadyStateChange: function (request) {
             if (request.readyState !== 4) return;
@@ -220,6 +243,7 @@
                     '<p class="xh_fail">' + request.status + " " + request.statusText + "</p>";
             }
         },
+
         /** @type {(element: HTMLElement) => void} */
         selectState: function (element) {
             if (element.dataset.ocal_state === undefined) return;
@@ -234,6 +258,7 @@
                 cell.style.cursor = "pointer";
             });
         },
+
         /** @type {() => void} */
         onSave: function () {
             var request = new XMLHttpRequest();
@@ -243,6 +268,7 @@
             request.send(this.getPayload());
             this.statusbar.innerHTML = "<progress></progress>";
         },
+
         /** @type {(url: string, save?: boolean) => string} */
         buildUrl: function (url, save) {
             var matches = url.match(/(.*)(#.*)?/);
@@ -262,6 +288,7 @@
             }
             return res;
         },
+
         /** @type {() => string} */
         getPayload: function () {
             var states = JSON.stringify(this.getAllCalendarStates());
