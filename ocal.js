@@ -27,7 +27,7 @@
      */
 
     /** @readonly */
-    var widget = Object.seal({
+    var widgetProto = Object.seal({
         /** @readonly @type {HTMLElement} */
         element: undefined,
 
@@ -207,11 +207,12 @@
 
         /** @type {(calendar: HTMLElement) => [string, number[]]} */
         getCalendarStates: function (calendar) {
+            var cells = /** @type {HTMLTableCellElement[]} */ (
+                Array.prototype.slice.call(calendar.querySelectorAll("td.ocal_state"))
+            );
             return [
                 calendar.dataset.ocal_date,
-                /** @type {HTMLTableCellElement[]} */ (
-                    Array.prototype.slice.call(calendar.querySelectorAll("td.ocal_state"))
-                ).map(function (cell) {
+                cells.map(function (cell) {
                     return +cell.dataset.ocal_state;
                 }),
             ];
@@ -252,9 +253,10 @@
             });
             this.currentState = +element.dataset.ocal_state;
             element.style.borderWidth = "3px";
-            /** @type {NodeListOf<HTMLElement>} */ (
+            var cells = /** @type {NodeListOf<HTMLElement>} */ (
                 this.element.querySelectorAll(".ocal_calendar td.ocal_state")
-            ).forEach(function (cell) {
+            );
+            cells.forEach(function (cell) {
                 cell.style.cursor = "pointer";
             });
         },
@@ -307,11 +309,13 @@
         },
     });
 
-    /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll(".ocal_container")).forEach(
-        function (element) {
-            /** @type {typeof widget} */ (
-                Object.create(widget, { element: { value: element } })
-            ).init();
-        }
+    var containers = /** @type {NodeListOf<HTMLElement>} */ (
+        document.querySelectorAll(".ocal_container")
     );
+    containers.forEach(function (element) {
+        var widget = /** @type {typeof widgetProto} */ (
+            Object.create(widgetProto, { element: { value: element } })
+        );
+        widget.init();
+    });
 })();
