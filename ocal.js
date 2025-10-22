@@ -91,7 +91,7 @@
         /** @type {(event: PopStateEvent) => void} */
         handlePopstateEvent: function (event) {
             if (event.state && this.occupancy in event.state.ocalUrls) {
-                this.load(event.state.ocalUrls[this.occupancy]);
+                this.load(event.state.ocalUrls[this.occupancy], true);
             }
         },
         /** @type {(event: MouseEvent) => void} */
@@ -121,7 +121,6 @@
             var target = /** @type {HTMLAnchorElement} */ (event.target);
             var url = this.buildUrl(target.href);
             this.load(url);
-            history.pushState(this.updatedHistoryState(url), "", url);
             event.preventDefault();
         },
         /** @type {(url: string) => Object} */
@@ -132,22 +131,28 @@
             state.ocalUrls = urls;
             return state;
         },
-        /** @type {(url: string) => void} */
-        load: function (url) {
+        /** @type {(url: string, reload?: boolean) => void} */
+        load: function (url, reload) {
             this.markClean();
             var request = new XMLHttpRequest();
             request.open("GET", url);
             request.setRequestHeader("X-CMSimple-XH-Request", "ocal");
-            request.onreadystatechange = this.handleLoadReadyStateChange.bind(this, request);
+            request.onreadystatechange = this.handleLoadReadyStateChange.bind(
+                this,
+                request,
+                url,
+                reload
+            );
             request.send(null);
             this.statusbar.innerHTML = "<progress></progress>";
         },
-        /** @type {(request: XMLHttpRequest) => void} */
-        handleLoadReadyStateChange: function (request) {
+        /** @type {(request: XMLHttpRequest, url: string, reload: boolean) => void} */
+        handleLoadReadyStateChange: function (request, url, reload) {
             if (request.readyState !== 4) return;
             var matches = request.responseText.match(/<!--AJAX START-->[\s\S]*<!--AJAX END-->/);
             if (request.status === 200 && matches) {
                 this.element.innerHTML = matches[0];
+                if (!reload) history.pushState(this.updatedHistoryState(url), "", url);
                 this.init(true);
             } else {
                 this.statusbar.innerHTML =
