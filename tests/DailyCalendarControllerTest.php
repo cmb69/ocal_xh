@@ -76,6 +76,7 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testDefaultActionRendersCalendar(): void
     {
+        $this->javaScript->expects($this->once())->method("includePolyfills");
         $this->javaScript->expects($this->once())->method("include")->with("./ocal");
         $response = $this->sut()(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-daily", 1);
         Approvals::verifyHtml($response->output());
@@ -111,6 +112,7 @@ class DailyCalendarControllerTest extends TestCase
 
     public function testListActionRendersListWithoutEntries(): void
     {
+        $this->javaScript->expects($this->once())->method("includePolyfills");
         $this->javaScript->expects($this->once())->method("include")->with("./ocal");
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",

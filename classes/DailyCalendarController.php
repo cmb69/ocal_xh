@@ -93,6 +93,7 @@ class DailyCalendarController
 
     protected function renderCalendarView(Request $request, Occupancy $occupancy, int $count): string
     {
+        $this->javaScript->includePolyfills();
         $this->javaScript->include($this->pluginFolder . "ocal");
         $data = [
             'occupancyName' => $occupancy->getName(),
@@ -172,6 +173,7 @@ class DailyCalendarController
 
     protected function renderListView(Request $request, Occupancy $occupancy, int $count): string
     {
+        $this->javaScript->includePolyfills();
         $this->javaScript->include($this->pluginFolder . "ocal");
         return $this->view->render('daily-lists', [
             'occupancyName' => $occupancy->getName(),

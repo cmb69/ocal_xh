@@ -94,6 +94,7 @@ class HourlyCalendarController
 
     protected function renderCalendarView(Request $request, Occupancy $occupancy, int $count): string
     {
+        $this->javaScript->includePolyfills();
         $this->javaScript->include($this->pluginFolder . "ocal");
         $data = [
             'occupancyName' => $occupancy->getName(),
@@ -158,6 +159,7 @@ class HourlyCalendarController
 
     protected function renderListView(Request $request, Occupancy $occupancy, int $count): string
     {
+        $this->javaScript->includePolyfills();
         $this->javaScript->include($this->pluginFolder . "ocal");
         return $this->view->render('hourly-lists', [
             'occupancyName' => $occupancy->getName(),

@@ -26,11 +26,6 @@
      * @prop {boolean} isAdmin
      */
 
-    /** @type {<T>(arrayLike: ArrayLike<T>) => T[]} */
-    function array(arrayLike) {
-        return Array.prototype.slice.call(arrayLike);
-    }
-
     /** @readonly */
     var widget = Object.seal({
         /** @readonly @type {HTMLElement} */
@@ -39,9 +34,9 @@
         currentState: undefined,
         /** @type {boolean} */
         unsavedChanges: undefined,
-        /** @type {HTMLScriptElement[]} */
+        /** @type {NodeListOf<HTMLScriptElement>} */
         get templates() {
-            return array(this.element.querySelectorAll("script[type='text/x-template']"));
+            return this.element.querySelectorAll("script[type='text/x-template']");
         },
         /** @type {string} */
         get occupancy() {
@@ -56,9 +51,9 @@
         get checksumInput() {
             return this.element.querySelector("input[name=ocal_checksum]");
         },
-        /** @type {HTMLElement[]} */
+        /** @type {NodeListOf<HTMLElement>} */
         get stateButtons() {
-            return array(this.element.querySelectorAll(".ocal_toolbar span"));
+            return this.element.querySelectorAll(".ocal_toolbar span");
         },
         /** @type {HTMLElement} */
         get statusbar() {
@@ -189,7 +184,7 @@
             return [
                 calendar.dataset.ocal_date,
                 /** @type {HTMLTableCellElement[]} */ (
-                    array(calendar.querySelectorAll("td.ocal_state"))
+                    Array.prototype.slice.call(calendar.querySelectorAll("td.ocal_state"))
                 ).map(function (cell) {
                     return +cell.dataset.ocal_state;
                 }),
@@ -198,7 +193,7 @@
         /** @type {() => {[x: string]: number[]}} */
         getAllCalendarStates: function () {
             var calendars = /** @type {HTMLElement[]} */ (
-                array(this.element.querySelectorAll(".ocal_calendar"))
+                Array.prototype.slice.call(this.element.querySelectorAll(".ocal_calendar"))
             );
             return calendars.map(this.getCalendarStates.bind(this)).reduce(function (acc, pair) {
                 acc[pair[0]] = pair[1];
@@ -228,8 +223,8 @@
             });
             this.currentState = +element.dataset.ocal_state;
             element.style.borderWidth = "3px";
-            /** @type {HTMLElement[]} */ (
-                array(this.element.querySelectorAll(".ocal_calendar td.ocal_state"))
+            /** @type {NodeListOf<HTMLElement>} */ (
+                this.element.querySelectorAll(".ocal_calendar td.ocal_state")
             ).forEach(function (cell) {
                 cell.style.cursor = "pointer";
             });
@@ -280,7 +275,7 @@
         },
     });
 
-    /** @type {HTMLElement[]} */ (array(document.querySelectorAll(".ocal_container"))).forEach(
+    /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll(".ocal_container")).forEach(
         function (element) {
             /** @type {typeof widget} */ (
                 Object.create(widget, { element: { value: element } })

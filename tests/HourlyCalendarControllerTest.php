@@ -78,6 +78,7 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testDefaultActionRendersCalendar(): void
     {
+        $this->javaScript->expects($this->once())->method("includePolyfills");
         $this->javaScript->expects($this->once())->method("include")->with("./ocal");
         $response = $this->sut()(new FakeRequest(["admin" => true, "time" => 1688256000]), "test-hourly", 1);
         Approvals::verifyHtml($response->output());
@@ -113,6 +114,7 @@ class HourlyCalendarControllerTest extends TestCase
 
     public function testListActionRendersListWithoutEntries(): void
     {
+        $this->javaScript->expects($this->once())->method("includePolyfills");
         $this->javaScript->expects($this->once())->method("include")->with("./ocal");
         $request = new FakeRequest([
             "url" => "http://example.com/?&ocal_action=list",
